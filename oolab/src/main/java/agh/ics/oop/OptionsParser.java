@@ -9,25 +9,21 @@ public class OptionsParser {
     }
     public static MoveDirection[] parse(String[] args) {
         MoveDirection[] directions = new MoveDirection[args.length];
-        int cnt = 0;
-        int j = 0;
+        int index = 0;
+
         for (String arg : args) {
-            MoveDirection value;
-            switch (arg) {
-                case "f" -> value = MoveDirection.FORWARD;
-                case "b" -> value = MoveDirection.BACKWARD;
-                case "r" -> value = MoveDirection.RIGHT;
-                case "l" -> value = MoveDirection.LEFT;
-                default -> {
-                    cnt++;
-                    value = MoveDirection.NULL;
-                }
+            MoveDirection value = switch (arg) {
+                case "f" -> MoveDirection.FORWARD;
+                case "b" -> MoveDirection.BACKWARD;
+                case "r" -> MoveDirection.RIGHT;
+                case "l" -> MoveDirection.LEFT;
+                default -> null;
+                };
+            if (value != null){
+                directions[index] = value;
+                index++;
             }
-            if (value != MoveDirection.NULL) {
-                directions[j] = value;
-            } else j--;
-            j++;
         }
-        return Arrays.copyOfRange(directions, 0, directions.length - cnt);
+        return Arrays.copyOfRange(directions, 0, index);
     }
 }

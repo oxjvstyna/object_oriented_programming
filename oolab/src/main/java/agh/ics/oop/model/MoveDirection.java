@@ -4,6 +4,5 @@ public enum MoveDirection {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT,
-    NULL;
+    RIGHT;
 }
