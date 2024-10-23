@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-import java.util.Vector;
+import java.util.Objects;
 
 public class Vector2d {
     private final int x;
@@ -52,6 +52,17 @@ public class Vector2d {
     }
     public boolean equals(Vector2d other) { //TO TRZEBA JAKOS ZMIENIC
         return this.x == other.x && this.y == other.y;
+    }
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Vector2d vector2d = (Vector2d) other;
+        return this.x == vector2d.x && this.y == vector2d.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
 }
