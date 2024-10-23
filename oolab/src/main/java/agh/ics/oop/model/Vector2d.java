@@ -53,11 +53,13 @@ public class Vector2d {
     public boolean equals(Vector2d other) { //TO TRZEBA JAKOS ZMIENIC
         return this.x == other.x && this.y == other.y;
     }
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
-        Vector2d vector2d = (Vector2d) other;
-        return this.x == vector2d.x && this.y == vector2d.y;
+    public boolean equals(Object other){
+        if (this == other)
+            return true;
+        if (!(other instanceof Vector2d))
+            return false;
+        Vector2d that = (Vector2d) other;
+        return this.x == that.x && this.y == that.y;
     }
 
     @Override
