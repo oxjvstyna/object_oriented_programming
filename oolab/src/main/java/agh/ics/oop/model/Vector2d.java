@@ -23,10 +23,10 @@ public class Vector2d {
     }
 
     public boolean precedes(Vector2d other) {
-        return this.x < other.x && this.y <= other.y;
+        return this.x <= other.x && this.y <= other.y;
     }
     public boolean follows(Vector2d other) {
-        return this.x > other.x && this.y >= other.y;
+        return this.x >= other.x && this.y >= other.y;
     }
 
     public Vector2d add(Vector2d other) {
@@ -50,9 +50,7 @@ public class Vector2d {
     public Vector2d opposite(Vector2d other) {
         return new Vector2d(-other.x, -other.y);
     }
-    public boolean equals(Vector2d other) { //TO TRZEBA JAKOS ZMIENIC
-        return this.x == other.x && this.y == other.y;
-    }
+
     public boolean equals(Object other){
         if (this == other)
             return true;
