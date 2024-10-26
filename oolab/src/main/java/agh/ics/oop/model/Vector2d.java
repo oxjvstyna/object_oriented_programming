@@ -18,6 +18,7 @@ public class Vector2d {
         return this.y;
     }
 
+    @Override
     public String toString() {
         return "(" + this.x + "," + this.y + ")";
     }
