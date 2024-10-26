@@ -38,5 +38,17 @@ public class World {
         Vector2d position2 = new Vector2d(-2,1);
         System.out.println(position2);
         System.out.println(position1.add(position2));
+        MapDirection north = MapDirection.NORTH;
+        Vector2d position3 = north.toUnitVector();
+        System.out.println(position3);
+        MapDirection south = MapDirection.SOUTH;
+        Vector2d position4 = south.toUnitVector();
+        System.out.println(position4);
+        MapDirection west = MapDirection.WEST;
+        Vector2d position5 = west.toUnitVector();
+        System.out.println(position5);
+        MapDirection east = MapDirection.EAST;
+        Vector2d position6 = east.toUnitVector();
+        System.out.println(position6);
     }
 }
