@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
@@ -11,6 +12,30 @@ public class World {
         System.out.println("system wystartowal");
         run(args);
         System.out.println("system zakonczyl dzialanie");
+        Animal zwierzak = new Animal();
+        System.out.println(zwierzak);
+        zwierzak.move(MoveDirection.FORWARD);
+        System.out.println(zwierzak);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.RIGHT);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.RIGHT);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        zwierzak.move(MoveDirection.FORWARD);
+        System.out.println(zwierzak);
+
     }
     public static void run(String[] args) {
         for(int i = 0; i < args.length; i++) {
@@ -39,4 +64,5 @@ public class World {
         System.out.println(position2);
         System.out.println(position1.add(position2));
     }
+
 }
