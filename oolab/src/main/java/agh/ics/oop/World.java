@@ -1,9 +1,10 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MapDirection;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
+
+import java.util.List;
 
 public class World {
     public World() {
@@ -29,7 +30,7 @@ public class World {
             }
         }
         System.out.println("Start");
-        MoveDirection[] directions = OptionsParser.parse(args);
+        List<MoveDirection> directions = OptionsParser.parse(args);
         for (MoveDirection direction : directions) {
             String message = switch (direction) {
                 case FORWARD -> "Zwierzak idzie do przodu";
