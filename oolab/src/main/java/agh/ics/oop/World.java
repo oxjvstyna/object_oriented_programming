@@ -12,27 +12,9 @@ public class World {
         System.out.println("system wystartowal");
         run(args);
         System.out.println("system zakonczyl dzialanie");
+
         Animal zwierzak = new Animal();
         System.out.println(zwierzak);
-        zwierzak.move(MoveDirection.FORWARD);
-        System.out.println(zwierzak);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.RIGHT);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.RIGHT);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
-        zwierzak.move(MoveDirection.FORWARD);
         zwierzak.move(MoveDirection.FORWARD);
         System.out.println(zwierzak);
 

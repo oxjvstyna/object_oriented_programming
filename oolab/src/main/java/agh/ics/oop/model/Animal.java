@@ -2,6 +2,7 @@ package agh.ics.oop.model;
 
 public class Animal {
     private static final Vector2d UPPER_LIMIT = new Vector2d(4, 4);
+    private static final Vector2d LOWER_LIMIT = new Vector2d(-4, -4);
     private Vector2d position;
     private MapDirection orientation;
 
@@ -30,11 +31,17 @@ public class Animal {
             break;
             case LEFT: this.orientation = this.orientation.previous();
             break;
-            case FORWARD, BACKWARD: // tutaj dodaj dolny i gorny limit lepiej
-                if (this.position.add(this.orientation.toUnitVector()).precedes(UPPER_LIMIT)){
-                    this.position = this.position.add(this.orientation.toUnitVector());
+            case FORWARD:
+                Vector2d forward = this.position.add(orientation.toUnitVector());
+                if(forward.precedes(UPPER_LIMIT) && forward.follows(LOWER_LIMIT)){
+                    this.position = forward;
                 }
             break;
+            case BACKWARD:
+                Vector2d backward = this.position.subtract(orientation.toUnitVector());
+                if(backward.follows(LOWER_LIMIT) && backward.precedes(UPPER_LIMIT))  {
+                    this.position = backward;
+                }
         }
     }
 }
