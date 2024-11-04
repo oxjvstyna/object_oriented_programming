@@ -1,8 +1,10 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.MapDirection;
+import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
+
+import java.util.List;
 
 public class World {
     public World() {
@@ -11,6 +13,11 @@ public class World {
         System.out.println("system wystartowal");
         run(args);
         System.out.println("system zakonczyl dzialanie");
+        List<MoveDirection> directions = OptionsParser.parse(args);
+        List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3, 4));
+        Simulation simulation = new Simulation(positions, directions);
+        simulation.run();
+
     }
     public static void run(String[] args) {
         for(int i = 0; i < args.length; i++) {
@@ -22,7 +29,7 @@ public class World {
             }
         }
         System.out.println("Start");
-        MoveDirection[] directions = OptionsParser.parse(args);
+        List<MoveDirection> directions = OptionsParser.parse(args);
         for (MoveDirection direction : directions) {
             String message = switch (direction) {
                 case FORWARD -> "Zwierzak idzie do przodu";
@@ -33,10 +40,5 @@ public class World {
             System.out.println(message);
         }
         System.out.println("Stop");
-        Vector2d position1 = new Vector2d(1,2);
-        System.out.println(position1);
-        Vector2d position2 = new Vector2d(-2,1);
-        System.out.println(position2);
-        System.out.println(position1.add(position2));
     }
 }
