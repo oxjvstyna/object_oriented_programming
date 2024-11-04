@@ -35,7 +35,7 @@ class OptionsParserTest {
         expected.add(MoveDirection.BACKWARD);
         expected.add(MoveDirection.RIGHT);
         expected.add(MoveDirection.LEFT);
-
+        // when
         List<MoveDirection> output = OptionsParser.parse((input));
         //then
         assertEquals(expected, output);
@@ -48,7 +48,6 @@ class OptionsParserTest {
         List<MoveDirection> expected = new ArrayList<>();
         // when
         List<MoveDirection> output = OptionsParser.parse((input));
-
         // then
         assertEquals(expected, output);
     }

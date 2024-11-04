@@ -13,11 +13,10 @@ public class World {
         System.out.println("system wystartowal");
         run(args);
         System.out.println("system zakonczyl dzialanie");
-
-        Animal zwierzak = new Animal();
-        System.out.println(zwierzak);
-        zwierzak.move(MoveDirection.FORWARD);
-        System.out.println(zwierzak);
+        List<MoveDirection> directions = OptionsParser.parse(args);
+        List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3, 4));
+        Simulation simulation = new Simulation(positions, directions);
+        simulation.run();
 
     }
     public static void run(String[] args) {
@@ -41,11 +40,5 @@ public class World {
             System.out.println(message);
         }
         System.out.println("Stop");
-        Vector2d position1 = new Vector2d(1,2);
-        System.out.println(position1);
-        Vector2d position2 = new Vector2d(-2,1);
-        System.out.println(position2);
-        System.out.println(position1.add(position2));
     }
-
 }
