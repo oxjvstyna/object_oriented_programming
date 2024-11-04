@@ -2,7 +2,7 @@ package agh.ics.oop.model;
 
 public class Animal {
     private static final Vector2d UPPER_LIMIT = new Vector2d(4, 4);
-    private static final Vector2d LOWER_LIMIT = new Vector2d(-4, -4);
+    private static final Vector2d LOWER_LIMIT = new Vector2d(0, 0);
     private Vector2d position;
     private MapDirection orientation;
 
@@ -23,6 +23,14 @@ public class Animal {
 
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
+    }
+
+    public Vector2d getPosition() {
+        return this.position;
+    }
+
+    public MapDirection getOrientation() {
+        return this.orientation;
     }
 
     public void move(MoveDirection direction){

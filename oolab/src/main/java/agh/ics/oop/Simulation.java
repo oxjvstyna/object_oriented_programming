@@ -24,4 +24,8 @@ public class Simulation {
             System.out.println("Zwierze " + (i % animalCount + 1) + " : " + animals.get(i % animalCount).toString());
         }
     }
+
+    public List<Animal> getAnimals() {
+        return animals;
+    }
 }
