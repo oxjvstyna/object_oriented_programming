@@ -18,7 +18,12 @@ public class Animal {
 
     @Override
     public String toString() {
-        return position.toString() + " " + orientation.toString();
+        return switch (orientation){
+            case EAST -> ">";
+            case NORTH -> "^";
+            case SOUTH -> "S";
+            case WEST -> "<";
+        };
     }
 
     public boolean isAt(Vector2d position) {
@@ -33,23 +38,24 @@ public class Animal {
         return this.orientation;
     }
 
-    public void move(MoveDirection direction){
+    public void move(MoveDirection direction, MoveValidator validator) {
         switch (direction){
             case RIGHT: this.orientation = this.orientation.next();
             break;
             case LEFT: this.orientation = this.orientation.previous();
             break;
             case FORWARD:
-                Vector2d forward = this.position.add(orientation.toUnitVector());
-                if(forward.precedes(UPPER_LIMIT) && forward.follows(LOWER_LIMIT)){
-                    this.position = forward;
+                Vector2d nextPositionForward = this.position.add(orientation.toUnitVector());
+                if(validator.canMoveTo(nextPositionForward)) {
+                    this.position = nextPositionForward;
                 }
-            break;
+                break;
             case BACKWARD:
-                Vector2d backward = this.position.subtract(orientation.toUnitVector());
-                if(backward.follows(LOWER_LIMIT) && backward.precedes(UPPER_LIMIT))  {
-                    this.position = backward;
+                Vector2d nextPositionBackward = this.position.subtract(orientation.toUnitVector());
+                if(validator.canMoveTo(nextPositionBackward)) {
+                    this.position = nextPositionBackward;
                 }
+                break;
         }
     }
 }
