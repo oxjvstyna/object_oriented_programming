@@ -1,8 +1,6 @@
 package agh.ics.oop.model;
 
 public class Animal {
-    private static final Vector2d UPPER_LIMIT = new Vector2d(4, 4);
-    private static final Vector2d LOWER_LIMIT = new Vector2d(0, 0);
     private Vector2d position;
     private MapDirection orientation;
 
