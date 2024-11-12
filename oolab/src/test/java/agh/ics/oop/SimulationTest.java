@@ -77,10 +77,10 @@ class SimulationTest {
     }
 
     @Test
-    void testSimulationRun() {
+    void visualSimulationCheck() {
         // given
         RectangularMap map = new RectangularMap(5, 5);
-        List<MoveDirection> directions = OptionsParser.parse(new String[]{"f", "b", "r", "l"});
+        List<MoveDirection> directions = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f"});
         List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
 
         // when
@@ -88,7 +88,7 @@ class SimulationTest {
         simulation.run();
 
         // then
-        System.out.println(map); // Visual check for correct simulation
+        System.out.println(map);
     }
     
 
@@ -131,6 +131,99 @@ class SimulationTest {
 
         assertEquals(new Vector2d(3, 4), animal2.getPosition());
         assertEquals(MapDirection.NORTH, animal2.getOrientation());
+    }
+
+    @Test
+    void doesAnimalPlacementNotCollide() {
+        // given
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal1 = new Animal(new Vector2d(2, 2));
+        Animal animal2 = new Animal(new Vector2d(2, 2)); // ten sam początkowy punkt
+
+        // when
+        boolean placedAnimal1 = map.place(animal1);
+        boolean placedAnimal2 = map.place(animal2);
+
+        // then
+        assertTrue(placedAnimal1);
+        assertFalse(placedAnimal2);
+    }
+
+    @Test
+    void doesAnimalFullyRotate() {
+        // given
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal = new Animal(new Vector2d(2, 2));
+
+        // when
+        animal.move(MoveDirection.RIGHT, map);
+        animal.move(MoveDirection.RIGHT, map);
+        animal.move(MoveDirection.RIGHT, map);
+        animal.move(MoveDirection.RIGHT, map);
+
+        // then
+        assertEquals(MapDirection.NORTH, animal.getOrientation());
+    }
+
+    @Test
+    void doAnimalsNotCollideDuringMovement() {
+        // given
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal1 = new Animal(new Vector2d(2, 2));
+        Animal animal2 = new Animal(new Vector2d(2, 3));
+        map.place(animal1);
+        map.place(animal2);
+
+        // when
+        animal1.move(MoveDirection.FORWARD, map);
+
+        // then
+        assertEquals(new Vector2d(2, 2), animal1.getPosition());
+        assertEquals(new Vector2d(2, 3), animal2.getPosition());
+    }
+
+    @Test
+    void doAnimalsMoveCorrectlyWithinLongSequence() {
+        // given
+        RectangularMap map = new RectangularMap(10, 10);
+        Animal animal = new Animal(new Vector2d(5, 5));
+        map.place(animal);
+
+        // when
+        MoveDirection[] moves = {
+                MoveDirection.FORWARD, MoveDirection.RIGHT,
+                MoveDirection.FORWARD, MoveDirection.LEFT,
+                MoveDirection.FORWARD, MoveDirection.FORWARD,
+                MoveDirection.RIGHT, MoveDirection.BACKWARD,
+                MoveDirection.LEFT, MoveDirection.FORWARD
+        };
+
+        for (MoveDirection move : moves) {
+            animal.move(move, map);
+        }
+
+        // then
+        assertEquals(new Vector2d(5, 9), animal.getPosition());
+        assertEquals(MapDirection.NORTH, animal.getOrientation());
+    }
+
+    @Test
+    void canAnimalsNotBePlacedOutOfBounds() {
+        // given
+        RectangularMap map = new RectangularMap(5, 5);
+        Animal animal1 = new Animal(new Vector2d(6, 6));
+        Animal animal2 = new Animal(new Vector2d(-2, 4));
+        Animal animal3 = new Animal(new Vector2d(-2, -10));
+        Animal animal4 = new Animal(new Vector2d(3, 4));
+
+        // when
+        map.place(animal1);
+        map.place(animal2);
+        map.place(animal3);
+        map.place(animal4);
+
+        // then
+        assertEquals(1, map.getAnimals().size());
     }
 }
 
