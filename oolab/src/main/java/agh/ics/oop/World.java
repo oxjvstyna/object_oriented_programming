@@ -18,10 +18,30 @@ public class World {
         Simulation simulation = new Simulation(positions, directions, map);
         simulation.run();
 
+
+        Animal animal1 = new Animal(new Vector2d(5, 5));
+        Animal animal2 = new Animal(new Vector2d(4, 5));
+
         GrassField grassField = new GrassField(20);
+        grassField.place(animal1);
+        grassField.place(animal2);
         grassField.generateGrass();
         System.out.println(grassField);
-
+        grassField.move(animal1, MoveDirection.LEFT);
+        grassField.move(animal2, MoveDirection.RIGHT);
+        grassField.move(animal1, MoveDirection.FORWARD);
+        System.out.println(grassField);
+        grassField.move(animal2, MoveDirection.FORWARD);
+        System.out.println(grassField);
+        grassField.move(animal1, MoveDirection.FORWARD);
+        System.out.println(grassField);
+        grassField.move(animal2, MoveDirection.FORWARD);
+        System.out.println(grassField);
+        grassField.move(animal1, MoveDirection.FORWARD);
+        System.out.println(grassField);
+        grassField.move(animal2, MoveDirection.FORWARD);
+        System.out.println(grassField);
+        grassField.move(animal1, MoveDirection.FORWARD);
 
     }
     public static void run(String[] args) {
