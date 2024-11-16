@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.RectangularMap;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 
 import java.util.List;
 
@@ -20,6 +17,11 @@ public class World {
         List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3, 4), new Vector2d(5, 6));
         Simulation simulation = new Simulation(positions, directions, map);
         simulation.run();
+
+        GrassField grassField = new GrassField(20);
+        grassField.generateGrass();
+        System.out.println(grassField);
+
 
     }
     public static void run(String[] args) {
