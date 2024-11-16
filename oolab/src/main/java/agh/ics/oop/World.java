@@ -12,37 +12,12 @@ public class World {
         run(args);
         System.out.println("system zakonczyl dzialanie");
 
-        RectangularMap map = new RectangularMap(10, 10);
         List<MoveDirection> directions = OptionsParser.parse(args);
-        List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3, 4), new Vector2d(5, 6));
-        Simulation simulation = new Simulation(positions, directions, map);
-        simulation.run();
+        List<Vector2d> positions = List.of(new Vector2d(22,25), new Vector2d(32, 4), new Vector2d(15, 6));
 
-
-        Animal animal1 = new Animal(new Vector2d(5, 5));
-        Animal animal2 = new Animal(new Vector2d(4, 5));
-
-        GrassField grassField = new GrassField(20);
-        grassField.place(animal1);
-        grassField.place(animal2);
-        grassField.generateGrass();
-        System.out.println(grassField);
-        grassField.move(animal1, MoveDirection.LEFT);
-        grassField.move(animal2, MoveDirection.RIGHT);
-        grassField.move(animal1, MoveDirection.FORWARD);
-        System.out.println(grassField);
-        grassField.move(animal2, MoveDirection.FORWARD);
-        System.out.println(grassField);
-        grassField.move(animal1, MoveDirection.FORWARD);
-        System.out.println(grassField);
-        grassField.move(animal2, MoveDirection.FORWARD);
-        System.out.println(grassField);
-        grassField.move(animal1, MoveDirection.FORWARD);
-        System.out.println(grassField);
-        grassField.move(animal2, MoveDirection.FORWARD);
-        System.out.println(grassField);
-        grassField.move(animal1, MoveDirection.FORWARD);
-
+        GrassField grassField = new GrassField(50);
+        Simulation<WorldElement, Vector2d> grassSimulation = new Simulation<>(positions, directions, grassField);
+        grassSimulation.run();
     }
     public static void run(String[] args) {
         for(int i = 0; i < args.length; i++) {
