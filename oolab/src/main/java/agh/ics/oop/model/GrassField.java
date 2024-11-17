@@ -1,20 +1,23 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
+import agh.ics.oop.model.util.RandomPositionGenerator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GrassField extends AbstractWorldMap{
 
-    private final int grassCount;
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
 
     public GrassField(int grassCount) {
-        this.grassCount = grassCount;
-        generateGrass();
+        int maxWidth = (int) (Math.sqrt(10 * grassCount) + 1);
+        int maxHeight = (int) (Math.sqrt(10 * grassCount) + 1);
+
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(maxWidth, maxHeight, grassCount);
+        for (Vector2d grassPosition : randomPositionGenerator) {
+            grasses.put(grassPosition, new Grass(grassPosition));
+        }
+        updateCoordinates(new Animal(new Vector2d(maxWidth, maxHeight)));
     }
 
     @Override
@@ -69,23 +72,6 @@ public class GrassField extends AbstractWorldMap{
             leftHeight = animal.getPosition().getY();
         }
     }
-
-    public void generateGrass(){
-        for(int i = 0; i < grassCount; i++){
-            int r1 = (int) (Math.random() * Math.sqrt(grassCount * 10) + 1);
-            int r2 = (int) (Math.random() * Math.sqrt(grassCount * 10) + 1);
-            Vector2d position = new Vector2d(r1, r2);
-            if (isOccupied(position)) {
-                i--;
-            }
-            else{
-                updateCoordinates(new Animal(position));
-                Grass newGrass = new Grass(position);
-                grasses.put(newGrass.getPosition(), newGrass);
-            }
-        }
-    }
-
 
     public Map<Vector2d, Grass> getGrasses() {
         return grasses;

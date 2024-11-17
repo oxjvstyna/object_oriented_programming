@@ -13,12 +13,11 @@ public class World {
         System.out.println("system zakonczyl dzialanie");
 
         List<MoveDirection> directions = OptionsParser.parse(args);
-        List<Vector2d> positions = List.of(new Vector2d(22,25), new Vector2d(32, 4), new Vector2d(15, 6));
+        List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(1, 4), new Vector2d(3, 2));
 
-        GrassField grassField = new GrassField(50);
+        GrassField grassField = new GrassField(10);
         Simulation grassSimulation = new Simulation(positions, directions, grassField);
         grassSimulation.run();
-        System.out.println(grassField.getElements());
     }
     public static void run(String[] args) {
         for(int i = 0; i < args.length; i++) {
