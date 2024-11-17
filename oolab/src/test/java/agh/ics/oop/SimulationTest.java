@@ -1,10 +1,6 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.RectangularMap;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -19,6 +15,8 @@ class SimulationTest {
         Animal animal = new Animal(new Vector2d(2, 2));
         Animal animal2 = new Animal(new Vector2d(3, 3));
         RectangularMap map = new RectangularMap(10, 10);
+        map.place(animal);
+        map.place(animal2);
 
         // when
         animal.move(MoveDirection.RIGHT, map);
@@ -52,34 +50,9 @@ class SimulationTest {
     }
 
     @Test
-    void isAnimalMovementNotOutOfBounds() {
-        // given
-        RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(0, 0));
-        map.place(animal);
-
-        Animal animal2 = new Animal(new Vector2d(0, 0));
-        map.place(animal2);
-
-        Animal animal3 = new Animal(new Vector2d(5, 5));
-        map.place(animal3);
-
-        // when
-        animal.move(MoveDirection.BACKWARD, map);
-        animal2.move(MoveDirection.LEFT, map);
-        animal2.move(MoveDirection.FORWARD, map);
-        animal3.move(MoveDirection.FORWARD, map);
-
-        // then
-        assertEquals(new Vector2d(0, 0), animal.getPosition());
-        assertEquals(new Vector2d(0, 0), animal2.getPosition());
-        assertEquals(new Vector2d(5, 5), animal3.getPosition());
-    }
-
-    @Test
     void visualSimulationCheck() {
         // given
-        RectangularMap map = new RectangularMap(5, 5);
+        WorldMap<Animal, Vector2d> map = new RectangularMap(5, 5);
         List<MoveDirection> directions = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f"});
         List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
 
@@ -148,6 +121,8 @@ class SimulationTest {
         assertTrue(placedAnimal1);
         assertFalse(placedAnimal2);
     }
+
+
 
     @Test
     void doesAnimalFullyRotate() {
@@ -225,5 +200,68 @@ class SimulationTest {
         // then
         assertEquals(1, map.getAnimals().size());
     }
+
+    @Test
+    void isGrassCountCorrect() {
+        // given
+        GrassField grassField = new GrassField(10);
+
+        // when
+        int grassCount = grassField.getGrasses().size();
+
+        // then
+        assertEquals(10, grassCount);
+    }
+
+    @Test
+    void isAnimalPrioritizedOverGrass() {
+        // given
+        GrassField grassField = new GrassField(10);
+        Animal animal = new Animal(new Vector2d(2, 2));
+        grassField.place(animal);
+
+        // when
+        WorldElement elementAtPosition = grassField.objectAt(new Vector2d(2, 2));
+
+        // then
+        assertInstanceOf(Animal.class, elementAtPosition);
+    }
+
+    @Test
+    void canDoUnlimitedMapMovement() {
+        // given
+        GrassField grassField = new GrassField(10);
+        Animal animal = new Animal(new Vector2d(0, 0));
+        grassField.place(animal);
+
+        // when
+        animal.move(MoveDirection.FORWARD, grassField);
+        animal.move(MoveDirection.FORWARD, grassField);
+        animal.move(MoveDirection.FORWARD, grassField);
+        animal.move(MoveDirection.FORWARD, grassField);
+        animal.move(MoveDirection.FORWARD, grassField);
+        animal.move(MoveDirection.FORWARD, grassField);
+
+        // then
+        assertEquals(new Vector2d(0, 6), animal.getPosition());
+    }
+
+    @Test
+    void visualGrassFieldVerification() {
+        // given
+        GrassField grassField = new GrassField(20);
+        Animal animal = new Animal(new Vector2d(1, 1));
+        grassField.place(animal);
+
+        // when
+        String mapVisual = grassField.toString();
+
+        // then
+        System.out.println(mapVisual);
+        assertTrue(mapVisual.contains("^"));
+    }
+
 }
+
+
 

@@ -16,8 +16,9 @@ public class World {
         List<Vector2d> positions = List.of(new Vector2d(22,25), new Vector2d(32, 4), new Vector2d(15, 6));
 
         GrassField grassField = new GrassField(50);
-        Simulation<WorldElement, Vector2d> grassSimulation = new Simulation<>(positions, directions, grassField);
+        Simulation grassSimulation = new Simulation(positions, directions, grassField);
         grassSimulation.run();
+        System.out.println(grassField.getElements());
     }
     public static void run(String[] args) {
         for(int i = 0; i < args.length; i++) {

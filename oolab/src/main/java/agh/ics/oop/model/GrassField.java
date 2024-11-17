@@ -2,77 +2,45 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class GrassField implements WorldMap<WorldElement, Vector2d> {
+public class GrassField extends AbstractWorldMap{
 
     private final int grassCount;
-    private final Map<Vector2d, Animal> animals = new HashMap<>();
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
-
-    private int rightWidth = 0;
-    private int rightHeight = 0;
-    private int leftWidth = 0;
-    private int leftHeight = 0;
 
     public GrassField(int grassCount) {
         this.grassCount = grassCount;
+        generateGrass();
     }
 
     @Override
-    public String toString() {
-        MapVisualizer toDraw = new MapVisualizer(this);
-        return toDraw.draw(new Vector2d(leftWidth, leftHeight), new Vector2d(rightWidth, rightHeight));
+    public boolean place(Animal animal) {
+        updateCoordinates(animal);
+        return super.place(animal);
     }
 
     @Override
-    public boolean place(WorldElement object) {
-        updateCoordinates(object);
-        if(canMoveTo(object.getPosition())){
-            if (object instanceof Animal) {
-                animals.put(object.getPosition(), (Animal) object);
-            }
-            else {
-                grasses.put(object.getPosition(), (Grass) object);
-            }
+    public void move(Animal animal, MoveDirection direction) {
+        super.move(animal, direction);
+        updateCoordinates(animal);
+    }
+
+    @Override
+    public boolean canMoveTo(Vector2d position) {
+        if(objectAt(position) instanceof Grass){
             return true;
         }
-        return false;
-    }
-
-    private void updateCoordinates(WorldElement object) {
-        if(object.getPosition().getX() > rightWidth){
-            rightWidth = object.getPosition().getX();
-        }
-        if(object.getPosition().getX() < leftWidth){
-            leftWidth = object.getPosition().getX();
-        }
-        if(object.getPosition().getY() > rightHeight){
-            rightHeight = object.getPosition().getY();
-        }
-        if(object.getPosition().getY() < leftHeight){
-            leftHeight = object.getPosition().getY();
-        }
-    }
-
-    @Override
-    public void move(WorldElement animal, MoveDirection direction) {
-        animals.remove(animal.getPosition(), (Animal) animal);
-        ((Animal) animal).move(direction, this);
-        updateCoordinates(animal);
-        animals.put(animal.getPosition(), (Animal) animal);
-    }
-
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position) || grasses.containsKey(position);
+        else return super.canMoveTo(position);
     }
 
     @Override
     public WorldElement objectAt(Vector2d position) {
         if(animals.containsKey(position)){
-            return animals.get(position);
+            return super.objectAt(position);
         }
         if(grasses.containsKey(position)){
             return grasses.get(position);
@@ -81,11 +49,25 @@ public class GrassField implements WorldMap<WorldElement, Vector2d> {
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
-        if (grasses.containsKey(position)){
-            return true;
+    public List<WorldElement> getElements() {
+        List<WorldElement> elements = super.getElements();
+        elements.addAll(grasses.values());
+        return elements;
+    }
+
+    private void updateCoordinates(Animal animal) {
+        if(animal.getPosition().getX() > rightWidth){
+            rightWidth = animal.getPosition().getX();
         }
-        else return !isOccupied(position);
+        if(animal.getPosition().getX() < leftWidth){
+            leftWidth = animal.getPosition().getX();
+        }
+        if(animal.getPosition().getY() > rightHeight){
+            rightHeight = animal.getPosition().getY();
+        }
+        if(animal.getPosition().getY() < leftHeight){
+            leftHeight = animal.getPosition().getY();
+        }
     }
 
     public void generateGrass(){
@@ -93,11 +75,19 @@ public class GrassField implements WorldMap<WorldElement, Vector2d> {
             int r1 = (int) (Math.random() * Math.sqrt(grassCount * 10) + 1);
             int r2 = (int) (Math.random() * Math.sqrt(grassCount * 10) + 1);
             Vector2d position = new Vector2d(r1, r2);
-            if (isOccupied(position)){
+            if (isOccupied(position)) {
                 i--;
             }
-            Grass newGrass = new Grass(position);
-            this.place(newGrass);
+            else{
+                updateCoordinates(new Animal(position));
+                Grass newGrass = new Grass(position);
+                grasses.put(newGrass.getPosition(), newGrass);
+            }
         }
+    }
+
+
+    public Map<Vector2d, Grass> getGrasses() {
+        return grasses;
     }
 }
