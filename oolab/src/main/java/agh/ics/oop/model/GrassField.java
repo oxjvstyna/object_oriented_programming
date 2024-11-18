@@ -29,11 +29,11 @@ public class GrassField extends AbstractWorldMap{
     @Override
     public void move(Animal animal, MoveDirection direction) {
         super.move(animal, direction);
-        updateCoordinates(animal);
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
+        updateCoordinates(new Animal(position));
         if(objectAt(position) instanceof Grass){
             return true;
         }
