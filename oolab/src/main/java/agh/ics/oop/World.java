@@ -13,9 +13,9 @@ public class World {
         System.out.println("system zakonczyl dzialanie");
 
         List<MoveDirection> directions = OptionsParser.parse(args);
-        List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(1, 4), new Vector2d(3, 2));
+        List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(1, 4));
 
-        GrassField grassField = new GrassField(5);
+        GrassField grassField = new GrassField(10);
         Simulation grassSimulation = new Simulation(positions, directions, grassField);
         grassSimulation.run();
     }
