@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
@@ -21,9 +22,9 @@ public class GrassField extends AbstractWorldMap{
     }
 
     @Override
-    public boolean place(Animal animal) {
+    public void place(Animal animal) throws IncorrectPositionException {
         updateCoordinates(animal);
-        return super.place(animal);
+        super.place(animal);
     }
 
     @Override

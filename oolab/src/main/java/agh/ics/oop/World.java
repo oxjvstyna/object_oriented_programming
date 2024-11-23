@@ -9,15 +9,18 @@ public class World {
     }
     public static void main(String[] args) {
         System.out.println("system wystartowal");
-        run(args);
-        System.out.println("system zakonczyl dzialanie");
+        try{
+            run(args);
+            System.out.println("system zakonczyl dzialanie");
+            List<MoveDirection> directions = OptionsParser.parse(args);
+            List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(1, 4));
 
-        List<MoveDirection> directions = OptionsParser.parse(args);
-        List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(1, 4));
-
-        GrassField grassField = new GrassField(10);
-        Simulation grassSimulation = new Simulation(positions, directions, grassField);
-        grassSimulation.run();
+            GrassField grassField = new GrassField(10);
+            Simulation grassSimulation = new Simulation(positions, directions, grassField);
+            grassSimulation.run();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Wystapil blad: " + e.getMessage());
+        }
     }
     public static void run(String[] args) {
         for(int i = 0; i < args.length; i++) {
