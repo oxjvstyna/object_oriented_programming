@@ -1,7 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.IncorrectPositionException;
-import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
@@ -68,6 +68,7 @@ public class GrassField extends AbstractWorldMap{
             leftHeight = animal.getPosition().getY();
         }
     }
+
 
     public Map<Vector2d, Grass> getGrasses() {
         return grasses;

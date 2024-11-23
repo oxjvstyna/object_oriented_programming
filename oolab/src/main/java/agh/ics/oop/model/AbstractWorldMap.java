@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 
@@ -27,7 +28,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     @Override
     public String toString() {
         MapVisualizer toDraw = new MapVisualizer(this);
-        return toDraw.draw(new Vector2d(leftWidth, leftHeight), new Vector2d(rightWidth, rightHeight));
+        return toDraw.draw(getCurrentBounds().lowerLeft(), getCurrentBounds().upperRight());
     }
 
     @Override
@@ -39,7 +40,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
             throw new IncorrectPositionException(animal.getPosition());
         }
     }
-
 
     @Override
     public boolean isOccupied(Vector2d position) {
@@ -63,4 +63,15 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         return new ArrayList<>(animals.values());
     }
 
+    @Override
+    public Boundary getCurrentBounds(){
+        Vector2d left = new Vector2d(leftWidth, leftHeight);
+        Vector2d right = new Vector2d(rightWidth, rightHeight);
+        List<WorldElement> elements = getElements();
+        for(WorldElement element : elements){
+            left = left.lowerLeft(element.getPosition());
+            right = right.upperRight(element.getPosition());
+        }
+        return new Boundary(left, right);
+    }
 }
