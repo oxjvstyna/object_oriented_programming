@@ -29,10 +29,8 @@ public class Simulation {
     public void run(){
         int animalCount = animals.size();
         int moveCount = moves.size();
-        System.out.println(currentMap);
         for (int i = 0; i < moveCount; i++) {
             currentMap.move(animals.get(i % animalCount), moves.get(i));
-            System.out.println(currentMap);
         }
     }
 
