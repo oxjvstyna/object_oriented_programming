@@ -8,19 +8,11 @@ import java.util.Map;
 public class RectangularMap extends AbstractWorldMap {
 
     public RectangularMap(int width, int height) {
-        this.rightWidth = width;
-        this.rightHeight = height;
-        this.leftWidth = 0;
-        this.leftHeight = 0;
+        lowerLeft = new Vector2d(0, 0);
+        upperRight = new Vector2d(width, height);
     }
-
     public Map<Vector2d, Animal> getAnimals() {
         return animals;
-    }
-
-    @Override
-    public Boundary getCurrentBounds(){
-        return new Boundary(new Vector2d(leftWidth, leftHeight), new Vector2d(rightWidth, rightHeight));
     }
 }
 

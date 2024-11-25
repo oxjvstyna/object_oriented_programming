@@ -24,6 +24,7 @@ public class Simulation {
             }
 
         }
+
     }
 
     public void run(){

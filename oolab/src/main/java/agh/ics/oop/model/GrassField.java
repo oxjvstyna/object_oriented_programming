@@ -18,18 +18,15 @@ public class GrassField extends AbstractWorldMap{
         for (Vector2d grassPosition : randomPositionGenerator) {
             grasses.put(grassPosition, new Grass(grassPosition));
         }
-        updateCoordinates(new Animal(new Vector2d(maxWidth, maxHeight)));
     }
 
     @Override
     public void place(Animal animal) throws IncorrectPositionException {
-        updateCoordinates(animal);
         super.place(animal);
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        updateCoordinates(new Animal(position));
         if(objectAt(position) instanceof Grass){
             return true;
         }
@@ -53,20 +50,16 @@ public class GrassField extends AbstractWorldMap{
         elements.addAll(grasses.values());
         return elements;
     }
-
-    private void updateCoordinates(Animal animal) {
-        if(animal.getPosition().getX() > rightWidth){
-            rightWidth = animal.getPosition().getX();
+    @Override
+    public Boundary getCurrentBounds(){
+        Vector2d left = new Vector2d(upperRight.getX(), upperRight.getY());
+        Vector2d right = new Vector2d(lowerLeft.getX(), lowerLeft.getY());
+        List<WorldElement> elements = getElements();
+        for(WorldElement element : elements){
+            left = left.lowerLeft(element.getPosition());
+            right = right.upperRight(element.getPosition());
         }
-        if(animal.getPosition().getX() < leftWidth){
-            leftWidth = animal.getPosition().getX();
-        }
-        if(animal.getPosition().getY() > rightHeight){
-            rightHeight = animal.getPosition().getY();
-        }
-        if(animal.getPosition().getY() < leftHeight){
-            leftHeight = animal.getPosition().getY();
-        }
+        return new Boundary(left, right);
     }
 
 

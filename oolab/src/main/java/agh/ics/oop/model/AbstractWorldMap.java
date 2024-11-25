@@ -13,10 +13,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
 
-    protected int rightWidth = 0;
-    protected int rightHeight = 0;
-    protected int leftWidth = 0;
-    protected int leftHeight = 0;
+    protected Vector2d lowerLeft = new Vector2d(0, 0);
+    protected Vector2d upperRight = new Vector2d(0, 0);
     protected final List<MapChangeListener> observers = new ArrayList<>();
 
     public void addObserver(MapChangeListener observer) {
@@ -68,8 +66,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return (position.precedes(new Vector2d(rightWidth, rightHeight))) &&
-                (position.follows(new Vector2d(leftWidth, leftHeight))) &&
+        return (position.precedes(upperRight)) &&
+                (position.follows(lowerLeft)) &&
                 !isOccupied(position);
     }
 
@@ -84,14 +82,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     @Override
-    public Boundary getCurrentBounds(){
-        Vector2d left = new Vector2d(leftWidth, leftHeight);
-        Vector2d right = new Vector2d(rightWidth, rightHeight);
-        List<WorldElement> elements = getElements();
-        for(WorldElement element : elements){
-            left = left.lowerLeft(element.getPosition());
-            right = right.upperRight(element.getPosition());
-        }
-        return new Boundary(left, right);
+    public Boundary getCurrentBounds() {
+        return new Boundary(lowerLeft, upperRight);
     }
 }
