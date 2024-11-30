@@ -1,4 +1,5 @@
 package agh.ics.oop;
+
 import agh.ics.oop.model.MoveDirection;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ class OptionsParserTest {
         expected.add(MoveDirection.LEFT);
 
         // when
-        List<MoveDirection> output = OptionsParser.parse((input));
+        List<MoveDirection> output = OptionsParser.parse(input);
 
         // then
         assertEquals(expected, output);
@@ -30,26 +31,24 @@ class OptionsParserTest {
     void areInvalidDirectionsHandledCorrectly() {
         // given
         String[] input = {"f", "n", "b", "x", "r", "y", "l"};
-        List<MoveDirection> expected = new ArrayList<>();
-        expected.add(MoveDirection.FORWARD);
-        expected.add(MoveDirection.BACKWARD);
-        expected.add(MoveDirection.RIGHT);
-        expected.add(MoveDirection.LEFT);
-        // when
-        List<MoveDirection> output = OptionsParser.parse((input));
-        //then
-        assertEquals(expected, output);
+
+        // when & then
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> OptionsParser.parse(input)
+        );
     }
 
     @Test
     void areAllInvalidDirectionsHandledCorrectly() {
         // given
         String[] input = {"v", "x", "y", "z"};
-        List<MoveDirection> expected = new ArrayList<>();
-        // when
-        List<MoveDirection> output = OptionsParser.parse((input));
-        // then
-        assertEquals(expected, output);
+
+        // when & then
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> OptionsParser.parse(input)
+        );
     }
 
     @Test
@@ -57,11 +56,11 @@ class OptionsParserTest {
         // given
         String[] input = {};
         List<MoveDirection> expected = new ArrayList<>();
+
         // when
-        List<MoveDirection> output = OptionsParser.parse((input));
+        List<MoveDirection> output = OptionsParser.parse(input);
 
         // then
         assertEquals(expected, output);
     }
-
 }

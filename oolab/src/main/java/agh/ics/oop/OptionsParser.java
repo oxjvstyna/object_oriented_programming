@@ -11,16 +11,13 @@ public class OptionsParser {
     public static List<MoveDirection> parse(String[] args) {
         List<MoveDirection> directions = new ArrayList<MoveDirection>();
         for (String arg : args) {
-            MoveDirection value = switch (arg) {
-                case "f" -> MoveDirection.FORWARD;
-                case "b" -> MoveDirection.BACKWARD;
-                case "r" -> MoveDirection.RIGHT;
-                case "l" -> MoveDirection.LEFT;
-                default -> null;
-                };
-            if (value != null){
-                directions.add(value);
-            }
+            switch (arg) {
+                case "f" -> directions.add(MoveDirection.FORWARD);
+                case "b" -> directions.add(MoveDirection.BACKWARD);
+                case "r" -> directions.add(MoveDirection.RIGHT);
+                case "l" -> directions.add(MoveDirection.LEFT);
+                default -> throw new IllegalArgumentException(arg + " jest nieprawidlowym ruchem.");
+                }
         }
         return directions;
     }

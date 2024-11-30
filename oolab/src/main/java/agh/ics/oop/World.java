@@ -5,40 +5,22 @@ import agh.ics.oop.model.*;
 import java.util.List;
 
 public class World {
-    public World() {
-    }
     public static void main(String[] args) {
-        System.out.println("system wystartowal");
-        run(args);
-        System.out.println("system zakonczyl dzialanie");
 
-        List<MoveDirection> directions = OptionsParser.parse(args);
-        List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(1, 4));
+        System.out.println("System wystartowal");
+        try{
+            List<MoveDirection> directions = OptionsParser.parse(args);
+            List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(9, 4));
 
-        GrassField grassField = new GrassField(10);
-        Simulation grassSimulation = new Simulation(positions, directions, grassField);
-        grassSimulation.run();
-    }
-    public static void run(String[] args) {
-        for(int i = 0; i < args.length; i++) {
-            System.out.print(args[i]);
-            if (i != args.length - 1) {
-                System.out.print(", ");
-            } else {
-                System.out.println();
-            }
+            GrassField grassField = new GrassField(10);
+            ConsoleMapDisplay logger = new ConsoleMapDisplay();
+            grassField.addObserver(logger);
+
+            Simulation grassSimulation = new Simulation(positions, directions, grassField);
+            grassSimulation.run();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Wystapil blad: " + e.getMessage());
         }
-        System.out.println("Start");
-        List<MoveDirection> directions = OptionsParser.parse(args);
-        for (MoveDirection direction : directions) {
-            String message = switch (direction) {
-                case FORWARD -> "Zwierzak idzie do przodu";
-                case BACKWARD -> "Zwierzak idzie do tylu";
-                case RIGHT -> "Zwierzak skreca w prawo";
-                case LEFT -> "Zwierzak skreca w lewo";
-            };
-            System.out.println(message);
-        }
-        System.out.println("Stop");
+        System.out.println("System zakonczyl dzialanie");
     }
 }
