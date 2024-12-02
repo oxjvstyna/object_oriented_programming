@@ -2,6 +2,8 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import javafx.application.Application;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class World {
 
             SimulationEngine engine = new SimulationEngine(simulations);
             engine.runAsyncInThreadPool();
+
 
             Application.launch(SimulationApp.class, args);
 
