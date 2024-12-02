@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
+import javafx.application.Application;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class World {
             List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(9, 4));
             ConsoleMapDisplay logger = new ConsoleMapDisplay();
 
-            for (int i = 0; i < 1000; i++){
+            for (int i = 0; i < 1; i++){
                 GrassField grassField = new GrassField(10);
                 RectangularMap rectangle = new RectangularMap(2, 10);
                 grassField.addObserver(logger);
@@ -27,6 +28,9 @@ public class World {
 
             SimulationEngine engine = new SimulationEngine(simulations);
             engine.runAsyncInThreadPool();
+
+            Application.launch(SimulationApp.class, args);
+
         } catch (IllegalArgumentException e) {
             System.out.println("Wystapil blad: " + e.getMessage());
         }
