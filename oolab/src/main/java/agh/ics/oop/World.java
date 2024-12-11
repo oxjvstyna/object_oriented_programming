@@ -2,8 +2,6 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import javafx.application.Application;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +25,9 @@ public class World {
                 simulations.add(new Simulation(positions, directions, grassField));
                 simulations.add(new Simulation(positions, directions, rectangle));
             }
-
             SimulationEngine engine = new SimulationEngine(simulations);
             engine.runAsyncInThreadPool();
 
-
-            Application.launch(SimulationApp.class, args);
 
         } catch (IllegalArgumentException e) {
             System.out.println("Wystapil blad: " + e.getMessage());

@@ -63,7 +63,7 @@ class SimulationTest {
     @Test
     void visualSimulationCheck() {
         // given
-        WorldMap<Animal, Vector2d> map = new RectangularMap(5, 5);
+        AbstractWorldMap map = new RectangularMap(5, 5);
         List<MoveDirection> directions = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f"});
         List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
 
