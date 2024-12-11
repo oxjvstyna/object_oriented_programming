@@ -5,18 +5,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
             fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+
     <top>
         <VBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER">
             <TextField fx:id="movesInput" promptText="Enter list of moves here" />
-            <Button  fx:id="startButton"  text="Start" onAction="#onSimulationStartClicked" />
+            <Button text="Start" onAction="#onSimulationStartClicked" />
         </VBox>
     </top>
     <center>
+        <VBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER">
         <Label fx:id="infoLabel" text="All animals will be living here!" textAlignment="CENTER"/>
+            <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true">
+
+            </GridPane>
+        </VBox>
     </center>
     <bottom>
         <Label fx:id="descriptionLabel" text="Move descriptions here!" alignment="CENTER"

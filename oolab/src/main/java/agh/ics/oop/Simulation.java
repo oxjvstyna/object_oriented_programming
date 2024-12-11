@@ -35,7 +35,7 @@ public class Simulation implements Runnable {
         for (int i = 0; i < moveCount; i++) {
             currentMap.move(animals.get(i % animalCount), moves.get(i));
             try {
-                Thread.sleep(250);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 System.err.println("Symulacja przerwana: " + e.getMessage());
                 Thread.currentThread().interrupt();
