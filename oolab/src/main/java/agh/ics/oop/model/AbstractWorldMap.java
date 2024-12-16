@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.World;
 import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
@@ -9,7 +10,6 @@ import java.util.*;
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
-
     protected final UUID id = UUID.randomUUID();
     protected Vector2d lowerLeft = new Vector2d(0, 0);
     protected Vector2d upperRight = new Vector2d(0, 0);
@@ -28,8 +28,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                 observer.mapChanged(this, message);
         }
     }
-
-
 
     @Override
     public void move(Animal animal, MoveDirection direction) {

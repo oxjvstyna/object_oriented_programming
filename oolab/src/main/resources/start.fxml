@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            minHeight="250.0" minWidth="850.0"
+            fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+
+    <top>
+        <VBox spacing="35" alignment="CENTER" BorderPane.alignment="CENTER" style="-fx-padding: 20;">
+            <Label text="Simulation" style="-fx-font-size: 50px; -fx-font-weight: bold;"/>
+            <Label text="Podaj listę ruchów." style="-fx-font-size: 24px;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="25" alignment="CENTER" BorderPane.alignment="CENTER" style="-fx-padding: 50;">
+            <TextField fx:id="movesInput" style="-fx-font-size: 16px; -fx-pref-width: 300px; -fx-padding: 10;"/>
+            <Button text="Start" onAction="#onSimulationStartClicked" style="-fx-font-size: 18px; -fx-pref-width: 200px; -fx-padding: 15;"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="15" alignment="CENTER" BorderPane.alignment="CENTER" style="-fx-padding: 10;">
+            <Label fx:id="descriptionLabel" text="Po podaniu listy ruchów naciśnij przycisk start." style="-fx-font-size: 14px;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -33,7 +33,6 @@ public class SimulationEngine {
         for(Simulation simulation : simulations){
             threadPool.submit(simulation);
         }
-        awaitSimulationEnd();
     }
     public void awaitSimulationEnd(){
         try{
