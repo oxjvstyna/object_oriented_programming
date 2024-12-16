@@ -16,8 +16,7 @@ import java.util.List;
 public class SimulationApp extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("start.fxml"));
         BorderPane viewRoot = loader.load();
         configureStage(primaryStage, viewRoot);
         primaryStage.show();

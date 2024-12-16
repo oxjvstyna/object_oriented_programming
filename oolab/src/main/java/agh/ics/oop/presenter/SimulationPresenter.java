@@ -2,25 +2,32 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
+import agh.ics.oop.SimulationApp;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import agh.ics.oop.model.AbstractWorldMap;
 import javafx.scene.control.TextField;
 import javafx.application.Application;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
 
 
 public class SimulationPresenter implements MapChangeListener {
+
     @FXML
     private Label infoLabel;
     @FXML
@@ -48,7 +55,6 @@ public class SimulationPresenter implements MapChangeListener {
 
         clearGrid();
 
-        // Dodaj kolumny i wiersze z odpowiednimi rozmiarami
         for (int i = 0; i < cols + 1; i++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
         }
@@ -73,7 +79,6 @@ public class SimulationPresenter implements MapChangeListener {
             mapGrid.add(yLabel, 0, rows - (y - lowerLeft.getY()));
         }
 
-        // Dodaj komórki mapy
         for (int x = lowerLeft.getX(); x <= upperRight.getX(); x++) {
             for (int y = lowerLeft.getY(); y <= upperRight.getY(); y++) {
                 Vector2d position = new Vector2d(x, y);
@@ -113,9 +118,32 @@ public class SimulationPresenter implements MapChangeListener {
         List<MoveDirection> directions = OptionsParser.parse(moveList.split(" "));
         List<Vector2d> positions = List.of(new Vector2d(1,2), new Vector2d(3, 1));
         AbstractWorldMap map = new GrassField(10);
-        map.addObserver(this);
-        SimulationEngine engine = new SimulationEngine(List.of(new Simulation(positions, directions, map)));
-        new Thread(engine::runSync).start();
-        infoLabel.setText("Simulation started!");
+
+        startSimulationInNewWindow(directions, positions, map);
+    }
+
+    private void startSimulationInNewWindow(List<MoveDirection> directions, List<Vector2d> positions, AbstractWorldMap map) {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
+                BorderPane viewRoot = loader.load();
+
+                SimulationPresenter presenter = loader.getController();
+                presenter.setWorldMap(map);
+                map.addObserver(presenter);
+
+                Stage stage = new Stage();
+                Scene scene = new Scene(viewRoot);
+                stage.setTitle("New Simulation Window");
+                stage.setScene(scene);
+                stage.show();
+
+                SimulationEngine engine = new SimulationEngine(List.of(new Simulation(positions, directions, map)));
+                engine.runAsyncInThreadPool();
+
+            } catch (IOException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        });
     }
 }
