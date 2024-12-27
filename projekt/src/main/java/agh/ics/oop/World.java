@@ -1,9 +1,22 @@
-package org.example;
+package agh.ics.oop;
 
-public class Main {
-    public static void main(String[] args) {System.out.println("Hello and welcome!");
+import agh.ics.oop.model.ConsoleMapDisplay;
+import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.RectangularMap;
+import agh.ics.oop.model.Vector2d;
 
-        for (int i = 1; i <= 5; i++) {System.out.println("i = " + i);
+import java.util.ArrayList;
+import java.util.List;
+
+public class World {
+    public static void main(String[] args) {
+        RectangularMap rectangle = new RectangularMap(2, 10);
+        List<MoveDirection> directions = OptionsParser.parse(args);
+        List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(9, 4));
+        ConsoleMapDisplay logger = new ConsoleMapDisplay();
+        Simulation simulation = new Simulation(positions, directions, rectangle);
+        rectangle.addObserver(logger);
+        simulation.run();
+
         }
     }
-}
