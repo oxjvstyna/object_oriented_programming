@@ -10,7 +10,6 @@
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
             fx:controller="agh.ics.oop.presenter.SimulationPresenter">
-
     <top>
         <VBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER">
             <TextField fx:id="movesInput" promptText="Enter list of moves here" />
@@ -21,7 +20,6 @@
         <VBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER">
         <Label fx:id="infoLabel" text="All animals will be living here!" textAlignment="CENTER"/>
             <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true">
-
             </GridPane>
         </VBox>
     </center>
