@@ -7,12 +7,12 @@ import java.util.*;
 public class RandomPositionGenerator implements Iterable<Vector2d> {
     private final ArrayList<Vector2d> positions;
 
-    public RandomPositionGenerator(int maxWidth, int maxHeight, int positionCount) {
+    public RandomPositionGenerator(int maxWidth, int maxHeight, int lowerLeftX, int lowerLeftY, int positionCount) {
 
         this.positions = new ArrayList<>();
 
-        for (int x = 0; x < maxWidth; x++) {
-            for (int y = 0; y < maxHeight; y++) {
+        for (int x = lowerLeftX; x < lowerLeftX + maxWidth; x++) {
+            for (int y = lowerLeftY; y < lowerLeftY + maxHeight; y++) {
                 positions.add(new Vector2d(x, y));
             }
         }

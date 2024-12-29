@@ -7,10 +7,10 @@ import java.util.Map;
 
 public class RectangularMap extends AbstractWorldMap {
 
-    public RectangularMap(int width, int height) {
+    public RectangularMap(int width, int height, Vector2d lowerLeft, Vector2d upperRight) {
         super(width, height);
-        lowerLeft = new Vector2d(0, 0);
-        upperRight = new Vector2d(width, height);
+        this.lowerLeft = lowerLeft;
+        this.upperRight = upperRight;
     }
     public Map<Vector2d, Animal> getAnimals() {
         return animals;
