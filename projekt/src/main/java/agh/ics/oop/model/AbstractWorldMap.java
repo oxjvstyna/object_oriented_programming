@@ -7,17 +7,20 @@ import java.util.*;
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
+    protected final Set<Vector2d> plants = new HashSet<>();
     protected Vector2d lowerLeft;
     protected Vector2d upperRight;
     protected int width;
     protected int height;
     protected final List<MapChangeListener> observers = new ArrayList<>();
+    protected Set<Vector2d> preferredFields;
 
-    public AbstractWorldMap(int width, int height) {
+    public AbstractWorldMap(int width, int height, GrowthVariant growthVariant) {
         lowerLeft = new Vector2d(0, 0);
         upperRight = new Vector2d(width, height);
         this.width = width;
         this.height = height;
+        this.preferredFields = growthVariant.generateFields();
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -36,6 +39,25 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     protected Vector2d adjustPosition(Vector2d position, Animal animal) {
         return position;
+    }
+
+    protected void placePlant(Vector2d position) {
+        plants.add(position);
+    }
+
+    public void growPlants() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Vector2d position = new Vector2d(x, y);
+
+                boolean isFertile = preferredFields.contains(position);
+
+                double growthChance = isFertile ? 0.8 : 0.2;
+                if (Math.random() < growthChance) {
+                    placePlant(position);
+                }
+            }
+        }
     }
 
     @Override
@@ -79,5 +101,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public List<WorldElement> getElements() {
         return new ArrayList<>(animals.values());
     }
+
+
 
 }

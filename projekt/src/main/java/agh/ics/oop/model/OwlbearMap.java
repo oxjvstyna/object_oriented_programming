@@ -4,8 +4,8 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 
 public class OwlbearMap extends AbstractWorldMap {
 
-    public OwlbearMap(int width, int height) throws IncorrectPositionException {
-        super(width, height);
+    public OwlbearMap(int width, int height, GrowthVariant variant) throws IncorrectPositionException {
+        super(width, height, variant);
         generateOwlbearTerritory();
     }
 

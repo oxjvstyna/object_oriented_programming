@@ -1,15 +1,13 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.ConsoleMapDisplay;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.EarthMap;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 
 import java.util.List;
 
 public class World {
     public static void main(String[] args) {
-        EarthMap rectangle = new EarthMap(2, 10);
+        GrowthVariant equator = new FertileEquator(2, 10);
+        EarthMap rectangle = new EarthMap(2, 10, equator);
         List<MoveDirection> directions = OptionsParser.parse(args);
         List<Vector2d> positions = List.of(new Vector2d(2,3), new Vector2d(9, 4));
         ConsoleMapDisplay logger = new ConsoleMapDisplay();

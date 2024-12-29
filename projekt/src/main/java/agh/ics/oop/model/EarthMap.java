@@ -4,8 +4,9 @@ import java.util.Map;
 
 public class EarthMap extends AbstractWorldMap {
 
-    public EarthMap(int width, int height) {
-        super(width, height);
+
+    public EarthMap(int width, int height, GrowthVariant growthVariant) {
+        super(width, height, growthVariant);
     }
 
     public Vector2d handleBorder(Vector2d position, Animal animal) {
