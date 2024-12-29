@@ -9,7 +9,7 @@ public class Genome {
     private final List<Integer> genes;
 
     public Genome(List<Integer> genes, int minMutation, int maxMutation) {
-        this.genes = new ArrayList<>();
+        this.genes = new ArrayList<>(genes);
         mutate(minMutation, maxMutation);
     }
 
@@ -21,8 +21,11 @@ public class Genome {
         }
     }
 
-    public List<Integer> createChildGenome(Animal parent1, Animal parent2) {
+    public String[] getGenesAsStrings() {
+        return this.genes.stream().map(String::valueOf).toArray(String[]::new);
+    }
 
+    public List<Integer> createChildGenome(Animal parent1, Animal parent2) {
         int energy1 = parent1.getEnergy();
         int energy2 = parent2.getEnergy();
 
@@ -30,7 +33,7 @@ public class Genome {
         Animal weakerParent = energy1 > energy2 ? parent2 : parent1;
 
         double totalEnergy = energy1 + energy2;
-        double strongerRatio =  strongerParent.getEnergy() / totalEnergy;
+        double strongerRatio = strongerParent.getEnergy() / totalEnergy;
 
         List<Integer> strongerGenes = strongerParent.getGenomes().getGenes();
         List<Integer> weakerGenes = weakerParent.getGenomes().getGenes();
@@ -59,7 +62,6 @@ public class Genome {
     private void mutate(int minMutation, int maxMutation) {
         Random random = new Random();
         int numberOfMutations = random.nextInt(minMutation, maxMutation + 1);
-
 
         List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < this.genes.size(); i++) {

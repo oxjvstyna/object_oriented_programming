@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class RectangularMap extends AbstractWorldMap {
 
-    public RectangularMap(int width, int height, Vector2d lowerLeft, Vector2d upperRight) {
-        super(width, height);
+    public RectangularMap(int width, int height, Vector2d lowerLeft, Vector2d upperRight, GrowthVariant growthVariant) {
+        super(width, height, growthVariant);
         this.lowerLeft = lowerLeft;
         this.upperRight = upperRight;
     }

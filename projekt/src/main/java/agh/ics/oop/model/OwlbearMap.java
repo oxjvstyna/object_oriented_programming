@@ -23,13 +23,13 @@ public class OwlbearMap extends AbstractWorldMap {
                 lowerLeft.getY() + sideLength - 1
         );
 
-        RectangularMap owlbearTerritory = new RectangularMap(sideLength, sideLength, lowerLeft, upperRight);
+        RectangularMap owlbearTerritory = new RectangularMap(sideLength, sideLength, lowerLeft, upperRight, variant);
 
         RandomPositionGenerator generator = new RandomPositionGenerator(
                 sideLength, sideLength, lowerLeft.getX(), lowerLeft.getY(), 1
         );
         Vector2d owlbearPosition = generator.iterator().next();
-        owlbearTerritory.place(new Owlbear(owlbearPosition));
+        //owlbearTerritory.place(new Owlbear(owlbearPosition));
     }
 
 }

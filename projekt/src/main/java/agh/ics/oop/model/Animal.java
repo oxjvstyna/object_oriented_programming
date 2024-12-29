@@ -3,13 +3,13 @@ package agh.ics.oop.model;
 import java.util.List;
 
 public class Animal implements WorldElement {
-    private final int REPRODUCTION_ENERGY;
+    private final int reproductionEnergy;
     private final int minMutation;
     private final int maxMutation;
     private Vector2d position;
     private MapDirection orientation;
     private int energy;
-    private Genome genome;
+    private final Genome genome;
     public Animal parent1;
     public Animal parent2;
     private int birthEnergy;
@@ -21,7 +21,7 @@ public class Animal implements WorldElement {
         this.genome = new Genome(genomeLength);
         this.parent1 = null;
         this.parent2 = null;
-        this.REPRODUCTION_ENERGY = reproductionEnergy;
+        this.reproductionEnergy = reproductionEnergy;
         this.minMutation = minMutation;
         this.maxMutation = maxMutation;
     }
@@ -34,7 +34,7 @@ public class Animal implements WorldElement {
         this.genome = genome;
         this.parent1 = parent1;
         this.parent2 = parent2;
-        this.REPRODUCTION_ENERGY = reproductionEnergy;
+        this.reproductionEnergy = reproductionEnergy;
         this.minMutation = minMutation;
         this.maxMutation = maxMutation;
 
@@ -50,32 +50,32 @@ public class Animal implements WorldElement {
         parent2.changeEnergy(-parent2.birthEnergy);
 
 
-        return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.REPRODUCTION_ENERGY, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation);
+        return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.reproductionEnergy, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation);
     }
 
-    public void move(int direction, MoveValidator validator) {
+    public void move(MoveDirection direction, MoveValidator validator) {
         switch (direction) {
-            case 0:
+            case FORWARD:
                 break;
-            case 1:
+            case FORWARD_RIGHT:
                 this.orientation = this.orientation.next();
                 break;
-            case 2:
+            case RIGHT:
                 this.orientation = this.orientation.next().next();
                 break;
-            case 3:
+            case BACKWARD_RIGHT:
                 this.orientation = this.orientation.next().next().next();
                 break;
-            case 4:
+            case BACKWARD:
                 this.orientation = this.orientation.next().next().next().next();
                 break;
-            case 5:
+            case BACKWARD_LEFT:
                 this.orientation = this.orientation.previous().previous().previous();
                 break;
-            case 6:
+            case LEFT:
                 this.orientation = this.orientation.previous().previous();
                 break;
-            case 7:
+            case FORWARD_LEFT:
                 this.orientation = this.orientation.previous();
                 break;
             default:

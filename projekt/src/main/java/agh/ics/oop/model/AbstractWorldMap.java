@@ -5,7 +5,7 @@ import agh.ics.oop.model.util.IncorrectPositionException;
 import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
-
+    protected GrowthVariant variant;
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected final Set<Vector2d> plants = new HashSet<>();
     protected Vector2d lowerLeft;
