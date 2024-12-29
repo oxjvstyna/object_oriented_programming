@@ -120,4 +120,15 @@ public class Animal implements WorldElement {
     public MapDirection getOrientation() {
         return this.orientation;
     }
+  
+  
+  public void reverseDirection() {
+        if (this.orientation == MapDirection.NORTH) {
+            this.orientation = MapDirection.SOUTH;
+        }
+        else if (this.orientation == MapDirection.SOUTH) {
+            this.orientation = MapDirection.NORTH;
+        }
+    }
+
 }

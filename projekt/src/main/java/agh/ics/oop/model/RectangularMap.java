@@ -1,12 +1,16 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.Boundary;
+
+import java.util.List;
 import java.util.Map;
 
 public class RectangularMap extends AbstractWorldMap {
 
-    public RectangularMap(int width, int height) {
-        lowerLeft = new Vector2d(0, 0);
-        upperRight = new Vector2d(width, height);
+    public RectangularMap(int width, int height, Vector2d lowerLeft, Vector2d upperRight) {
+        super(width, height);
+        this.lowerLeft = lowerLeft;
+        this.upperRight = upperRight;
     }
     public Map<Vector2d, Animal> getAnimals() {
         return animals;
