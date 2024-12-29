@@ -56,4 +56,13 @@ public class Animal implements WorldElement {
                 break;
         }
     }
+
+    public void reverseDirection() {
+        if (this.orientation == MapDirection.NORTH) {
+            this.orientation = MapDirection.SOUTH;
+        }
+        else if (this.orientation == MapDirection.SOUTH) {
+            this.orientation = MapDirection.NORTH;
+        }
+    }
 }

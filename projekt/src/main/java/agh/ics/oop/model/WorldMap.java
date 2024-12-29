@@ -20,8 +20,4 @@ public interface WorldMap<T, P> extends MoveValidator {
 
     List<WorldElement> getElements();
 
-    Boundary getCurrentBounds();
-
-    UUID getID();
-
 }

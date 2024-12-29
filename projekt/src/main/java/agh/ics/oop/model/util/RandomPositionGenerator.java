@@ -7,7 +7,7 @@ import java.util.*;
 public class RandomPositionGenerator implements Iterable<Vector2d> {
     private final ArrayList<Vector2d> positions;
 
-    public RandomPositionGenerator(int maxWidth, int maxHeight, int grassCount) {
+    public RandomPositionGenerator(int maxWidth, int maxHeight, int positionCount) {
 
         this.positions = new ArrayList<>();
 
@@ -19,7 +19,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
 
         Collections.shuffle(positions);
 
-        while (positions.size() > grassCount) {
+        while (positions.size() > positionCount) {
             positions.removeLast();
         }
     }
