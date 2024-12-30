@@ -17,7 +17,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     public AbstractWorldMap(int width, int height, GrowthVariant growthVariant) {
         lowerLeft = new Vector2d(0, 0);
-        upperRight = new Vector2d(width, height);
+        upperRight = new Vector2d(width - 1, height - 1);
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
@@ -37,8 +37,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         }
     }
 
-    protected Vector2d adjustPosition(Vector2d position, Animal animal) {
-        return position;
+    protected Vector2d adjustPosition(Animal animal) {
+        return animal.getPosition();
     }
 
     protected void placePlant(Vector2d position) {
@@ -65,7 +65,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         Vector2d initialPosition = animal.getPosition();
         animals.remove(animal.getPosition(), (Animal) animal);
         animal.move(direction, this);
-        Vector2d newPosition = adjustPosition(animal.getPosition(), animal);
+        Vector2d newPosition = adjustPosition(animal);
         animals.put(newPosition, animal);
         notifyObservers("Zwierze ruszylo z " + initialPosition + " do " + animal.getPosition());
     }
