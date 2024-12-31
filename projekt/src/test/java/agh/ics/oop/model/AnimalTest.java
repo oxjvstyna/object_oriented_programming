@@ -43,7 +43,7 @@ class AnimalTest {
         Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
 
         // when
-        animal.changeEnergy(-30);
+        animal.addEnergy(-30);
 
         // then
         assertEquals(70, animal.getEnergy());
@@ -56,7 +56,7 @@ class AnimalTest {
         Animal animal = new Animal(initialPosition, 50, 5, 50, 20, 1, 3);
 
         // when
-        animal.changeEnergy(-60);
+        animal.addEnergy(-60);
 
         // then
         assertEquals(0, animal.getEnergy());

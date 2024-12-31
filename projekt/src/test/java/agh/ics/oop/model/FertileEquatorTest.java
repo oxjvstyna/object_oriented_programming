@@ -1,86 +1,93 @@
 package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class FertileEquatorTest {
 
     @Test
-    void testGenerateFields() {
-        // Przygotowanie
-        FertileEquator equator = new FertileEquator(10, 10);
+    void generateFieldsShouldCreateCorrectNumberOfPreferredFields() {
+        // given
+        int width = 10;
+        int height = 10;
+        FertileEquator equator = new FertileEquator(width, height);
 
-        // Generowanie preferowanych pól
-        Set<Vector2d> fields = equator.generateFields();
+        // when
+        Set<Vector2d> preferredFields = equator.generateFields();
 
-        // Obliczamy liczbę preferowanych pól (20% powierzchni mapy)
-        int expectedPreferredCount = (int) (0.2 * 10 * 10); // 20% z 100 pól = 20
-        assertEquals(expectedPreferredCount, fields.size(), "Liczba preferowanych pól powinna wynosić 20.");
+        // then
+        int equatorStartY = height / 2 - (int) (height * 0.1);
+        int equatorEndY = height / 2 + (int) (height * 0.1);
+        int expectedCount = width * (equatorEndY - equatorStartY + 1);
+
+        assertEquals(expectedCount, preferredFields.size(),
+                "Number of preferred fields should match expected count.");
     }
 
     @Test
-    void testGenerateFieldsCorrectRange() {
-        // Przygotowanie
-        FertileEquator equator = new FertileEquator(10, 10);
-        Set<Vector2d> fields = equator.generateFields();
+    void generateFieldsShouldIncludeOnlyCentralRows() {
+        // given
+        int width = 10;
+        int height = 10;
+        FertileEquator equator = new FertileEquator(width, height);
 
-        // Sprawdzamy, czy wszystkie preferowane pola mieszczą się w odpowiednim zakresie
-        int equatorStartY = 10 / 2 - (int)(10 * 0.1); // 4
-        int equatorEndY = 10 / 2 + (int)(10 * 0.1); // 6
+        // when
+        Set<Vector2d> preferredFields = equator.generateFields();
 
-        for (Vector2d field : fields) {
-            int y = field.getY();
-            assertTrue(y >= equatorStartY && y <= equatorEndY,
-                    "Pole " + field + " powinno być w obrębie równika.");
+        // then
+        int equatorStartY = height / 2 - (int) (height * 0.1);
+        int equatorEndY = height / 2 + (int) (height * 0.1);
+
+        for (Vector2d field : preferredFields) {
+            assertTrue(field.getY() >= equatorStartY && field.getY() <= equatorEndY,
+                    "Field should belong to the equator region.");
         }
     }
 
     @Test
-    void testFieldWithinEquator() {
-        // Przygotowanie
-        FertileEquator equator = new FertileEquator(10, 10);
-        Set<Vector2d> fields = equator.generateFields();
+    void generateFieldsShouldCoverFullWidthOfMap() {
+        // given
+        int width = 10;
+        int height = 10;
+        FertileEquator equator = new FertileEquator(width, height);
 
-        // Testowanie, czy pole w obrębie równika jest preferowane
-        Vector2d equatorField = new Vector2d(5, 5); // (5,5) w obrębie równika
-        assertTrue(fields.contains(equatorField), "Pole (5,5) powinno być preferowane.");
-    }
+        // when
+        Set<Vector2d> preferredFields = equator.generateFields();
 
-    @Test
-    void testFieldOutsideEquator() {
-        // Przygotowanie
-        FertileEquator equator = new FertileEquator(10, 10);
-        Set<Vector2d> fields = equator.generateFields();
+        // then
+        int equatorStartY = height / 2 - (int) (height * 0.1);
+        int equatorEndY = height / 2 + (int) (height * 0.1);
 
-        // Testowanie, czy pole spoza równika nie jest preferowane
-        Vector2d nonEquatorField = new Vector2d(0, 0); // pole (0,0) spoza równika
-        assertFalse(fields.contains(nonEquatorField), "Pole (0,0) nie powinno być preferowane.");
-    }
-
-    @Test
-    void testRandomFieldsGeneration() {
-        // Przygotowanie
-        FertileEquator equator = new FertileEquator(10, 10);
-        Set<Vector2d> fields = equator.generateFields();
-
-        // Sprawdzamy, czy liczba wygenerowanych pól jest zgodna z oczekiwaniami
-        int equatorStartY = 10 / 2 - (int)(10 * 0.1); // 4
-        int equatorEndY = 10 / 2 + (int)(10 * 0.1); // 6
-
-        int preferredCount = 0;
-        for (Vector2d field : fields) {
-            int y = field.getY();
-            if (y >= equatorStartY && y <= equatorEndY) {
-                preferredCount++;
+        for (int x = 0; x < width; x++) {
+            for (int y = equatorStartY; y <= equatorEndY; y++) {
+                assertTrue(preferredFields.contains(new Vector2d(x, y)),
+                        "Preferred fields should include all positions in equator band.");
             }
         }
+    }
 
-        // Sprawdzamy, czy 20% pól na mapie jest preferowanych
-        int totalFields = 10 * 10; // 100 pól na mapie
-        assertTrue(preferredCount >= totalFields * 0.18 && preferredCount <= totalFields * 0.22,
-                "Preferowane pola powinny stanowić około 20% wszystkich pól na mapie.");
+    @Test
+    void generateFieldsShouldNotIncludeFieldsOutsideEquatorBand() {
+        // given
+        int width = 10;
+        int height = 10;
+        FertileEquator equator = new FertileEquator(width, height);
+
+        // when
+        Set<Vector2d> preferredFields = equator.generateFields();
+
+        // then
+        int equatorStartY = height / 2 - (int) (height * 0.1);
+        int equatorEndY = height / 2 + (int) (height * 0.1);
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (y < equatorStartY || y > equatorEndY) {
+                    assertFalse(preferredFields.contains(new Vector2d(x, y)),
+                            "Fields outside equator band should not be preferred.");
+                }
+            }
+        }
     }
 }

@@ -51,8 +51,8 @@ public class Animal implements WorldElement {
 
         Genome childGenome = new Genome(childGenes, parent1.minMutation, parent1.maxMutation);
 
-        parent1.changeEnergy(-parent1.birthEnergy);
-        parent2.changeEnergy(-parent2.birthEnergy);
+        parent1.addEnergy(-parent1.birthEnergy);
+        parent2.addEnergy(-parent2.birthEnergy);
 
 
         return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.reproductionEnergy, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation);
@@ -95,11 +95,8 @@ public class Animal implements WorldElement {
         }
     }
 
-    public void changeEnergy(int value) {
+    public void addEnergy(int value) {
         this.energy += value;
-        if (this.energy < 0) {
-            this.energy = 0;
-        }
     }
 
     public int getEnergy() {
