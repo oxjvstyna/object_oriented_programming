@@ -7,8 +7,8 @@ import java.util.List;
 
 public class World {
     public static void main(String[] args) {
-        GrowthVariant equator = new FertileEquator(2, 10);
-        EarthMap rectangle = new EarthMap(2, 10, equator);
+        GrowthVariant growthVariant = new FertileEquator(2, 10);
+        EarthMap map = new EarthMap(2, 10, growthVariant);
         ConsoleMapDisplay logger = new ConsoleMapDisplay();
 
         Genome genome = new Genome(8);
@@ -16,9 +16,14 @@ public class World {
 
         List<MoveDirection> directions = OptionsParser.parse(genomeAsStrings);
         List<Vector2d> positions = List.of(new Vector2d(2, 3));
-        rectangle.addObserver(logger);
 
-        Simulation simulation = new Simulation(positions, directions, rectangle);
+        int animalCount = 4;
+        int simulationSteps = 100;
+        map.addObserver(logger);
+
+        SimulationConfig config = new SimulationConfig(map, growthVariant, animalCount, simulationSteps);
+
+        Simulation simulation = new Simulation(config);
         simulation.run();
     }
 }

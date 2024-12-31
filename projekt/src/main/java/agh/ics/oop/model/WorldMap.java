@@ -14,8 +14,6 @@ public interface WorldMap<T, P> extends MoveValidator {
 
     void move(T object, MoveDirection direction);
 
-    boolean isOccupied(P position);
-
     WorldElement objectAt(P position);
 
     List<WorldElement> getElements();

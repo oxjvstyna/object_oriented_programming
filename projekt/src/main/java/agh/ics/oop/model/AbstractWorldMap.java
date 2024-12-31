@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.IncorrectPositionException;
+import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
 
@@ -14,10 +15,12 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected int width;
     protected int height;
     protected int plantEnergy;
+    protected int animalConfig;
     protected final List<MapChangeListener> observers = new ArrayList<>();
     protected Set<Vector2d> preferredFields;
 
     public AbstractWorldMap(int width, int height, GrowthVariant growthVariant) {
+        this.variant = growthVariant;
         lowerLeft = new Vector2d(0, 0);
         upperRight = new Vector2d(width - 1, height - 1);
         this.width = width;
@@ -52,6 +55,18 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         // tu cos bedzie...
     }
 
+    protected void initializeAnimals(int animalCount) {
+        RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
+            positionGenerator.forEach(position -> {
+                try {
+                    this.place(new Animal(position, 100, 10, 10, 10, 10, 10));
+                } catch (IncorrectPositionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+    }
+
     protected void consumePlants() {
         // To napraw zeby handlowalo clashe
         for (Animal animal : animals.values()) {
@@ -73,6 +88,10 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                 continue;
             }
         }
+    }
+
+    public void initializeMap(int animalCount) {
+        initializeAnimals(animalCount);
     }
 
     public void handleMap() {
