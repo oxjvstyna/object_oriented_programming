@@ -1,23 +1,29 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.OptionsParser;
 import agh.ics.oop.model.util.IncorrectPositionException;
+import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected GrowthVariant variant;
+    protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected final Set<Vector2d> plants = new HashSet<>();
     protected Vector2d lowerLeft;
     protected Vector2d upperRight;
     protected int width;
     protected int height;
+    protected int plantEnergy;
+    protected int animalConfig;
     protected final List<MapChangeListener> observers = new ArrayList<>();
     protected Set<Vector2d> preferredFields;
 
     public AbstractWorldMap(int width, int height, GrowthVariant growthVariant) {
+        this.variant = growthVariant;
         lowerLeft = new Vector2d(0, 0);
-        upperRight = new Vector2d(width, height);
+        upperRight = new Vector2d(width - 1, height - 1);
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
@@ -37,8 +43,79 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         }
     }
 
-    protected Vector2d adjustPosition(Vector2d position, Animal animal) {
-        return position;
+    protected void removeAnimals() {
+        for (List<Animal> field : occupiedFields.values()) {
+            for (Animal animal : field) {
+                animals.remove(animal.getPosition());
+                field.remove(animal);
+            }
+        }
+    }
+
+    protected void handleClash(Animal animal1, Animal animal2) {
+        // tu cos bedzie...
+    }
+
+    protected void initializeAnimals(int animalCount) {
+        RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
+            positionGenerator.forEach(position -> {
+                try {
+                    this.place(new Animal(position, 100, 10, 10, 10, 10, 10));
+                } catch (IncorrectPositionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+    }
+
+    protected void consumePlants() {
+        // To napraw zeby handlowalo clashe
+        for (Animal animal : animals.values()) {
+            Vector2d position = animal.getPosition();
+            if (plants.contains(position)) {
+                animal.addEnergy(plantEnergy);
+                plants.remove(position);
+            }
+        }
+    }
+
+    protected void moveAnimals() {
+        for (Animal animal : animals.values()) {
+
+            String[] genomeAsStrings = animal.getGenomes().getGenesAsStrings();
+            List<MoveDirection> moves = OptionsParser.parse(genomeAsStrings);
+
+            // do zmiany
+            Random random = new Random();
+            int randomNumber = random.nextInt(moves.size()) + 1;
+
+            this.move(animal, moves.get(randomNumber));
+        }
+    }
+
+    protected void reproduceAnimals() {
+        for (List<Animal> field : occupiedFields.values()) {
+            for (Animal animal : field) {
+                continue;
+            }
+        }
+    }
+
+    public void initializeMap(int animalCount) {
+        initializeAnimals(animalCount);
+    }
+
+    public void handleMap() {
+//        removeAnimals();
+        moveAnimals();
+//        consumePlants();
+//        reproduceAnimals();
+//        growPlants();
+    }
+
+
+    protected Vector2d adjustPosition(Animal animal) {
+        return animal.getPosition();
     }
 
     protected void placePlant(Vector2d position) {
@@ -63,27 +140,31 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     @Override
     public void move(Animal animal, MoveDirection direction) {
         Vector2d initialPosition = animal.getPosition();
-        animals.remove(animal.getPosition(), (Animal) animal);
+        occupiedFields.get(initialPosition).remove(animal);
+        animals.remove(initialPosition);
+
         animal.move(direction, this);
-        Vector2d newPosition = adjustPosition(animal.getPosition(), animal);
+        Vector2d newPosition = adjustPosition(animal);
+
         animals.put(newPosition, animal);
-        notifyObservers("Zwierze ruszylo z " + initialPosition + " do " + animal.getPosition());
+        occupiedFields.putIfAbsent(newPosition, new ArrayList<>());
+        occupiedFields.get(newPosition).add(animal);
+
+        notifyObservers("Zwierze ruszylo z " + initialPosition + " do " + newPosition);
     }
+
 
     @Override
     public void place(Animal animal) throws IncorrectPositionException {
-        if(canMoveTo(animal.getPosition())){
-            animals.put(animal.getPosition(), animal);
-            notifyObservers("Zwierze umieszczone na pozycji " + animal.getPosition());
+        Vector2d position = animal.getPosition();
+        if (canMoveTo(position)) {
+            animals.put(position, animal);
+            occupiedFields.putIfAbsent(position, new ArrayList<>());
+            occupiedFields.get(position).add(animal);
+            notifyObservers("Zwierze umieszczone na pozycji " + position);
+        } else {
+            throw new IncorrectPositionException(position);
         }
-        else{
-            throw new IncorrectPositionException(animal.getPosition());
-        }
-    }
-
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return objectAt(position) != null;
     }
 
     @Override

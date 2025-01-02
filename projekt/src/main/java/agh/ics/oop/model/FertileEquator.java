@@ -6,7 +6,7 @@ import java.util.Set;
 public class FertileEquator implements GrowthVariant{
     private final int width;
     private final int height;
-    private final Set<Vector2d> preferredFields = new HashSet<>();
+    final Set<Vector2d> preferredFields = new HashSet<>();
 
     public FertileEquator(int width, int height) {
         this.width = width;
@@ -24,8 +24,4 @@ public class FertileEquator implements GrowthVariant{
         }
         return preferredFields;
     }
-
-
-
-
 }

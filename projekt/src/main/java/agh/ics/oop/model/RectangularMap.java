@@ -12,8 +12,5 @@ public class RectangularMap extends AbstractWorldMap {
         this.lowerLeft = lowerLeft;
         this.upperRight = upperRight;
     }
-    public Map<Vector2d, Animal> getAnimals() {
-        return animals;
-    }
 }
 

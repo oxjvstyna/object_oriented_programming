@@ -29,7 +29,7 @@ public class OwlbearMap extends AbstractWorldMap {
                 sideLength, sideLength, lowerLeft.getX(), lowerLeft.getY(), 1
         );
         Vector2d owlbearPosition = generator.iterator().next();
-        //owlbearTerritory.place(new Owlbear(owlbearPosition));
+        owlbearTerritory.place(new Owlbear(owlbearPosition, 999999999, 5, 99999, 99999, 9999, 9999 ));
     }
 
 }
