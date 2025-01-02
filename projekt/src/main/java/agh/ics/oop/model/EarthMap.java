@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import java.util.List;
 import java.util.Map;
 
 public class EarthMap extends AbstractWorldMap {
@@ -37,9 +38,6 @@ public class EarthMap extends AbstractWorldMap {
         return new Vector2d(x, y);
     }
 
-    public Map<Vector2d, Animal> getAnimals() {
-        return animals;
-    }
 
     @Override
     public boolean canMoveTo(Vector2d position) {

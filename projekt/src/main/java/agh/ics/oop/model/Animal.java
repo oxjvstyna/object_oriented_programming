@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.OptionsParser;
+
 import java.util.List;
 import java.util.Map;
 

@@ -11,12 +11,6 @@ public class World {
         EarthMap map = new EarthMap(2, 10, growthVariant);
         ConsoleMapDisplay logger = new ConsoleMapDisplay();
 
-        Genome genome = new Genome(8);
-        String[] genomeAsStrings = genome.getGenesAsStrings();
-
-        List<MoveDirection> directions = OptionsParser.parse(genomeAsStrings);
-        List<Vector2d> positions = List.of(new Vector2d(2, 3));
-
         int animalCount = 4;
         int simulationSteps = 100;
         map.addObserver(logger);

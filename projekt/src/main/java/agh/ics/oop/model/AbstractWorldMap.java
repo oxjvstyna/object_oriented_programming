@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.OptionsParser;
 import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
@@ -79,7 +80,17 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     protected void moveAnimals() {
-        // Tu cos bedzie...
+        for (Animal animal : animals.values()) {
+
+            String[] genomeAsStrings = animal.getGenomes().getGenesAsStrings();
+            List<MoveDirection> moves = OptionsParser.parse(genomeAsStrings);
+
+            // do zmiany
+            Random random = new Random();
+            int randomNumber = random.nextInt(moves.size()) + 1;
+
+            this.move(animal, moves.get(randomNumber));
+        }
     }
 
     protected void reproduceAnimals() {
@@ -95,11 +106,11 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     public void handleMap() {
-        removeAnimals();
+//        removeAnimals();
         moveAnimals();
-        consumePlants();
-        reproduceAnimals();
-        growPlants();
+//        consumePlants();
+//        reproduceAnimals();
+//        growPlants();
     }
 
 

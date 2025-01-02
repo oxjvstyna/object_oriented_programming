@@ -17,5 +17,4 @@ public interface WorldMap<T, P> extends MoveValidator {
     WorldElement objectAt(P position);
 
     List<WorldElement> getElements();
-
 }
