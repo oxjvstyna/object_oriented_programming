@@ -2,6 +2,8 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.OptionsParser;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ public class Animal implements WorldElement {
     private final int reproductionEnergy;
     private final int minMutation;
     private final int maxMutation;
+    private final int moveIndex;
     private Vector2d position;
     MapDirection orientation;
     private int energy;
@@ -16,8 +19,9 @@ public class Animal implements WorldElement {
     public Animal parent1;
     public Animal parent2;
     int birthEnergy;
+    private MoveVariant moveVariant;
 
-    public Animal(Vector2d initialPosition, int initialEnergy, int genomeLength, int reproductionEnergy, int birthEnergy, int minMutation, int maxMutation) {
+    public Animal(Vector2d initialPosition, int initialEnergy, int genomeLength, int reproductionEnergy, int birthEnergy, int minMutation, int maxMutation, MoveVariant moveVariant) {
         this.orientation = MapDirection.NORTH; //randomowa
         this.position = initialPosition;
         this.energy = initialEnergy;
@@ -27,10 +31,12 @@ public class Animal implements WorldElement {
         this.reproductionEnergy = reproductionEnergy;
         this.minMutation = minMutation;
         this.maxMutation = maxMutation;
+        this.moveIndex = 0;
     }
 
     //tworzenie dzieci
-    public Animal(Vector2d position, int energy, Genome genome, Animal parent1, Animal parent2, int reproductionEnergy, int birthEnergy, int minMutation, int maxMutation) {
+    public Animal(Vector2d position, int energy, Genome genome, Animal parent1, Animal parent2, int reproductionEnergy, int birthEnergy, int minMutation, int maxMutation, int moveIndex, MoveVariant moveVariant) {
+        this.moveIndex = moveIndex;
         this.orientation = MapDirection.NORTH; //zmienic na randomową
         this.position = position;
         this.energy = energy;
@@ -57,7 +63,7 @@ public class Animal implements WorldElement {
         parent2.addEnergy(-parent2.birthEnergy);
 
 
-        return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.reproductionEnergy, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation);
+        return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.reproductionEnergy, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation, 0, moveVariant);
     }
 
     public void move(MoveDirection direction, MoveValidator validator) {
@@ -97,6 +103,16 @@ public class Animal implements WorldElement {
         }
     }
 
+    public void makeMove(MoveValidator validator) {
+        int index = moveVariant.getNextMoveIndex(genome, moveIndex);
+        int dir = genome.getGenes().get(index);
+        String[] nextMove = new String[1];
+        nextMove[0] = Integer.toString(dir);
+        List<MoveDirection> directions = OptionsParser.parse(nextMove);
+        MoveDirection direction = directions.getFirst();
+        move(direction, validator);
+    }
+
     public void addEnergy(int value) {
         this.energy += value;
     }
@@ -124,8 +140,6 @@ public class Animal implements WorldElement {
     public MapDirection getOrientation() {
         return this.orientation;
     }
-  
-  
 
     public void reverseDirection() {
         Map<MapDirection, MapDirection> opposites = Map.of(
@@ -141,6 +155,4 @@ public class Animal implements WorldElement {
 
         this.orientation = opposites.get(this.orientation);
     }
-
-
 }

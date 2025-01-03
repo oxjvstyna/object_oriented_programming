@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AnimalTest {
 
+    private MoveVariant TotalPredestination;
+
     @Test
     void animalShouldMoveCorrectly() {
         // given
         Vector2d initialPosition = new Vector2d(2, 2);
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, TotalPredestination);
         MoveValidator validator = position -> true; // Always allows movement
 
         // when
@@ -26,7 +28,7 @@ class AnimalTest {
     void animalShouldNotMoveWhenBlocked() {
         // given
         Vector2d initialPosition = new Vector2d(2, 2);
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, TotalPredestination);
         MoveValidator validator = position -> false; // Blocks movement
 
         // when
@@ -40,7 +42,7 @@ class AnimalTest {
     void animalShouldLoseEnergyCorrectly() {
         // given
         Vector2d initialPosition = new Vector2d(2, 2);
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, TotalPredestination);
 
         // when
         animal.addEnergy(-30);
@@ -53,7 +55,7 @@ class AnimalTest {
     void animalShouldNotHaveNegativeEnergy() {
         // given
         Vector2d initialPosition = new Vector2d(2, 2);
-        Animal animal = new Animal(initialPosition, 50, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 50, 5, 50, 20, 1, 3, TotalPredestination);
 
         // when
         animal.addEnergy(-60);
@@ -68,8 +70,8 @@ class AnimalTest {
         Vector2d position = new Vector2d(3, 3);
         Genome parent1Genome = new Genome(5);
         Genome parent2Genome = new Genome(5);
-        Animal parent1 = new Animal(position, 100, parent1Genome, null, null, 50, 20, 1, 3);
-        Animal parent2 = new Animal(position, 100, parent2Genome, null, null, 50, 20, 1, 3);
+        Animal parent1 = new Animal(position, 100, parent1Genome, null, null, 50, 20, 1, 3, 0, TotalPredestination);
+        Animal parent2 = new Animal(position, 100, parent2Genome, null, null, 50, 20, 1, 3, 0, TotalPredestination);
 
         // when
         Animal child = parent1.reproduce(parent1, parent2);
@@ -87,7 +89,7 @@ class AnimalTest {
     void animalShouldChangeOrientationCorrectly() {
         // given
         Vector2d initialPosition = new Vector2d(2, 2);
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, TotalPredestination);
 
         // when
         animal.move(MoveDirection.RIGHT, position -> true);
@@ -100,7 +102,7 @@ class AnimalTest {
     @Test
     void animalShouldReverseDirectionCorrectly() {
         // given
-        Animal animal = new Animal(new Vector2d(0, 0), 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(new Vector2d(0, 0), 100, 5, 50, 20, 1, 3, TotalPredestination);
         animal.orientation = MapDirection.NORTH;
 
         // when
@@ -113,7 +115,7 @@ class AnimalTest {
     @Test
     void animalShouldBeAliveWhenEnergyIsPositive() {
         // given
-        Animal animal = new Animal(new Vector2d(0, 0), 10, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(new Vector2d(0, 0), 10, 5, 50, 20, 1, 3, TotalPredestination);
 
         // when
         boolean isAlive = animal.isAlive();
@@ -125,7 +127,7 @@ class AnimalTest {
     @Test
     void animalShouldBeDeadWhenEnergyIsZero() {
         // given
-        Animal animal = new Animal(new Vector2d(0, 0), 0, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(new Vector2d(0, 0), 0, 5, 50, 20, 1, 3, TotalPredestination);
 
         // when
         boolean isAlive = animal.isAlive();
