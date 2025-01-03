@@ -12,7 +12,7 @@ public interface WorldMap<T, P> extends MoveValidator {
 
     void place(T object) throws IncorrectPositionException;
 
-    void move(T object, MoveDirection direction);
+    void move(T object);
 
     WorldElement objectAt(P position);
 

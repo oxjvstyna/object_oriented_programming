@@ -10,7 +10,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected GrowthVariant growthVariant;
     protected MoveVariant moveVariant;
     protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
-    protected final Map<Vector2d, Animal> animals = new HashMap<>();
+    protected final Set<Animal> animals = new HashSet<>();
     protected final Set<Vector2d> plants = new HashSet<>();
     protected Vector2d lowerLeft;
     protected Vector2d upperRight;
@@ -48,7 +48,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected void removeAnimals() {
         for (List<Animal> field : occupiedFields.values()) {
             for (Animal animal : field) {
-                animals.remove(animal.getPosition());
+                animals.remove(animal);
                 field.remove(animal);
             }
         }
@@ -62,7 +62,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
-                    this.place(new Animal(position, 100, 10, 10, 10, 10, 10, moveVariant));
+                    this.place(new Animal(position, 100, 5, 10, 10, 1, 4, moveVariant));
                 } catch (IncorrectPositionException e) {
                     throw new RuntimeException(e);
                 }
@@ -72,7 +72,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     protected void consumePlants() {
         // To napraw zeby handlowalo clashe
-        for (Animal animal : animals.values()) {
+        for (Animal animal : animals) {
             Vector2d position = animal.getPosition();
             if (plants.contains(position)) {
                 animal.addEnergy(plantEnergy);
@@ -82,16 +82,10 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     protected void moveAnimals() {
-        for (Animal animal : animals.values()) {
-
-            String[] genomeAsStrings = animal.getGenomes().getGenesAsStrings();
-            List<MoveDirection> moves = OptionsParser.parse(genomeAsStrings);
-
-            // do zmiany
-            Random random = new Random();
-            int randomNumber = random.nextInt(moves.size()) + 1;
-
-            this.move(animal, moves.get(randomNumber));
+        for (Animal animal : animals) {
+            System.out.println(animal.getOrientation());
+            System.out.println(OptionsParser.parse(animal.getGenomes().getGenesAsStrings()));
+            this.move(animal);
         }
     }
 
@@ -140,15 +134,15 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     @Override
-    public void move(Animal animal, MoveDirection direction) {
+    public void move(Animal animal) {
         Vector2d initialPosition = animal.getPosition();
         occupiedFields.get(initialPosition).remove(animal);
         animals.remove(initialPosition);
 
-        animal.move(direction, this);
+        animal.move(this);
         Vector2d newPosition = adjustPosition(animal);
 
-        animals.put(newPosition, animal);
+        animals.add(animal);
         occupiedFields.putIfAbsent(newPosition, new ArrayList<>());
         occupiedFields.get(newPosition).add(animal);
 
@@ -160,7 +154,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public void place(Animal animal) throws IncorrectPositionException {
         Vector2d position = animal.getPosition();
         if (canMoveTo(position)) {
-            animals.put(position, animal);
+            animals.add(animal);
             occupiedFields.putIfAbsent(position, new ArrayList<>());
             occupiedFields.get(position).add(animal);
             notifyObservers("Zwierze umieszczone na pozycji " + position);
@@ -177,12 +171,13 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        return animals.get(position);
+        // na szybko do zmiany
+        return new Plant(new Vector2d(position.getX(), position.getY()));
     }
 
     @Override
     public List<WorldElement> getElements() {
-        return new ArrayList<>(animals.values());
+        return new ArrayList<>(animals);
     }
 
 
