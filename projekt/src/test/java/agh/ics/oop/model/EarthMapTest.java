@@ -10,9 +10,9 @@ class EarthMapTest {
         // given
         MoveValidator validator = position -> true; // Always allows movement
         GrowthVariant variant = new FertileEquator(10, 5);
-        EarthMap map = new EarthMap(10, 5, variant); // mapa o szerokości 10 i wysokości 5
+        EarthMap map = new EarthMap(10, 5, variant, new TotalPredestination()); // mapa o szerokości 10 i wysokości 5
         Vector2d initialPosition = new Vector2d(0, 2);  // zwierzę na lewej krawędzi
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, new TotalPredestination());
 
         // when
         animal.move(MoveDirection.LEFT, validator);
@@ -27,9 +27,10 @@ class EarthMapTest {
     void animalShouldWrapAroundHorizontallyWhenExitingRight() {
         // given
         GrowthVariant variant = new FertileEquator(10, 5);
-        EarthMap map = new EarthMap(10, 5, variant); // mapa o szerokości 10 i wysokości 5
+        MoveVariant moveVariant = new TotalPredestination();
+        EarthMap map = new EarthMap(10, 5, variant, moveVariant); // mapa o szerokości 10 i wysokości 5
         Vector2d initialPosition = new Vector2d(11, 2);  // zwierzę na prawej krawędzi
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
         // when
         map.handleBorder(animal);  // zwierzę ma wyjść za prawą krawędź
@@ -43,9 +44,10 @@ class EarthMapTest {
         // given
         MoveValidator validator = position -> true; // Always allows movement
         GrowthVariant variant = new FertileEquator(10, 5);
-        EarthMap map = new EarthMap(10, 5, variant); // mapa o szerokości 10 i wysokości 5
+        MoveVariant moveVariant = new TotalPredestination();
+        EarthMap map = new EarthMap(10, 5, variant, moveVariant); // mapa o szerokości 10 i wysokości 5
         Vector2d initialPosition = new Vector2d(5, 4);  // zwierzę blisko górnej krawędzi
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
         // when
         animal.move(MoveDirection.FORWARD, validator);
@@ -60,9 +62,10 @@ class EarthMapTest {
     void animalShouldNotMoveBeyondBottomBorder() {
         // given
         GrowthVariant variant = new FertileEquator(10, 5);
-        EarthMap map = new EarthMap(10, 5, variant); // mapa o szerokości 10 i wysokości 5
+        MoveVariant moveVariant = new TotalPredestination();
+        EarthMap map = new EarthMap(10, 5, variant, moveVariant); // mapa o szerokości 10 i wysokości 5
         Vector2d initialPosition = new Vector2d(5, 0);  // zwierzę blisko dolnej krawędzi
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
         // when
         Vector2d newPosition = map.handleBorder(animal);  // zwierzę ma wyjść poza dolną krawędź
@@ -77,9 +80,10 @@ class EarthMapTest {
         // given
         MoveValidator validator = position -> true; // Always allows movement
         GrowthVariant variant = new FertileEquator(10, 5);
-        EarthMap map = new EarthMap(10, 5, variant); // mapa o szerokości 10 i wysokości 5
+        MoveVariant moveVariant = new TotalPredestination();
+        EarthMap map = new EarthMap(10, 5, variant, moveVariant); // mapa o szerokości 10 i wysokości 5
         Vector2d initialPosition = new Vector2d(0, 0);  // zwierzę na dolnym lewym rogu
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
         // when
         animal.move(MoveDirection.LEFT, validator);
@@ -97,9 +101,10 @@ class EarthMapTest {
         // given
         MoveValidator validator = position -> true; // Always allows movement
         GrowthVariant variant = new FertileEquator(10, 5);
-        EarthMap map = new EarthMap(10, 5, variant); // mapa o szerokości 10 i wysokości 5
+        MoveVariant moveVariant = new TotalPredestination();
+        EarthMap map = new EarthMap(10, 5, variant, moveVariant); // mapa o szerokości 10 i wysokości 5
         Vector2d initialPosition = new Vector2d(9, 4);  // zwierzę na górnym prawym rogu
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3);
+        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
         // when
         animal.move(MoveDirection.FORWARD_RIGHT, validator);

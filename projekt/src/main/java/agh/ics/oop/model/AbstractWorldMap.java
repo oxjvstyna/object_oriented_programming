@@ -7,7 +7,8 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
-    protected GrowthVariant variant;
+    protected GrowthVariant growthVariant;
+    protected MoveVariant moveVariant;
     protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected final Set<Vector2d> plants = new HashSet<>();
@@ -20,8 +21,9 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected final List<MapChangeListener> observers = new ArrayList<>();
     protected Set<Vector2d> preferredFields;
 
-    public AbstractWorldMap(int width, int height, GrowthVariant growthVariant) {
-        this.variant = growthVariant;
+    public AbstractWorldMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
+        this.growthVariant = growthVariant;
+        this.moveVariant = moveVariant;
         lowerLeft = new Vector2d(0, 0);
         upperRight = new Vector2d(width - 1, height - 1);
         this.width = width;
@@ -60,7 +62,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
-                    this.place(new Animal(position, 100, 10, 10, 10, 10, 10));
+                    this.place(new Animal(position, 100, 10, 10, 10, 10, 10, moveVariant));
                 } catch (IncorrectPositionException e) {
                     throw new RuntimeException(e);
                 }

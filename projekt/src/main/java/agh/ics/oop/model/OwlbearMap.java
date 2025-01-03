@@ -3,9 +3,8 @@ import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 public class OwlbearMap extends AbstractWorldMap {
-
-    public OwlbearMap(int width, int height, GrowthVariant variant) throws IncorrectPositionException {
-        super(width, height, variant);
+    public OwlbearMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) throws IncorrectPositionException {
+        super(width, height, growthVariant, moveVariant);
         generateOwlbearTerritory();
     }
 
@@ -23,13 +22,13 @@ public class OwlbearMap extends AbstractWorldMap {
                 lowerLeft.getY() + sideLength - 1
         );
 
-        RectangularMap owlbearTerritory = new RectangularMap(sideLength, sideLength, lowerLeft, upperRight, variant);
+        RectangularMap owlbearTerritory = new RectangularMap(sideLength, sideLength, lowerLeft, upperRight, growthVariant, moveVariant);
 
         RandomPositionGenerator generator = new RandomPositionGenerator(
                 sideLength, sideLength, lowerLeft.getX(), lowerLeft.getY(), 1
         );
         Vector2d owlbearPosition = generator.iterator().next();
-        owlbearTerritory.place(new Owlbear(owlbearPosition, 999999999, 5, 99999, 99999, 9999, 9999 ));
+        owlbearTerritory.place(new Owlbear(owlbearPosition, 999999999, 5, 99999, 99999, 9999, 9999, moveVariant));
     }
 
 }

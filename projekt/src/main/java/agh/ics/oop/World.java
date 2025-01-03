@@ -8,14 +8,14 @@ import java.util.List;
 public class World {
     public static void main(String[] args) {
         GrowthVariant growthVariant = new FertileEquator(2, 10);
-        EarthMap map = new EarthMap(2, 10, growthVariant);
+        MoveVariant moveVariant = new TotalPredestination();
+        EarthMap map = new EarthMap(2, 10, growthVariant, moveVariant);
         ConsoleMapDisplay logger = new ConsoleMapDisplay();
-
         int animalCount = 4;
         int simulationSteps = 100;
         map.addObserver(logger);
 
-        SimulationConfig config = new SimulationConfig(map, growthVariant, animalCount, simulationSteps);
+        SimulationConfig config = new SimulationConfig(map, growthVariant, animalCount, simulationSteps, moveVariant);
 
         Simulation simulation = new Simulation(config);
         simulation.run();
