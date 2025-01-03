@@ -1,10 +1,6 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
-import agh.ics.oop.model.util.IncorrectPositionException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Simulation implements Runnable {
     protected SimulationConfig simConfig;
@@ -22,10 +18,11 @@ public class Simulation implements Runnable {
                 simConfig.getCurrentMap().handleMap();
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
                 break;
             }
         }
+        simConfig.getCurrentMap().getReport();
     }
 
 

@@ -38,12 +38,15 @@ public class Genome {
         List<Integer> strongerGenes = strongerParent.getGenomes().getGenes();
         List<Integer> weakerGenes = weakerParent.getGenomes().getGenes();
 
-        int genomeLength = strongerParent.getGenomes().getGenes().size();
+        if (strongerGenes.size() != weakerGenes.size()) { // do wywalenia
+            throw new IllegalArgumentException("Parent genomes must have the same length.");
+        }
 
-        int strongerGenesCount = (int) Math.round(genomeLength * strongerRatio);
+        int genomeLength = strongerGenes.size();
+        int strongerGenesCount = (int) (genomeLength * strongerRatio);
         int weakerGenesCount = genomeLength - strongerGenesCount;
 
-        List<Integer> childGenotype = new ArrayList<>();
+        List<Integer> childGenotype = new ArrayList<>(genomeLength);
 
         Random random = new Random();
         boolean strongerStartsFromLeft = random.nextBoolean();
@@ -58,6 +61,7 @@ public class Genome {
 
         return childGenotype;
     }
+
 
     public List<Integer> getGenes() {
         return this.genes;

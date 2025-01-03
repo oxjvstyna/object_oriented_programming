@@ -1,7 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.OptionsParser;
-import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
@@ -29,6 +27,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
+        this.plantEnergy = 1;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -57,12 +56,11 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
-                    this.place(new Animal(position, 30, 5, 10, 10, 1, 4, moveVariant));
-                } catch (IncorrectPositionException e) {
-                    throw new RuntimeException(e);
+                    this.place(new Animal(position, 10, 5, 10, 10, 1, 4, moveVariant));
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             });
-
     }
 
     protected void consumePlants() {
@@ -70,6 +68,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         for (Animal animal : animals) {
             Vector2d position = animal.getPosition();
             if (plants.contains(position)) {
+                // System.out.println("Energia wzrosla z " + animal.getEnergy() + " do " + (animal.getEnergy() + plantEnergy) );
                 animal.addEnergy(plantEnergy);
                 plants.remove(position);
             }
@@ -84,8 +83,14 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     protected void reproduceAnimals() {
         for (List<Animal> field : occupiedFields.values()) {
-            for (Animal animal : field) {
-                continue;
+            if (field.size() >= 2) {
+                // Logika oczywiście do zmiany
+                Animal parent1 = field.getFirst();
+                Animal parent2 = field.getLast();
+                Animal child = parent1.reproduce(parent2);
+                animals.add(child);
+                this.place(child);
+                return;
             }
         }
     }
@@ -97,9 +102,19 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public void handleMap() {
         removeAnimals();
         moveAnimals();
-//        consumePlants();
-//        reproduceAnimals();
-//        growPlants();
+        consumePlants();
+        reproduceAnimals();
+        growPlants();
+    }
+
+    public void getReport() {
+        System.out.println("Liczba zwierzat na mapie: " + animals.size());
+        System.out.println("Liczba roslin na mapie: " + plants.size());
+        System.out.println("Liczba wolnych pol: " + (this.width * this.height - occupiedFields.size()));
+        System.out.println("Najpopularniejszy genotyp: " + "DO ZROBIENIA");
+        System.out.println("Sredni poziom energii dla zyjacych zwierzakow: " + "DO ZROBIENIA");
+        System.out.println("Sredni poziom dlugosci zycia zwierzakow na mapie: " + "DO ZROBIENIA");
+        System.out.println("Srednia liczba dzieci dla zyjacych zwierzakow: " + "DO ZROBIENIA");
     }
 
 
@@ -130,12 +145,10 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public void move(Animal animal) {
         Vector2d initialPosition = animal.getPosition();
         occupiedFields.get(initialPosition).remove(animal);
-        animals.remove(initialPosition);
 
         animal.move(this);
         Vector2d newPosition = adjustPosition(animal);
 
-        animals.add(animal);
         occupiedFields.putIfAbsent(newPosition, new ArrayList<>());
         occupiedFields.get(newPosition).add(animal);
 
@@ -144,16 +157,12 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
 
     @Override
-    public void place(Animal animal) throws IncorrectPositionException {
+    public void place(Animal animal) {
         Vector2d position = animal.getPosition();
-        if (canMoveTo(position)) {
-            animals.add(animal);
-            occupiedFields.putIfAbsent(position, new ArrayList<>());
-            occupiedFields.get(position).add(animal);
-            notifyObservers("Zwierze umieszczone na pozycji " + position);
-        } else {
-            throw new IncorrectPositionException(position);
-        }
+        animals.add(animal);
+        occupiedFields.putIfAbsent(position, new ArrayList<>());
+        occupiedFields.get(position).add(animal);
+        notifyObservers("Zwierze umieszczone na pozycji " + position);
     }
 
     @Override
