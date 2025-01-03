@@ -103,6 +103,7 @@ public class Animal implements WorldElement {
         if(validator.canMoveTo(nextPositionForward)) {
             this.position = nextPositionForward;
         }
+        this.addEnergy(-1); // ale czy nie ma odejmowac energii tylko po wykonaniu ruchu?
     }
 
 

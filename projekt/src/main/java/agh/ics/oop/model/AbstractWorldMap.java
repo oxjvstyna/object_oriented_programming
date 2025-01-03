@@ -46,12 +46,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     protected void removeAnimals() {
-        for (List<Animal> field : occupiedFields.values()) {
-            for (Animal animal : field) {
-                animals.remove(animal);
-                field.remove(animal);
-            }
-        }
+        animals.removeIf(animal -> !animal.isAlive());
     }
 
     protected void handleClash(Animal animal1, Animal animal2) {
@@ -62,7 +57,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
-                    this.place(new Animal(position, 100, 5, 10, 10, 1, 4, moveVariant));
+                    this.place(new Animal(position, 30, 5, 10, 10, 1, 4, moveVariant));
                 } catch (IncorrectPositionException e) {
                     throw new RuntimeException(e);
                 }
@@ -100,7 +95,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     public void handleMap() {
-//        removeAnimals();
+        removeAnimals();
         moveAnimals();
 //        consumePlants();
 //        reproduceAnimals();
