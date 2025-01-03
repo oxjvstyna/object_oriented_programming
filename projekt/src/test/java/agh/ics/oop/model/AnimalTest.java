@@ -15,9 +15,9 @@ class AnimalTest {
         MoveValidator validator = position -> true; // Always allows movement
 
         // when
-        animal.move(MoveDirection.FORWARD, validator);
-        animal.move(MoveDirection.RIGHT, validator);
-        animal.move(MoveDirection.FORWARD, validator);
+        animal.move(validator);
+        animal.move(validator);
+        animal.move(validator);
 
         // then
         assertEquals(new Vector2d(3, 3), animal.getPosition());
@@ -32,7 +32,7 @@ class AnimalTest {
         MoveValidator validator = position -> false; // Blocks movement
 
         // when
-        animal.move(MoveDirection.FORWARD, validator);
+        animal.move(validator);
 
         // then
         assertEquals(initialPosition, animal.getPosition());
@@ -92,8 +92,8 @@ class AnimalTest {
         Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, TotalPredestination);
 
         // when
-        animal.move(MoveDirection.RIGHT, position -> true);
-        animal.move(MoveDirection.BACKWARD_LEFT, position -> true);
+        animal.move(position -> true);
+        animal.move(position -> true);
 
         // then
         assertEquals(MapDirection.NORTH_WEST, animal.getOrientation());

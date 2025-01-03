@@ -18,8 +18,8 @@ public class Simulation implements Runnable {
         simConfig.getCurrentMap().initializeMap(simConfig.getAnimalCount());
         int steps = simConfig.getSimulationSteps();
         for (int i = 0; i < steps; i++) {
-            simConfig.getCurrentMap().handleMap();
             try {
+                simConfig.getCurrentMap().handleMap();
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();

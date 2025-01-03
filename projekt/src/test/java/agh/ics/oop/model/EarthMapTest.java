@@ -15,8 +15,8 @@ class EarthMapTest {
         Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, new TotalPredestination());
 
         // when
-        animal.move(MoveDirection.LEFT, validator);
-        animal.move(MoveDirection.FORWARD, validator);
+        animal.move(validator);
+        animal.move(validator);
         map.handleBorder(animal);  // zwierzę ma wyjść za lewą krawędź
 
         // then
@@ -50,7 +50,7 @@ class EarthMapTest {
         Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
         // when
-        animal.move(MoveDirection.FORWARD, validator);
+        animal.move(validator);
         Vector2d newPosition = map.handleBorder(animal);  // zwierzę ma wyjść poza górną krawędź
 
         // then
@@ -86,9 +86,9 @@ class EarthMapTest {
         Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
         // when
-        animal.move(MoveDirection.LEFT, validator);
-        animal.move(MoveDirection.FORWARD_LEFT, validator);
-        animal.move(MoveDirection.FORWARD, validator);
+        animal.move(validator);
+        animal.move(validator);
+        animal.move(validator);
         Vector2d newPosition = map.handleBorder(animal);  // zwierzę ma wyjść poza dolną lewą krawędź
 
         // then
@@ -107,9 +107,9 @@ class EarthMapTest {
         Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
         // when
-        animal.move(MoveDirection.FORWARD_RIGHT, validator);
+        animal.move(validator);
         System.out.println(animal.getPosition());
-        animal.move(MoveDirection.FORWARD, validator);
+        animal.move(validator);
         Vector2d newPosition = map.handleBorder(animal);  // zwierzę ma zostać
 
         // then

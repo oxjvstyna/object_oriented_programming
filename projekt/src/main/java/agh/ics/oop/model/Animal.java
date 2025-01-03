@@ -32,6 +32,7 @@ public class Animal implements WorldElement {
         this.minMutation = minMutation;
         this.maxMutation = maxMutation;
         this.moveIndex = 0;
+        this.moveVariant = moveVariant;
     }
 
     //tworzenie dzieci
@@ -66,13 +67,13 @@ public class Animal implements WorldElement {
         return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.reproductionEnergy, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation, 0, moveVariant);
     }
 
-    public void move(MoveDirection direction, MoveValidator validator) {
+    public void move(MoveValidator validator) {
+        int index = this.moveVariant.getNextMoveIndex(genome, moveIndex);
+        int moveDirectionCode = genome.getGenes().get(index);
+        List<MoveDirection> directions = OptionsParser.parse(new String[]{Integer.toString(moveDirectionCode)});
+        MoveDirection direction = directions.getFirst();
         switch (direction) {
             case FORWARD:
-                Vector2d nextPositionForward = this.position.add(orientation.toUnitVector());
-                if(validator.canMoveTo(nextPositionForward)) {
-                    this.position = nextPositionForward;
-                }
                 break;
             case FORWARD_RIGHT:
                 this.orientation = this.orientation.next();
@@ -84,10 +85,7 @@ public class Animal implements WorldElement {
                 this.orientation = this.orientation.next().next().next();
                 break;
             case BACKWARD:
-                Vector2d nextPositionBackward = this.position.subtract(orientation.toUnitVector());
-                if(validator.canMoveTo(nextPositionBackward)) {
-                    this.position = nextPositionBackward;
-                }
+                this.orientation = this.orientation.next().next().next().next();
                 break;
             case BACKWARD_LEFT:
                 this.orientation = this.orientation.previous().previous().previous();
@@ -100,18 +98,15 @@ public class Animal implements WorldElement {
                 break;
             default:
                 throw new IllegalArgumentException("Invalid move direction: " + direction);
+
         }
+        Vector2d nextPositionForward = this.position.add(orientation.toUnitVector());
+        if(validator.canMoveTo(nextPositionForward)) {
+            this.position = nextPositionForward;
+        }
+
     }
 
-    public void makeMove(MoveValidator validator) {
-        int index = moveVariant.getNextMoveIndex(genome, moveIndex);
-        int dir = genome.getGenes().get(index);
-        String[] nextMove = new String[1];
-        nextMove[0] = Integer.toString(dir);
-        List<MoveDirection> directions = OptionsParser.parse(nextMove);
-        MoveDirection direction = directions.getFirst();
-        move(direction, validator);
-    }
 
     public void addEnergy(int value) {
         this.energy += value;
