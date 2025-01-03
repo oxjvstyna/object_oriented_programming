@@ -11,8 +11,8 @@ public class World {
         MoveVariant moveVariant = new TotalPredestination();
         EarthMap map = new EarthMap(10, 10, growthVariant, moveVariant);
         ConsoleMapDisplay logger = new ConsoleMapDisplay();
-        int animalCount = 1;
-        int simulationSteps = 5;
+        int animalCount = 5;
+        int simulationSteps = 100;
         map.addObserver(logger);
 
         SimulationConfig config = new SimulationConfig(map, growthVariant, animalCount, simulationSteps, moveVariant);

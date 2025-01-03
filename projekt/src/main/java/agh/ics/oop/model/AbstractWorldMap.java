@@ -83,8 +83,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     protected void moveAnimals() {
         for (Animal animal : animals) {
-            System.out.println(animal.getOrientation());
-            System.out.println(OptionsParser.parse(animal.getGenomes().getGenesAsStrings()));
             this.move(animal);
         }
     }

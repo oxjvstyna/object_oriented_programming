@@ -31,8 +31,9 @@ public class Animal implements WorldElement {
         this.reproductionEnergy = reproductionEnergy;
         this.minMutation = minMutation;
         this.maxMutation = maxMutation;
-        this.moveIndex = 0;
+        this.moveIndex = -1;
         this.moveVariant = moveVariant;
+        this.birthEnergy = birthEnergy;
     }
 
     //tworzenie dzieci
@@ -54,17 +55,16 @@ public class Animal implements WorldElement {
         this.position = position;
     }
 
-    public Animal reproduce(Animal parent1, Animal parent2) {
+    public Animal reproduce(Animal parent) {
 
-        List<Integer> childGenes = parent1.genome.createChildGenome(parent1, parent2);
+        List<Integer> childGenes = this.genome.createChildGenome(this, parent);
 
-        Genome childGenome = new Genome(childGenes, parent1.minMutation, parent1.maxMutation);
+        Genome childGenome = new Genome(childGenes, this.minMutation, this.maxMutation);
 
-        parent1.addEnergy(-parent1.birthEnergy);
-        parent2.addEnergy(-parent2.birthEnergy);
-
-
-        return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.reproductionEnergy, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation, 0, moveVariant);
+        Animal child = new Animal(this.position,this.birthEnergy + parent.birthEnergy, childGenome, this, parent, this.reproductionEnergy, this.birthEnergy, this.minMutation, this.maxMutation, -1, moveVariant);
+        this.addEnergy(-this.birthEnergy);
+        parent.addEnergy(-parent.birthEnergy);
+        return child;
     }
 
     public void move(MoveValidator validator) {
@@ -98,13 +98,11 @@ public class Animal implements WorldElement {
                 break;
             default:
                 throw new IllegalArgumentException("Invalid move direction: " + direction);
-
         }
         Vector2d nextPositionForward = this.position.add(orientation.toUnitVector());
         if(validator.canMoveTo(nextPositionForward)) {
             this.position = nextPositionForward;
         }
-
     }
 
 
