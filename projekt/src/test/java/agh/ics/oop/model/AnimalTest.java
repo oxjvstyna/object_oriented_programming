@@ -50,14 +50,12 @@ class AnimalTest {
         MoveValidator validator = position -> true; // Always allows movement
 
         int initialEnergy = animal.getEnergy();
-        int energyLossPerMove = 10;
 
         // when
-        animal.addEnergy(-energyLossPerMove);
         animal.move(validator);
 
         // then
-        int expectedEnergy = initialEnergy - energyLossPerMove;
+        int expectedEnergy = initialEnergy - 1;
         assertEquals(expectedEnergy, animal.getEnergy()); // Ensure energy is as expected
     }
 

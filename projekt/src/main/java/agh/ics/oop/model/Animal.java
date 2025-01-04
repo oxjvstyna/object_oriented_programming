@@ -19,7 +19,7 @@ public class Animal implements WorldElement {
     public Animal parent1;
     public Animal parent2;
     int birthEnergy;
-    private MoveVariant moveVariant;
+    private final MoveVariant moveVariant;
     private int age = 0;
     private int numberOfChildren = 0;
 
