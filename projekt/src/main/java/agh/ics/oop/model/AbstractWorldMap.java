@@ -1,7 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.OptionsParser;
-import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
@@ -20,6 +18,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected int animalConfig;
     protected final List<MapChangeListener> observers = new ArrayList<>();
     protected Set<Vector2d> preferredFields;
+    int maxAnimalSize = 0;
+
 
     public AbstractWorldMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
         this.growthVariant = growthVariant;
@@ -29,6 +29,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
+        this.plantEnergy = 10;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -46,36 +47,59 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     protected void removeAnimals() {
-        for (List<Animal> field : occupiedFields.values()) {
-            for (Animal animal : field) {
-                animals.remove(animal);
-                field.remove(animal);
+        List<Animal> toRemove = new ArrayList<>();
+        for (Animal animal : animals) {
+            if (!animal.isAlive()) {
+                toRemove.add(animal);
+            }
+        }
+        for (Animal animal : toRemove) {
+            animals.remove(animal);
+            List<Animal> animalsAtPosition = occupiedFields.get(animal.getPosition());
+            if (animalsAtPosition != null) {
+                animalsAtPosition.remove(animal);
+                if (animalsAtPosition.isEmpty()) {
+                    occupiedFields.remove(animal.getPosition());
+                }
             }
         }
     }
 
-    protected void handleClash(Animal animal1, Animal animal2) {
-        // tu cos bedzie...
+
+    protected Animal resolveClash(List<Animal> animals) {
+        // Sortuj zwierzęta według priorytetów
+        return animals.stream()
+                .max(Comparator.comparingInt(Animal::getEnergy)             // Najwięcej energii
+                        .thenComparingInt(Animal::getAge)                   // Najstarsze
+                        .thenComparingInt(Animal::getNumberOfChildren)      // Najwięcej dzieci
+                        .thenComparing(a -> Math.random()))                 // Losowość
+                .orElse(null); // Zwróć zwierzę o najwyższym priorytecie
     }
+
 
     protected void initializeAnimals(int animalCount) {
         RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
-                    this.place(new Animal(position, 100, 5, 10, 10, 1, 4, moveVariant));
-                } catch (IncorrectPositionException e) {
-                    throw new RuntimeException(e);
+                    this.place(new Animal(position, 10, 5, 10, 10, 1, 4, moveVariant));
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             });
-
     }
 
     protected void consumePlants() {
-        // To napraw zeby handlowalo clashe
-        for (Animal animal : animals) {
-            Vector2d position = animal.getPosition();
-            if (plants.contains(position)) {
-                animal.addEnergy(plantEnergy);
+        for (List<Animal> field : occupiedFields.values()){
+
+            if (field == null || field.isEmpty()) {
+                continue;
+            }
+
+            Animal highestPriorityAnimal = resolveClash(field);
+            Vector2d position = highestPriorityAnimal.getPosition();
+            if (plants.contains(position)){
+                highestPriorityAnimal.addEnergy(plantEnergy);
+//                System.out.println("Energia wzrosla z " + highestPriorityAnimal.getEnergy() + " do " + (highestPriorityAnimal.getEnergy() + plantEnergy) );
                 plants.remove(position);
             }
         }
@@ -83,16 +107,25 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
     protected void moveAnimals() {
         for (Animal animal : animals) {
-            System.out.println(animal.getOrientation());
-            System.out.println(OptionsParser.parse(animal.getGenomes().getGenesAsStrings()));
             this.move(animal);
         }
     }
 
-    protected void reproduceAnimals() {
+    protected void reproduceAnimals() { // do sprawdzenia czy na pewno jest dobrze (czy czasem nie jest tutaj zle uzywana prioretytowosc)
         for (List<Animal> field : occupiedFields.values()) {
-            for (Animal animal : field) {
-                continue;
+            if (field.size() > 1) {
+
+                Animal parent1 = resolveClash(field);
+                field.remove(parent1);
+                Animal parent2 = resolveClash(field);
+                field.add(parent1);
+
+                if (parent1.getEnergy() >= parent1.birthEnergy && parent2.getEnergy() >= parent2.birthEnergy) {
+                    Animal child = parent1.reproduce(parent2);
+                    animals.add(child);
+                    this.maxAnimalSize = Math.max(animals.size(), maxAnimalSize); // do przeniesienia
+                    this.place(child);
+                }
             }
         }
     }
@@ -102,11 +135,22 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     public void handleMap() {
-//        removeAnimals();
+        removeAnimals();
         moveAnimals();
-//        consumePlants();
-//        reproduceAnimals();
-//        growPlants();
+        consumePlants();
+        reproduceAnimals();
+        growPlants();
+    }
+
+    public void getReport() {
+        System.out.println("Liczba zwierzat na mapie: " + animals.size());
+        System.out.println("Liczba roslin na mapie: " + plants.size());
+        System.out.println("Liczba wolnych pol: " + (this.width * this.height - occupiedFields.size()));
+        System.out.println("Najpopularniejszy genotyp: " + "DO ZROBIENIA");
+        System.out.println("Sredni poziom energii dla zyjacych zwierzakow: " + "DO ZROBIENIA");
+        System.out.println("Sredni poziom dlugosci zycia zwierzakow na mapie: " + "DO ZROBIENIA");
+        System.out.println("Srednia liczba dzieci dla zyjacych zwierzakow: " + "DO ZROBIENIA");
+        System.out.println("Total animals: " + this.maxAnimalSize);
     }
 
 
@@ -137,12 +181,10 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public void move(Animal animal) {
         Vector2d initialPosition = animal.getPosition();
         occupiedFields.get(initialPosition).remove(animal);
-        animals.remove(initialPosition);
 
         animal.move(this);
         Vector2d newPosition = adjustPosition(animal);
 
-        animals.add(animal);
         occupiedFields.putIfAbsent(newPosition, new ArrayList<>());
         occupiedFields.get(newPosition).add(animal);
 
@@ -151,16 +193,12 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
 
     @Override
-    public void place(Animal animal) throws IncorrectPositionException {
+    public void place(Animal animal) {
         Vector2d position = animal.getPosition();
-        if (canMoveTo(position)) {
-            animals.add(animal);
-            occupiedFields.putIfAbsent(position, new ArrayList<>());
-            occupiedFields.get(position).add(animal);
-            notifyObservers("Zwierze umieszczone na pozycji " + position);
-        } else {
-            throw new IncorrectPositionException(position);
-        }
+        animals.add(animal);
+        occupiedFields.putIfAbsent(position, new ArrayList<>());
+        occupiedFields.get(position).add(animal);
+        notifyObservers("Zwierze umieszczone na pozycji " + position);
     }
 
     @Override

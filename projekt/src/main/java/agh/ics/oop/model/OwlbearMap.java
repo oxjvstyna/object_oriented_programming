@@ -1,14 +1,13 @@
 package agh.ics.oop.model;
-import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 public class OwlbearMap extends AbstractWorldMap {
-    public OwlbearMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) throws IncorrectPositionException {
+    public OwlbearMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
         super(width, height, growthVariant, moveVariant);
         generateOwlbearTerritory();
     }
 
-    public void generateOwlbearTerritory() throws IncorrectPositionException {
+    public void generateOwlbearTerritory() {
         int sideLength = (int) Math.sqrt(0.2 * this.width * this.height);
 
         RandomPositionGenerator areaGenerator = new RandomPositionGenerator(
