@@ -29,7 +29,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
-        this.plantEnergy = 2;
+        this.plantEnergy = 10;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -88,8 +88,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
             });
     }
 
-
-
     protected void consumePlants() {
         for (List<Animal> field : occupiedFields.values()){
 
@@ -113,20 +111,21 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         }
     }
 
-    protected void reproduceAnimals() {
+    protected void reproduceAnimals() { // do sprawdzenia czy na pewno jest dobrze (czy czasem nie jest tutaj zle uzywana prioretytowosc)
         for (List<Animal> field : occupiedFields.values()) {
-            if (field.size() >= 2) {
-                // Logika oczywiście do zmiany
-                Animal parent1 = field.getFirst();
-                Animal parent2 = field.getLast();
+            if (field.size() > 1) {
+
+                Animal parent1 = resolveClash(field);
+                field.remove(parent1);
+                Animal parent2 = resolveClash(field);
+                field.add(parent1);
+
                 if (parent1.getEnergy() >= parent1.birthEnergy && parent2.getEnergy() >= parent2.birthEnergy) {
                     Animal child = parent1.reproduce(parent2);
                     animals.add(child);
-                    this.maxAnimalSize = Math.max(animals.size(), maxAnimalSize);
+                    this.maxAnimalSize = Math.max(animals.size(), maxAnimalSize); // do przeniesienia
                     this.place(child);
-                    return;
                 }
-
             }
         }
     }

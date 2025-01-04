@@ -7,10 +7,10 @@ import java.util.List;
 
 public class World {
     public static void main(String[] args) {
-        GrowthVariant growthVariant = new FertileEquator(10, 10);
+        GrowthVariant growthVariant = new FertileEquator(5, 5);
         MoveVariant predestination = new TotalPredestination();
         MoveVariant crazy = new SlightMadness();
-        EarthMap map = new EarthMap(10, 10, growthVariant, predestination);
+        EarthMap map = new EarthMap(5, 5, growthVariant, predestination);
         ConsoleMapDisplay logger = new ConsoleMapDisplay();
         int animalCount = 50;
         int simulationSteps = 20;
