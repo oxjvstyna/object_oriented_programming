@@ -58,35 +58,16 @@ public class Animal implements WorldElement {
     }
 
     public Animal reproduce(Animal parent) {
-        List<Integer> childGenes = this.genome.createChildGenome(this, parent);
 
-        if (childGenes == null || childGenes.isEmpty()) {
-            throw new IllegalStateException("Child genome cannot be null or empty.");
-        }
+        List<Integer> childGenes = this.genome.createChildGenome(this, parent);
 
         Genome childGenome = new Genome(childGenes, this.minMutation, this.maxMutation);
 
-        // Utwórz dziecko z poprawnym genomem i pozycją
-        Animal child = new Animal(
-                this.position,
-                this.birthEnergy + parent.birthEnergy,
-                childGenome,
-                this,
-                parent,
-                this.reproductionEnergy,
-                this.birthEnergy,
-                this.minMutation,
-                this.maxMutation,
-                -1,
-                moveVariant
-        );
-
+        Animal child = new Animal(this.position,this.birthEnergy + parent.birthEnergy, childGenome, this, parent, this.reproductionEnergy, this.birthEnergy, this.minMutation, this.maxMutation, -1, moveVariant);
         this.addEnergy(-this.birthEnergy);
         parent.addEnergy(-parent.birthEnergy);
-
         return child;
     }
-
 
     public void move(MoveValidator validator) {
         int index = this.moveVariant.getNextMoveIndex(genome, moveIndex);

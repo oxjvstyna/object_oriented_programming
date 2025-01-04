@@ -18,6 +18,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected int animalConfig;
     protected final List<MapChangeListener> observers = new ArrayList<>();
     protected Set<Vector2d> preferredFields;
+    int maxAnimalSize = 0;
+
 
     public AbstractWorldMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
         this.growthVariant = growthVariant;
@@ -27,7 +29,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
-        this.plantEnergy = 1;
+        this.plantEnergy = 2;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -87,10 +89,14 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                 // Logika oczywiście do zmiany
                 Animal parent1 = field.getFirst();
                 Animal parent2 = field.getLast();
-                Animal child = parent1.reproduce(parent2);
-                animals.add(child);
-                this.place(child);
-                return;
+                if (parent1.getEnergy() >= parent1.birthEnergy && parent2.getEnergy() >= parent2.birthEnergy) {
+                    Animal child = parent1.reproduce(parent2);
+                    animals.add(child);
+                    this.maxAnimalSize = Math.max(animals.size(), maxAnimalSize);
+                    this.place(child);
+                    return;
+                }
+
             }
         }
     }
@@ -115,6 +121,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         System.out.println("Sredni poziom energii dla zyjacych zwierzakow: " + "DO ZROBIENIA");
         System.out.println("Sredni poziom dlugosci zycia zwierzakow na mapie: " + "DO ZROBIENIA");
         System.out.println("Srednia liczba dzieci dla zyjacych zwierzakow: " + "DO ZROBIENIA");
+        System.out.println("Total animals: " + this.maxAnimalSize);
     }
 
 
