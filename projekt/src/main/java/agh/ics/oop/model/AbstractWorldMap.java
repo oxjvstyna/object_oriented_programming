@@ -47,12 +47,35 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     protected void removeAnimals() {
-        animals.removeIf(animal -> !animal.isAlive());
+        List<Animal> toRemove = new ArrayList<>();
+        for (Animal animal : animals) {
+            if (!animal.isAlive()) {
+                toRemove.add(animal);
+            }
+        }
+        for (Animal animal : toRemove) {
+            animals.remove(animal);
+            List<Animal> animalsAtPosition = occupiedFields.get(animal.getPosition());
+            if (animalsAtPosition != null) {
+                animalsAtPosition.remove(animal);
+                if (animalsAtPosition.isEmpty()) {
+                    occupiedFields.remove(animal.getPosition());
+                }
+            }
+        }
     }
 
-    protected void handleClash(Animal animal1, Animal animal2) {
-        // tu cos bedzie...
+
+    protected Animal resolveClash(List<Animal> animals) {
+        // Sortuj zwierzęta według priorytetów
+        return animals.stream()
+                .max(Comparator.comparingInt(Animal::getEnergy)             // Najwięcej energii
+                        .thenComparingInt(Animal::getAge)                   // Najstarsze
+                        .thenComparingInt(Animal::getNumberOfChildren)      // Najwięcej dzieci
+                        .thenComparing(a -> Math.random()))                 // Losowość
+                .orElse(null); // Zwróć zwierzę o najwyższym priorytecie
     }
+
 
     protected void initializeAnimals(int animalCount) {
         RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
@@ -65,13 +88,20 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
             });
     }
 
+
+
     protected void consumePlants() {
-        // To napraw zeby handlowalo clashe
-        for (Animal animal : animals) {
-            Vector2d position = animal.getPosition();
-            if (plants.contains(position)) {
-                // System.out.println("Energia wzrosla z " + animal.getEnergy() + " do " + (animal.getEnergy() + plantEnergy) );
-                animal.addEnergy(plantEnergy);
+        for (List<Animal> field : occupiedFields.values()){
+
+            if (field == null || field.isEmpty()) {
+                continue;
+            }
+
+            Animal highestPriorityAnimal = resolveClash(field);
+            Vector2d position = highestPriorityAnimal.getPosition();
+            if (plants.contains(position)){
+                highestPriorityAnimal.addEnergy(plantEnergy);
+//                System.out.println("Energia wzrosla z " + highestPriorityAnimal.getEnergy() + " do " + (highestPriorityAnimal.getEnergy() + plantEnergy) );
                 plants.remove(position);
             }
         }

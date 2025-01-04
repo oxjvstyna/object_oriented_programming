@@ -20,6 +20,8 @@ public class Animal implements WorldElement {
     public Animal parent2;
     int birthEnergy;
     private MoveVariant moveVariant;
+    private int age = 0;
+    private int numberOfChildren = 0;
 
     public Animal(Vector2d initialPosition, int initialEnergy, int genomeLength, int reproductionEnergy, int birthEnergy, int minMutation, int maxMutation, MoveVariant moveVariant) {
         this.orientation = MapDirection.NORTH; //randomowa
@@ -59,6 +61,9 @@ public class Animal implements WorldElement {
 
     public Animal reproduce(Animal parent) {
 
+        this.numberOfChildren++;
+        parent.setNumberOfChildren(parent.getNumberOfChildren() + 1);
+
         List<Integer> childGenes = this.genome.createChildGenome(this, parent);
 
         Genome childGenome = new Genome(childGenes, this.minMutation, this.maxMutation);
@@ -70,6 +75,7 @@ public class Animal implements WorldElement {
     }
 
     public void move(MoveValidator validator) {
+        this.age += 1;
         int index = this.moveVariant.getNextMoveIndex(genome, moveIndex);
         int moveDirectionCode = genome.getGenes().get(index);
         List<MoveDirection> directions = OptionsParser.parse(new String[]{Integer.toString(moveDirectionCode)});
@@ -150,5 +156,17 @@ public class Animal implements WorldElement {
         );
 
         this.orientation = opposites.get(this.orientation);
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public int getNumberOfChildren() {
+        return numberOfChildren;
+    }
+
+    public void setNumberOfChildren(int numberOfChildren) {
+        this.numberOfChildren = numberOfChildren;
     }
 }
