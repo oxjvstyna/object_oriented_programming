@@ -31,7 +31,7 @@ public class Animal implements WorldElement {
         this.reproductionEnergy = reproductionEnergy;
         this.minMutation = minMutation;
         this.maxMutation = maxMutation;
-        this.moveIndex = 0;
+        this.moveIndex = -1;
         this.moveVariant = moveVariant;
     }
 
@@ -64,7 +64,7 @@ public class Animal implements WorldElement {
         parent2.addEnergy(-parent2.birthEnergy);
 
 
-        return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.reproductionEnergy, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation, 0, moveVariant);
+        return new Animal(parent1.position,2 * parent1.birthEnergy, childGenome, parent1, parent2, parent1.reproductionEnergy, parent1.birthEnergy, parent1.minMutation, parent1.maxMutation, -1, moveVariant);
     }
 
     public void move(MoveValidator validator) {
