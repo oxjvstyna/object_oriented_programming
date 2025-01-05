@@ -26,6 +26,8 @@ public class World {
         SimulationConfig config = new SimulationConfig(map, growthVariant, animalCount, simulationSteps, predestination);
 
         Simulation simulation = new Simulation(config);
-        simulation.run();
+
+        SimulationEngine engine = new SimulationEngine(simulation);
+        engine.runAsyncInThreadPool();
     }
 }
