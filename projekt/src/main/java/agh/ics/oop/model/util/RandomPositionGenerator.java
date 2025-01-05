@@ -8,19 +8,13 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
     private final ArrayList<Vector2d> positions;
 
     public RandomPositionGenerator(int maxWidth, int maxHeight, int lowerLeftX, int lowerLeftY, int positionCount) {
-
         this.positions = new ArrayList<>();
 
-        for (int x = lowerLeftX; x < lowerLeftX + maxWidth; x++) {
-            for (int y = lowerLeftY; y < lowerLeftY + maxHeight; y++) {
-                positions.add(new Vector2d(x, y));
-            }
-        }
-
-        Collections.shuffle(positions);
-
-        while (positions.size() > positionCount) {
-            positions.removeLast();
+        Random random = new Random();
+        for (int i = 0; i < positionCount; i++) {
+            int x = lowerLeftX + random.nextInt(maxWidth);
+            int y = lowerLeftY + random.nextInt(maxHeight);
+            positions.add(new Vector2d(x, y)); // Dodawanie punktów bez sprawdzania ich unikalności
         }
     }
 
@@ -39,7 +33,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
 
         @Override
         public Vector2d next() {
-            return  internalIterator.next();
+            return internalIterator.next();
         }
     }
 }
