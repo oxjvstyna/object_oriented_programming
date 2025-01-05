@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WorldMap<T, P> extends MoveValidator {
 
@@ -8,7 +9,9 @@ public interface WorldMap<T, P> extends MoveValidator {
 
     void move(T object);
 
-    WorldElement objectAt(P position);
+    Optional<WorldElement> objectAt(P position);
 
     List<WorldElement> getElements();
+
+    List<Animal> getOrderedAnimals();
 }
