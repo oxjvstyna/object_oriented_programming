@@ -13,10 +13,12 @@ public class World {
         MoveVariant predestination = new TotalPredestination();
         MoveVariant crazy = new SlightMadness();
         EarthMap map = new EarthMap(5, 5, growthVariant, predestination);
+        ConsoleMapDisplay logger = new ConsoleMapDisplay();
+        map.addObserver(logger);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         map.addObserver((worldMap, message) ->{
                 String currentTime = LocalDateTime.now().format(formatter);
-                System.out.println(currentTime + " " + message);
+                System.out.println(currentTime);
         });
         int animalCount = 50;
         int simulationSteps = 20;
