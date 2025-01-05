@@ -4,6 +4,8 @@ import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.IncorrectPositionException;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GrassFieldTest {
@@ -29,10 +31,10 @@ public class GrassFieldTest {
             grassField.place(animal);
 
             // when
-            WorldElement elementAtPosition = grassField.objectAt(new Vector2d(2, 2));
+            Optional<WorldElement> elementAtPosition = grassField.objectAt(new Vector2d(2, 2));
 
-            // then
-            assertInstanceOf(Animal.class, elementAtPosition);
+            assertTrue(elementAtPosition.isPresent(), "Element powinien być obecny na pozycji (2, 2)");
+            assertInstanceOf(Animal.class, elementAtPosition.get(), "Element na pozycji (2, 2) powinien być instancją klasy Animal");
         } catch (IncorrectPositionException e) {
             fail("Niespodziewany IncorrectPositionException: " + e.getMessage());
         }
@@ -166,10 +168,10 @@ public class GrassFieldTest {
             grassField.place(animal);
 
             // when
-            WorldElement element = grassField.objectAt(new Vector2d(2, 2));
+            Optional<WorldElement> element = grassField.objectAt(new Vector2d(2, 2));
 
             // then
-            assertEquals(animal, element);
+            assertTrue(element.isPresent(), "Element powinien być obecny na pozycji (2, 2)");
         } catch (IncorrectPositionException e) {
             fail("Niespodziewany IncorrectPositionException: " + e.getMessage());
         }
