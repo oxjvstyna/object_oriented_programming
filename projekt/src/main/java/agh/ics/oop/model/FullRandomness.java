@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import static java.util.Collections.shuffle;
 
-public class FullRandomness {
+public class FullRandomness implements MutationVariant {
 
     protected static void mutate(int minMutation, int maxMutation, Genome genome) {
         Random random = new Random();

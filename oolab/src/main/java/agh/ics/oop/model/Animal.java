@@ -15,6 +15,16 @@ public class Animal implements WorldElement {
     }
 
     @Override
+    public String getTextureResource() {
+        return switch (this.orientation){
+            case NORTH -> "up.png";
+            case EAST -> "right.png";
+            case SOUTH -> "down.png";
+            case WEST -> "left.png";
+        };
+    }
+
+    @Override
     public String toString() {
         return switch (orientation){
             case EAST -> ">";

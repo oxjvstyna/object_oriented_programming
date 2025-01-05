@@ -3,6 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected GrowthVariant growthVariant;
@@ -10,14 +11,14 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
     protected final Set<Animal> animals = new HashSet<>();
     protected final Set<Vector2d> plants = new HashSet<>();
+    protected final Map<String, Integer> genotypes = new HashMap<>();
+    protected final List<MapChangeListener> observers = new ArrayList<>();
+    protected Set<Vector2d> preferredFields;
     protected Vector2d lowerLeft;
     protected Vector2d upperRight;
     protected int width;
     protected int height;
     protected int plantEnergy;
-    protected int animalConfig;
-    protected final List<MapChangeListener> observers = new ArrayList<>();
-    protected Set<Vector2d> preferredFields;
     int maxAnimalSize = 0;
 
 
@@ -29,7 +30,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
-        this.plantEnergy = 10;
+        this.plantEnergy = 2;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -67,13 +68,12 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
 
     protected Animal resolveClash(List<Animal> animals) {
-        // Sortuj zwierzęta według priorytetów
         return animals.stream()
-                .max(Comparator.comparingInt(Animal::getEnergy)             // Najwięcej energii
-                        .thenComparingInt(Animal::getAge)                   // Najstarsze
-                        .thenComparingInt(Animal::getNumberOfChildren)      // Najwięcej dzieci
-                        .thenComparing(a -> Math.random()))                 // Losowość
-                .orElse(null); // Zwróć zwierzę o najwyższym priorytecie
+                .max(Comparator.comparingInt(Animal::getEnergy)
+                        .thenComparingInt(Animal::getAge)
+                        .thenComparingInt(Animal::getNumberOfChildren)
+                        .thenComparing(a -> Math.random()))
+                .orElse(null);
     }
 
 
@@ -123,7 +123,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                 if (parent1.getEnergy() >= parent1.birthEnergy && parent2.getEnergy() >= parent2.birthEnergy) {
                     Animal child = parent1.reproduce(parent2);
                     animals.add(child);
-                    this.maxAnimalSize = Math.max(animals.size(), maxAnimalSize); // do przeniesienia
                     this.place(child);
                 }
             }
@@ -143,14 +142,37 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     public void getReport() {
+        String mostFrequentGenome = genotypes.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("BRAK");
+
+        double averageEnergyForLiveAnimals = animals.stream()
+                .filter(Animal::isAlive)
+                .mapToInt(Animal::getEnergy)
+                .average()
+                .orElse(0.0);
+
+        double averageDaysAliveForLiveAnimals = animals.stream()
+                .filter(Animal::isAlive)
+                .mapToInt(Animal::getAge)
+                .average()
+                .orElse(0.0);
+
+        double averageChildrenForLiveAnimals = animals.stream()
+                .filter(Animal::isAlive)
+                .mapToInt(Animal::getNumberOfChildren)
+                .average()
+                .orElse(0.0);
+
         System.out.println("Liczba zwierzat na mapie: " + animals.size());
         System.out.println("Liczba roslin na mapie: " + plants.size());
         System.out.println("Liczba wolnych pol: " + (this.width * this.height - occupiedFields.size()));
-        System.out.println("Najpopularniejszy genotyp: " + "DO ZROBIENIA");
-        System.out.println("Sredni poziom energii dla zyjacych zwierzakow: " + "DO ZROBIENIA");
-        System.out.println("Sredni poziom dlugosci zycia zwierzakow na mapie: " + "DO ZROBIENIA");
-        System.out.println("Srednia liczba dzieci dla zyjacych zwierzakow: " + "DO ZROBIENIA");
-        System.out.println("Total animals: " + this.maxAnimalSize);
+        System.out.println("Najpopularniejszy genotyp: " + mostFrequentGenome);
+        System.out.println("Sredni poziom energii dla zyjacych zwierzakow: " + averageEnergyForLiveAnimals);
+        System.out.println("Sredni poziom dlugosci zycia zwierzakow na mapie: " + averageDaysAliveForLiveAnimals);
+        System.out.println("Srednia liczba dzieci dla zyjacych zwierzakow: " + averageChildrenForLiveAnimals);
+        System.out.println("Laczna ilosc zwierzat na mapie: " + this.maxAnimalSize);
     }
 
 
@@ -196,10 +218,15 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
         animals.add(animal);
+        genotypes.merge(Arrays.toString(animal.getGenomes().getGenesAsStrings()), 1, Integer::sum);
         occupiedFields.putIfAbsent(position, new ArrayList<>());
         occupiedFields.get(position).add(animal);
+
+        maxAnimalSize = Math.max(maxAnimalSize, animals.size());
+
         notifyObservers("Zwierze umieszczone na pozycji " + position);
     }
+
 
     @Override
     public boolean canMoveTo(Vector2d position) {
@@ -208,14 +235,28 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        // na szybko do zmiany
-        return new Plant(new Vector2d(position.getX(), position.getY()));
+    public Optional<WorldElement> objectAt(Vector2d position) {
+        if (occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty()) {
+            return Optional.of(occupiedFields.get(position).getFirst());
+        } else if (plants.contains(position)) {
+            return Optional.of(new Plant(position));
+        }
+        return Optional.empty();
     }
+
 
     @Override
     public List<WorldElement> getElements() {
         return new ArrayList<>(animals);
+    }
+
+    @Override
+    public List<Animal> getOrderedAnimals() {
+        List<Animal> sortedAnimals = new ArrayList<>(animals);
+        return sortedAnimals.stream()
+                .sorted(Comparator.comparing((Animal animal) -> animal.getPosition().getX())
+                        .thenComparing(animal -> animal.getPosition().getY()))
+                .toList();
     }
 
 

@@ -82,18 +82,18 @@ public class SimulationPresenter implements MapChangeListener {
         for (int x = lowerLeft.getX(); x <= upperRight.getX(); x++) {
             for (int y = lowerLeft.getY(); y <= upperRight.getY(); y++) {
                 Vector2d position = new Vector2d(x, y);
-                Label cellLabel = new Label();
 
-                if (worldMap.isOccupied(position)) {
-                    Object object = worldMap.objectAt(position);
-                    cellLabel.setText(object.toString());
-                }
-
-                GridPane.setHalignment(cellLabel, HPos.CENTER);
-                mapGrid.add(cellLabel, x - lowerLeft.getX() + 1, rows - (y - lowerLeft.getY()));
+                int finalX = x;
+                int finalY = y;
+                worldMap.objectAt(position)
+                        .ifPresent(element -> {
+                            WorldElementBox elementBox = new WorldElementBox(element);
+                            mapGrid.add(elementBox, finalX - lowerLeft.getX() + 1, rows - (finalY - lowerLeft.getY()));
+                        });
             }
         }
     }
+
 
 
     private void clearGrid() {

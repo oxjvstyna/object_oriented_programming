@@ -5,6 +5,8 @@ import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GrassField extends AbstractWorldMap{
 
@@ -20,6 +22,7 @@ public class GrassField extends AbstractWorldMap{
         }
     }
 
+
     @Override
     public void place(Animal animal) throws IncorrectPositionException {
         super.place(animal);
@@ -27,29 +30,33 @@ public class GrassField extends AbstractWorldMap{
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        if(objectAt(position) instanceof Grass){
+        Optional<WorldElement> element = objectAt(position);
+
+        if (element.isPresent() && element.get() instanceof Grass) {
             return true;
         }
-        else return !isOccupied(position);
+        return !isOccupied(position);
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        if(animals.containsKey(position)){
+    public Optional<WorldElement> objectAt(Vector2d position) {
+        if (animals.containsKey(position)) {
             return super.objectAt(position);
         }
-        if(grasses.containsKey(position)){
-            return grasses.get(position);
+        if (grasses.containsKey(position)) {
+            return Optional.of(grasses.get(position)); // grasses.get(position) zakładamy, że nie zwraca null
         }
-        return null;
+        return Optional.empty();
     }
+
+
 
     @Override
     public List<WorldElement> getElements() {
-        List<WorldElement> elements = super.getElements();
-        elements.addAll(grasses.values());
-        return elements;
+        return Stream.concat(super.getElements().stream(), grasses.values().stream())
+                .collect(Collectors.toList());
     }
+
     @Override
     public Boundary getCurrentBounds(){
         Vector2d left = new Vector2d(upperRight.getX(), upperRight.getY());
