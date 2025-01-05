@@ -22,6 +22,7 @@ public class GrassField extends AbstractWorldMap{
         }
     }
 
+
     @Override
     public void place(Animal animal) throws IncorrectPositionException {
         super.place(animal);

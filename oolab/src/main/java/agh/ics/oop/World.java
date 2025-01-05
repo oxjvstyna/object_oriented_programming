@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.util.FileMapDisplay;
 import javafx.application.Application;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,11 @@ public class World {
 
             for (int i = 0; i < 1; i++){
                 GrassField grassField = new GrassField(10);
+                FileMapDisplay fileObserver = new FileMapDisplay(grassField.getID());
                 RectangularMap rectangle = new RectangularMap(2, 10);
+                FileMapDisplay secondFileObserver = new FileMapDisplay(rectangle.getID());
+                grassField.addObserver(fileObserver);
+                rectangle.addObserver(secondFileObserver);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 rectangle.addObserver((worldMap, message) ->{
                     String currentTime = LocalDateTime.now().format(formatter);
@@ -32,6 +37,8 @@ public class World {
                     String currentTime = LocalDateTime.now().format(formatter);
                     System.out.println(currentTime + " " + message);
                 });
+
+
                 grassField.addObserver(logger);
                 rectangle.addObserver(logger);
                 simulations.add(new Simulation(positions, directions, grassField));

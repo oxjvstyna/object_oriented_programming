@@ -7,6 +7,12 @@ public class Grass implements WorldElement {
     }
 
     @Override
+    public String getTextureResource() {
+        return "grass.png";
+    }
+
+
+    @Override
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
