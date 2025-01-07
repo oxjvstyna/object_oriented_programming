@@ -172,7 +172,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         System.out.println("Sredni poziom energii dla zyjacych zwierzakow: " + averageEnergyForLiveAnimals);
         System.out.println("Sredni poziom dlugosci zycia zwierzakow na mapie: " + averageDaysAliveForLiveAnimals);
         System.out.println("Srednia liczba dzieci dla zyjacych zwierzakow: " + averageChildrenForLiveAnimals);
-        System.out.println("Laczna ilosc zwierzat na mapie: " + this.maxAnimalSize);
+        System.out.println("Maksymalna ilosc zwierzat na mapie: " + this.maxAnimalSize);
     }
 
 
@@ -232,16 +232,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public boolean canMoveTo(Vector2d position) {
         return (position.precedes(upperRight)) &&
                 (position.follows(lowerLeft));
-    }
-
-    @Override
-    public Optional<WorldElement> objectAt(Vector2d position) {
-        if (occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty()) {
-            return Optional.of(occupiedFields.get(position).getFirst());
-        } else if (plants.contains(position)) {
-            return Optional.of(new Plant(position));
-        }
-        return Optional.empty();
     }
 
 

@@ -13,6 +13,7 @@ public class World {
         MoveVariant predestination = new TotalPredestination();
         MoveVariant crazy = new SlightMadness();
         EarthMap map = new EarthMap(50, 50, growthVariant, predestination);
+        OwlbearMap map2 = new OwlbearMap(50, 50, growthVariant, predestination);
         ConsoleMapDisplay logger = new ConsoleMapDisplay();
         map.addObserver(logger);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

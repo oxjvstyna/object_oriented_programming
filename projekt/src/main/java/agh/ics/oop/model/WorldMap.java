@@ -9,8 +9,6 @@ public interface WorldMap<T, P> extends MoveValidator {
 
     void move(T object);
 
-    Optional<WorldElement> objectAt(P position);
-
     List<WorldElement> getElements();
 
     List<Animal> getOrderedAnimals();
