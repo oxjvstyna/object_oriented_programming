@@ -4,25 +4,26 @@ import agh.ics.oop.model.MoveDirection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class OptionsParser {
     public OptionsParser() {
     }
     public static List<MoveDirection> parse(String[] args) {
-        List<MoveDirection> directions = new ArrayList<MoveDirection>();
-        for (String arg : args) {
-            switch (arg) {
-                case "0" -> directions.add(MoveDirection.FORWARD);
-                case "1" -> directions.add(MoveDirection.FORWARD_RIGHT);
-                case "2" -> directions.add(MoveDirection.RIGHT);
-                case "3" -> directions.add(MoveDirection.BACKWARD_RIGHT);
-                case "4" -> directions.add(MoveDirection.BACKWARD);
-                case "5" -> directions.add(MoveDirection.BACKWARD_LEFT);
-                case "6" -> directions.add(MoveDirection.LEFT);
-                case "7" -> directions.add(MoveDirection.FORWARD_LEFT);
+
+        return Stream.of(args)
+                .map(arg -> switch(arg){
+                case "0" -> MoveDirection.FORWARD;
+                case "1" -> MoveDirection.FORWARD_RIGHT;
+                case "2" -> MoveDirection.RIGHT;
+                case "3" -> MoveDirection.BACKWARD_RIGHT;
+                case "4" -> MoveDirection.BACKWARD;
+                case "5" -> MoveDirection.BACKWARD_LEFT;
+                case "6" -> MoveDirection.LEFT;
+                case "7" -> MoveDirection.FORWARD_LEFT;
                 default -> throw new IllegalArgumentException(arg + " jest nieprawidlowym ruchem.");
-            }
+            })
+                .collect(Collectors.toList());
         }
-        return directions;
     }
-}

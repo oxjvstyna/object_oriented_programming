@@ -1,34 +1,52 @@
 package agh.ics.oop.model;
-import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
+import java.util.List;
+
 public class OwlbearMap extends AbstractWorldMap {
-    public OwlbearMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) throws IncorrectPositionException {
+    Owlbear owlbear;
+    Vector2d territoryLowerLeft;
+    Vector2d territoryUpperRight;
+    public OwlbearMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
         super(width, height, growthVariant, moveVariant);
         generateOwlbearTerritory();
     }
 
-    public void generateOwlbearTerritory() throws IncorrectPositionException {
+    public void generateOwlbearTerritory() {
         int sideLength = (int) Math.sqrt(0.2 * this.width * this.height);
 
-        RandomPositionGenerator areaGenerator = new RandomPositionGenerator(
-                width - sideLength + 1, height - sideLength + 1,
-                0, 0, 1
-        );
-        Vector2d lowerLeft = areaGenerator.iterator().next();
+        RandomPositionGenerator areaGenerator = new RandomPositionGenerator(width - sideLength + 1, height - sideLength + 1, 0, 0, 1);
+        territoryLowerLeft = areaGenerator.iterator().next();
 
-        Vector2d upperRight = new Vector2d(
-                lowerLeft.getX() + sideLength - 1,
-                lowerLeft.getY() + sideLength - 1
-        );
+        territoryUpperRight = new Vector2d(lowerLeft.getX() + sideLength - 1, lowerLeft.getY() + sideLength - 1);
 
-        RectangularMap owlbearTerritory = new RectangularMap(sideLength, sideLength, lowerLeft, upperRight, growthVariant, moveVariant);
-
-        RandomPositionGenerator generator = new RandomPositionGenerator(
-                sideLength, sideLength, lowerLeft.getX(), lowerLeft.getY(), 1
-        );
+        RandomPositionGenerator generator = new RandomPositionGenerator(sideLength, sideLength, territoryLowerLeft.getX(), territoryUpperRight.getY(), 1);
         Vector2d owlbearPosition = generator.iterator().next();
-        owlbearTerritory.place(new Owlbear(owlbearPosition, 999999999, 5, 99999, 99999, 9999, 9999, moveVariant));
+        this.owlbear = new Owlbear(owlbearPosition, 999999999, 5, 99999, 99999, 9999, 9999, moveVariant, this);
+        this.place(owlbear);
     }
 
+    public void eatAnimals() {
+        for (Animal animal : occupiedFields.get(owlbear.getPosition())) {
+            animal.addEnergy(-999999999);
+        }
+    }
+
+    public Vector2d getTerritoryLowerLeft() {
+        return territoryLowerLeft;
+    }
+
+    public Vector2d getTerritoryUpperRight() {
+        return territoryUpperRight;
+    }
+
+    @Override
+    public void handleMap() {
+        removeAnimals();
+        moveAnimals();
+        eatAnimals();
+        consumePlants();
+        reproduceAnimals();
+        growPlants();
+    }
 }

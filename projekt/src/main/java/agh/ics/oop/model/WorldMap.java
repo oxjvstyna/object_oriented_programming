@@ -1,20 +1,15 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.util.Boundary;
-import agh.ics.oop.model.util.IncorrectPositionException;
-
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public interface WorldMap<T, P> extends MoveValidator {
 
-    void place(T object) throws IncorrectPositionException;
+    void place(T object);
 
     void move(T object);
 
-    WorldElement objectAt(P position);
-
     List<WorldElement> getElements();
+
+    List<Animal> getOrderedAnimals();
 }
