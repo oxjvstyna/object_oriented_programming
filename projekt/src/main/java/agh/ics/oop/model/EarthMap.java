@@ -3,8 +3,8 @@ package agh.ics.oop.model;
 public class EarthMap extends AbstractWorldMap {
 
 
-    public EarthMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
-        super(width, height, growthVariant, moveVariant);
+    public EarthMap(int width, int height, GrowthVariant growthVariant, AnimalConfig animalConfig) {
+        super(width, height, growthVariant, animalConfig);
     }
 
     public Vector2d handleBorder(Animal animal) {
