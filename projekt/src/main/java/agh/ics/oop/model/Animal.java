@@ -14,7 +14,7 @@ public class Animal implements WorldElement {
     private final int maxMutation;
     private final int moveIndex;
     private Vector2d position;
-    private MapDirection orientation;
+    MapDirection orientation;
     private int energy;
     private final Genome genome;
     public Animal parent1;

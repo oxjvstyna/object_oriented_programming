@@ -20,7 +20,7 @@ public class OwlbearMap extends AbstractWorldMap {
 
         RandomPositionGenerator generator = new RandomPositionGenerator(sideLength, sideLength, territoryLowerLeft.x(), territoryLowerLeft.y(), 1);
         Vector2d owlbearPosition = generator.iterator().next();
-        AnimalConfig owlbearConfig = new AnimalConfig( 999999999, 5, 99999, 99999, 9999, 9999, moveVariant);
+        AnimalConfig owlbearConfig = new AnimalConfig( 999999999, 5, 99999, 99999, 9999, 9999, config.moveVariant());
         this.owlbear = new Owlbear(owlbearPosition, owlbearConfig, this);
         this.place(owlbear);
     }

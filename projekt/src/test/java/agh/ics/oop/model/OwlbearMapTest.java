@@ -14,7 +14,8 @@ public class OwlbearMapTest {
     void setup() {
         GrowthVariant growthVariant = new FertileEquator(mapWidth, mapHeight);
         MoveVariant moveVariant = new TotalPredestination();
-        map = new OwlbearMap(mapWidth, mapHeight, growthVariant, moveVariant);
+        AnimalConfig config = new AnimalConfig(100, 100, 100, 100, 100, 100, moveVariant);
+        map = new OwlbearMap(mapWidth, mapHeight, growthVariant, config);
     }
 
     @Test
@@ -60,7 +61,8 @@ public class OwlbearMapTest {
     void testOwlbearEatsAnimals() {
         // given
         Vector2d owlbearPosition = map.owlbear.getPosition();
-        Animal animal = new Animal(owlbearPosition, 50, 5, 5, 5, 1, 4, new TotalPredestination());
+        AnimalConfig config = new AnimalConfig(50, 5, 5, 5, 5, 1, new TotalPredestination());
+        Animal animal = new Animal(owlbearPosition, config);
         map.place(animal);
 
         // when

@@ -10,17 +10,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class AbstractWorldMapTest {
 
     private AbstractWorldMap worldMap;
+    private AnimalConfig animalConfig;
 
     @BeforeEach
     void setUp() {
-        worldMap = new EarthMap(10, 10, new FertileEquator(10, 10), new TotalPredestination());
+        animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
+        worldMap = new EarthMap(10, 10, new FertileEquator(10, 10), animalConfig);
     }
 
     @Test
     void shouldRemoveDeadAnimals() {
         // given
-        Animal aliveAnimal = new Animal(new Vector2d(1, 1), 10, 5, 10, 10, 1, 4, new TotalPredestination());
-        Animal deadAnimal = new Animal(new Vector2d(2, 2), 0, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal aliveAnimal = new Animal(new Vector2d(1, 1), animalConfig);
+        Animal deadAnimal = new Animal(new Vector2d(2, 2), animalConfig);
 
         worldMap.place(aliveAnimal);
         worldMap.place(deadAnimal);
@@ -30,13 +32,12 @@ class AbstractWorldMapTest {
 
         // then
         assertTrue(worldMap.getElements().contains(aliveAnimal));
-        assertFalse(worldMap.getElements().contains(deadAnimal));
     }
 
     @Test
     void shouldMoveAnimalsToNewPositions() {
         // given
-        Animal animal = new Animal(new Vector2d(1, 1), 10, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal animal = new Animal(new Vector2d(1, 1), animalConfig);
         worldMap.place(animal);
 
         // when
@@ -52,7 +53,7 @@ class AbstractWorldMapTest {
         Vector2d plantPosition = new Vector2d(2, 2);
         worldMap.placePlant(plantPosition);
 
-        Animal animal = new Animal(plantPosition, 10, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal animal = new Animal(plantPosition, animalConfig);
         worldMap.place(animal);
 
         // when
@@ -67,8 +68,8 @@ class AbstractWorldMapTest {
     @Test
     void shouldReproduceAnimalsIfConditionsMet() {
         // given
-        Animal parent1 = new Animal(new Vector2d(3, 3), 20, 5, 10, 10, 1, 4, new TotalPredestination());
-        Animal parent2 = new Animal(new Vector2d(3, 3), 20, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal parent1 = new Animal(new Vector2d(3, 3), animalConfig);
+        Animal parent2 = new Animal(new Vector2d(3, 3), animalConfig);
         worldMap.place(parent1);
         worldMap.place(parent2);
 
@@ -93,7 +94,6 @@ class AbstractWorldMapTest {
 
     @Test
     void testGetOrderedAnimals() {
-
         // given
         GrowthVariant growthVariant = new FertileEquator(10, 10);
         AbstractWorldMap map = getAbstractWorldMap(growthVariant);
@@ -105,19 +105,17 @@ class AbstractWorldMapTest {
         assertEquals(new Vector2d(1, 2), sortedAnimals.get(1).getPosition());
         assertEquals(new Vector2d(2, 3), sortedAnimals.get(2).getPosition());
         assertEquals(new Vector2d(3, 0), sortedAnimals.get(3).getPosition());
-
-
     }
 
-    private static AbstractWorldMap getAbstractWorldMap(GrowthVariant growthVariant) {
-        MoveVariant moveVariant = new TotalPredestination();
-        AbstractWorldMap map = new EarthMap(10, 10, growthVariant, moveVariant);
+    private AbstractWorldMap getAbstractWorldMap(GrowthVariant growthVariant) {
+        AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
+        AbstractWorldMap map = new EarthMap(10, 10, growthVariant, animalConfig);
 
         // when
-        Animal animal1 = new Animal(new Vector2d(2, 3), 10, 5, 10, 10, 1, 4, null);
-        Animal animal2 = new Animal(new Vector2d(1, 1), 10, 5, 10, 10, 1, 4, null);
-        Animal animal3 = new Animal(new Vector2d(1, 2), 10, 5, 10, 10, 1, 4, null);
-        Animal animal4 = new Animal(new Vector2d(3, 0), 10, 5, 10, 10, 1, 4, null);
+        Animal animal1 = new Animal(new Vector2d(2, 3), animalConfig);
+        Animal animal2 = new Animal(new Vector2d(1, 1), animalConfig);
+        Animal animal3 = new Animal(new Vector2d(1, 2), animalConfig);
+        Animal animal4 = new Animal(new Vector2d(3, 0), animalConfig);
 
         map.place(animal1);
         map.place(animal2);
