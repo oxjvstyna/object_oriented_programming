@@ -63,7 +63,8 @@ public class SimulationPresenter {
                 // Tworzenie komponentów symulacji
                 GrowthVariant selectedGrowthVariant = growthVariantComboBox.getValue().equals("FertileEquator") ? new FertileEquator(width, height) : null;
                 MoveVariant selectedMoveVariant = moveVariantComboBox.getValue().equals("TotalPredestination") ? new TotalPredestination() : null;
-                AbstractWorldMap map = new GlobeMap(width, height, selectedGrowthVariant, selectedMoveVariant);
+                AnimalConfig animalConfig = new AnimalConfig(10, 10, 10, 10, 10, 10, selectedMoveVariant);
+                AbstractWorldMap map = new GlobeMap(width, height, selectedGrowthVariant, animalConfig);
                 MutationVariant selectedMutationVariant = mutationVariantComboBox.getValue().equals("Random") ? new FullRandomness() : null;
                 map.setPlantEnergy(plantEnergy);
 

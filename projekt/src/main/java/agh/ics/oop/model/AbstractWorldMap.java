@@ -5,6 +5,7 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
+    private final AnimalTracker tracker = new AnimalTracker();
     protected GrowthVariant growthVariant;
     protected MoveVariant moveVariant;
     protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
@@ -19,16 +20,18 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected int height;
     protected int plantEnergy;
     int maxAnimalSize = 0;
+    protected AnimalConfig config;
 
 
-    public AbstractWorldMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
+    public AbstractWorldMap(int width, int height, GrowthVariant growthVariant, AnimalConfig config) {
         this.growthVariant = growthVariant;
-        this.moveVariant = moveVariant;
         lowerLeft = new Vector2d(0, 0);
         upperRight = new Vector2d(width - 1, height - 1);
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
+        this.plantEnergy = 2;
+        this.config = config;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -79,7 +82,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.x(), lowerLeft.y(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
-                    this.place(new Animal(position, 10, 5, 10, 10, 1, 4, moveVariant));
+                    this.place(new Animal(position, config));
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
@@ -98,6 +101,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
             if (plants.contains(position)){
                 highestPriorityAnimal.addEnergy(plantEnergy);
                 plants.remove(position);
+                tracker.onPlantEaten();
+
             }
         }
     }
@@ -121,6 +126,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                     Animal child = parent1.reproduce(parent2);
                     animals.add(child);
                     this.place(child);
+                    tracker.onDescendantAdded();
+
                 }
             }
         }
@@ -251,6 +258,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.plantEnergy = plantEnergy;
     }
 
+
     public int getWidth() {
         return width;
     }
@@ -285,9 +293,5 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     private boolean hasAnimalAt(Vector2d position) {
         return occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty();
     }
-
-
-
-
 
 }

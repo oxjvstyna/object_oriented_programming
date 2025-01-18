@@ -3,8 +3,8 @@ package agh.ics.oop.model;
 public class GlobeMap extends AbstractWorldMap {
 
 
-    public GlobeMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
-        super(width, height, growthVariant, moveVariant);
+    public GlobeMap(int width, int height, GrowthVariant growthVariant, AnimalConfig animalConfig) {
+        super(width, height, growthVariant, animalConfig);
     }
 
     public Vector2d handleBorder(Animal animal) {

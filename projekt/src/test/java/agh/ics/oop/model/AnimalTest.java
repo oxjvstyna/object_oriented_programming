@@ -16,8 +16,9 @@ class AnimalTest {
     @Test
     void animalShouldMoveAccordingToItsGenome() {
         // given
+        AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
         Vector2d initialPosition = new Vector2d(2, 0);
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, totalPredestination);
+        Animal animal = new Animal(initialPosition, animalConfig);
         MoveValidator validator = position -> true; // Always allows movement
 
         // when
@@ -32,7 +33,8 @@ class AnimalTest {
     void animalShouldNotMoveWhenBlocked() {
         // given
         Vector2d initialPosition = new Vector2d(2, 0);
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, totalPredestination);
+        AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal animal = new Animal(initialPosition, animalConfig);
         MoveValidator validator = position -> false; // Always blocks movement
 
         // when
@@ -46,7 +48,8 @@ class AnimalTest {
     void animalShouldLoseEnergyPerGenomeMove() {
         // given
         Vector2d initialPosition = new Vector2d(2, 0);
-        Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, totalPredestination);
+        AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal animal = new Animal(initialPosition, animalConfig);
         MoveValidator validator = position -> true; // Always allows movement
 
         int initialEnergy = animal.getEnergy();
@@ -63,8 +66,9 @@ class AnimalTest {
     void animalShouldReproduceCorrectly() {
         // given
         Vector2d position = new Vector2d(2, 2);
-        Animal parent1 = new Animal(position, 100, 5, 50, 20, 1, 3, totalPredestination);
-        Animal parent2 = new Animal(position, 80, 5, 50, 20, 1, 3, totalPredestination);
+        AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal parent1 = new Animal(position, animalConfig);
+        Animal parent2 = new Animal(position, animalConfig);
 
         // when
         Animal child = parent1.reproduce(parent2);
@@ -80,8 +84,10 @@ class AnimalTest {
     void animalShouldHaveRandomOrientationAfterReproduction() {
         // given
         Vector2d position = new Vector2d(0, 0);
-        Animal parent1 = new Animal(position, 100, 5, 50, 20, 1, 3, totalPredestination);
-        Animal parent2 = new Animal(position, 80, 5, 50, 20, 1, 3, totalPredestination);
+        AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
+
+        Animal parent1 = new Animal(position, animalConfig);
+        Animal parent2 = new Animal(position, animalConfig);
 
         // when
         Animal child = parent1.reproduce(parent2);
@@ -94,7 +100,8 @@ class AnimalTest {
     void animalShouldDieWhenEnergyIsZero() {
         // given
         Vector2d position = new Vector2d(3, 3);
-        Animal animal = new Animal(position, 0, 5, 50, 20, 1, 3, totalPredestination);
+        AnimalConfig animalConfig = new AnimalConfig(0, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal animal = new Animal(position, animalConfig);
 
         // when
         boolean isAlive = animal.isAlive();
@@ -107,7 +114,8 @@ class AnimalTest {
     void animalShouldGainEnergyWhenFed() {
         // given
         Vector2d position = new Vector2d(1, 1);
-        Animal animal = new Animal(position, 50, 5, 50, 20, 1, 3, totalPredestination);
+        AnimalConfig animalConfig = new AnimalConfig(50, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal animal = new Animal(position, animalConfig);
 
         // when
         animal.addEnergy(30);
@@ -120,7 +128,8 @@ class AnimalTest {
     void animalShouldFollowMoveVariantLogic() {
         // given
         Vector2d position = new Vector2d(2, 2);
-        Animal animal = new Animal(position, 100, 5, 50, 20, 1, 3, totalPredestination);
+        AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal animal = new Animal(position, animalConfig);
         MoveValidator validator = pos -> true; // Always allows movement
 
         // when
@@ -134,7 +143,8 @@ class AnimalTest {
     void animalShouldReverseDirection() {
         // given
         Vector2d position = new Vector2d(0, 0);
-        Animal animal = new Animal(position, 100, 5, 50, 20, 1, 3, totalPredestination);
+        AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal animal = new Animal(position, animalConfig);
         animal.orientation = MapDirection.NORTH;
 
         // when
