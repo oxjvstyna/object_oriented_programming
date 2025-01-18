@@ -4,11 +4,16 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.ScrollPane?>
 
+<?import javafx.scene.layout.StackPane?>
 <BorderPane fx:controller="agh.ics.oop.presenter.SimulationPresenter"
-            xmlns:fx="http://javafx.com/fxml/1">
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            minHeight="550.0" minWidth="850.0">
     <center>
         <ScrollPane fitToWidth="true" fitToHeight="true">
-            <GridPane fx:id="mapGrid" gridLinesVisible="true" />
+            <StackPane>
+                <GridPane fx:id="mapGrid" gridLinesVisible="true" />
+            </StackPane>
         </ScrollPane>
     </center>
 </BorderPane>

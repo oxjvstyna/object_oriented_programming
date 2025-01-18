@@ -12,10 +12,6 @@ public class Simulation implements Runnable {
     @Override
     public void run() {
         simConfig.currentMap().initializeMap(simConfig.animalCount());
-        int steps = simConfig.simulationSteps();
-        for (int i = 0; i < steps; i++) {
-            simConfig.currentMap().handleMap();
-        }
         simConfig.currentMap().getReport();
     }
 
