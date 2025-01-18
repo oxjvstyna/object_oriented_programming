@@ -42,4 +42,8 @@ public class SimulationEngine {
             System.out.println(e.getMessage());
         }
     }
+
+    public Simulation getSimulation() {
+        return simulation;
+    }
 }

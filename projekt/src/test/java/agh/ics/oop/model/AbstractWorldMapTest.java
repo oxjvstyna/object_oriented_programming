@@ -15,14 +15,16 @@ class AbstractWorldMapTest {
     @BeforeEach
     void setUp() {
         animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
-        worldMap = new EarthMap(10, 10, new FertileEquator(10, 10), animalConfig);
+        worldMap = new GlobeMap(10, 10, new FertileEquator(10, 10), animalConfig);
     }
 
     @Test
     void shouldRemoveDeadAnimals() {
         // given
+
         Animal aliveAnimal = new Animal(new Vector2d(1, 1), animalConfig);
-        Animal deadAnimal = new Animal(new Vector2d(2, 2), animalConfig);
+        AnimalConfig deadAnimalConfig = new AnimalConfig(0, 5, 10, 10, 1, 4, new TotalPredestination());
+        Animal deadAnimal = new Animal(new Vector2d(2, 2), deadAnimalConfig);
 
         worldMap.place(aliveAnimal);
         worldMap.place(deadAnimal);
@@ -32,6 +34,7 @@ class AbstractWorldMapTest {
 
         // then
         assertTrue(worldMap.getElements().contains(aliveAnimal));
+        assertFalse(worldMap.getElements().contains(deadAnimal));
     }
 
     @Test
@@ -109,7 +112,7 @@ class AbstractWorldMapTest {
 
     private AbstractWorldMap getAbstractWorldMap(GrowthVariant growthVariant) {
         AnimalConfig animalConfig = new AnimalConfig(10, 5, 10, 10, 1, 4, new TotalPredestination());
-        AbstractWorldMap map = new EarthMap(10, 10, growthVariant, animalConfig);
+        AbstractWorldMap map = new GlobeMap(10, 10, growthVariant, animalConfig);
 
         // when
         Animal animal1 = new Animal(new Vector2d(2, 3), animalConfig);
