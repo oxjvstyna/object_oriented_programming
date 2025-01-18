@@ -12,8 +12,9 @@ public class World {
         GrowthVariant growthVariant = new FertileEquator(50, 50);
         MoveVariant predestination = new TotalPredestination();
         MoveVariant crazy = new SlightMadness();
-        EarthMap map = new EarthMap(50, 50, growthVariant, predestination);
-        OwlbearMap map2 = new OwlbearMap(50, 50, growthVariant, predestination);
+        AnimalConfig animalConfig = new AnimalConfig(10, 10, 10, 10, 10, 10, predestination);
+        EarthMap map = new EarthMap(50, 50, growthVariant, animalConfig);
+        OwlbearMap map2 = new OwlbearMap(50, 50, growthVariant, animalConfig);
         ConsoleMapDisplay logger = new ConsoleMapDisplay();
         map.addObserver(logger);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

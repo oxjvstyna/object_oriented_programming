@@ -19,24 +19,24 @@ public class Animal implements WorldElement {
     private final Genome genome;
     public Animal parent1;
     public Animal parent2;
-    private int birthEnergy;
+    int birthEnergy;
     private final MoveVariant moveVariant;
     private int age = 0;
     private int numberOfChildren = 0;
 
-    public Animal(AnimalConfig config) {
+    public Animal(Vector2d initialPosition, AnimalConfig config) {
         this.id = idCounter++;
         this.orientation = getRandomOrientation();
-        this.position = config.getInitialPosition();
-        this.energy = config.getInitialEnergy();
-        this.genome = new Genome(config.getGenomeLength());
+        this.position = initialPosition;
+        this.energy = config.initialEnergy();
+        this.genome = new Genome(config.genomeLength());
         this.parent1 = null;
         this.parent2 = null;
-        this.reproductionEnergy = config.getReproductionEnergy();
-        this.minMutation = config.getMinMutation();
-        this.maxMutation = config.getMaxMutation();
-        this.moveVariant = config.getMoveVariant();
-        this.birthEnergy = config.getBirthEnergy();
+        this.reproductionEnergy = config.reproductionEnergy();
+        this.minMutation = config.minMutation();
+        this.maxMutation = config.maxMutation();
+        this.moveVariant = config.moveVariant();
+        this.birthEnergy = config.birthEnergy();
         this.moveIndex = -1;
     }
 
@@ -181,5 +181,9 @@ public class Animal implements WorldElement {
 
     public int getMoveIndex() {
         return this.moveIndex;
+    }
+
+    public Genome getGenomes() {
+        return this.genome;
     }
 }

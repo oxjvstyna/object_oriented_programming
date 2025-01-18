@@ -3,8 +3,8 @@ package agh.ics.oop.model;
 public class Owlbear extends Animal {
     OwlbearMap worldMap;
 
-    public Owlbear(Vector2d owlbearPosition, int initialEnergy, int genomeLength, int reproductionEnergy, int birthEnergy, int minMutation, int maxMutation, MoveVariant moveVariant, OwlbearMap map) {
-        super(owlbearPosition, initialEnergy, genomeLength, reproductionEnergy, birthEnergy, minMutation, maxMutation, moveVariant);
+    public Owlbear(Vector2d owlbearPosition,AnimalConfig config, OwlbearMap map) {
+        super(owlbearPosition, config);
         this.worldMap = map;
     }
 

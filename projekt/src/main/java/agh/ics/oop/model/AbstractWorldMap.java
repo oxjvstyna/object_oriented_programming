@@ -21,17 +21,18 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected int height;
     protected int plantEnergy;
     int maxAnimalSize = 0;
+    protected AnimalConfig config;
 
 
-    public AbstractWorldMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
+    public AbstractWorldMap(int width, int height, GrowthVariant growthVariant, AnimalConfig config) {
         this.growthVariant = growthVariant;
-        this.moveVariant = moveVariant;
         lowerLeft = new Vector2d(0, 0);
         upperRight = new Vector2d(width - 1, height - 1);
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
         this.plantEnergy = 2;
+        this.config = config;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -82,7 +83,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
-                    this.place(new Animal(position, 10, 5, 10, 10, 1, 4, moveVariant));
+                    this.place(new Animal(position, config));
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
@@ -254,6 +255,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                 .toList();
     }
 
-
-
+    public AnimalConfig getConfig() {
+        return config;
+    }
 }
