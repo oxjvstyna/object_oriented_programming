@@ -250,4 +250,44 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public void setPlantEnergy(int plantEnergy) {
         this.plantEnergy = plantEnergy;
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public String getCellContent(int x, int y) {
+        Vector2d position = new Vector2d(x, y);
+        boolean hasAnimals = hasAnimalAt(position);
+        boolean hasPlants = plants.contains(position);
+
+        if (hasAnimals && hasPlants) {
+            int animalCount = occupiedFields.get(position).size();
+            return "A(" + animalCount + ")P"; // np. "A(3)P" oznacza 3 zwierzęta i roślinę
+        } else if (hasAnimals) {
+            int animalCount = occupiedFields.get(position).size();
+            return "A(" + animalCount + ")"; // np. "A(2)" oznacza 2 zwierzęta
+        } else if (hasPlants) {
+            return "P"; // Tylko roślina
+        } else {
+            return "."; // Puste pole
+        }
+    }
+
+
+    private boolean hasPlantAt(Vector2d position) {
+        return occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty();
+    }
+
+    private boolean hasAnimalAt(Vector2d position) {
+        return occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty();
+    }
+
+
+
+
+
 }
