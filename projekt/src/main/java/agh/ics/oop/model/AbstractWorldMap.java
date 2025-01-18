@@ -3,7 +3,6 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     private final AnimalTracker tracker = new AnimalTracker();
@@ -80,7 +79,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
 
     protected void initializeAnimals(int animalCount) {
-        RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
+        RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.x(), lowerLeft.y(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
                     this.place(new Animal(position, config));
@@ -101,7 +100,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
             Vector2d position = highestPriorityAnimal.getPosition();
             if (plants.contains(position)){
                 highestPriorityAnimal.addEnergy(plantEnergy);
-//                System.out.println("Energia wzrosla z " + highestPriorityAnimal.getEnergy() + " do " + (highestPriorityAnimal.getEnergy() + plantEnergy) );
                 plants.remove(position);
                 tracker.onPlantEaten();
 
@@ -115,7 +113,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         }
     }
 
-    protected void reproduceAnimals() { // do sprawdzenia czy na pewno jest dobrze (czy czasem nie jest tutaj zle uzywana prioretytowosc)
+    protected void reproduceAnimals() {
         for (List<Animal> field : occupiedFields.values()) {
             if (field.size() > 1) {
 
@@ -250,8 +248,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public List<Animal> getOrderedAnimals() {
         List<Animal> sortedAnimals = new ArrayList<>(animals);
         return sortedAnimals.stream()
-                .sorted(Comparator.comparing((Animal animal) -> animal.getPosition().getX())
-                        .thenComparing(animal -> animal.getPosition().getY()))
+                .sorted(Comparator.comparing((Animal animal) -> animal.getPosition().x())
+                        .thenComparing(animal -> animal.getPosition().y()))
                 .toList();
     }
 
