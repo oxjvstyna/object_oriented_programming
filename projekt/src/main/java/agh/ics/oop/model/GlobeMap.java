@@ -1,9 +1,9 @@
 package agh.ics.oop.model;
 
-public class EarthMap extends AbstractWorldMap {
+public class GlobeMap extends AbstractWorldMap {
 
 
-    public EarthMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
+    public GlobeMap(int width, int height, GrowthVariant growthVariant, MoveVariant moveVariant) {
         super(width, height, growthVariant, moveVariant);
     }
 

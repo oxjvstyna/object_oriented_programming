@@ -3,7 +3,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +12,7 @@ class AbstractWorldMapTest {
 
     @BeforeEach
     void setUp() {
-        worldMap = new EarthMap(10, 10, new FertileEquator(10, 10), new TotalPredestination());
+        worldMap = new GlobeMap(10, 10, new FertileEquator(10, 10), new TotalPredestination());
     }
 
     @Test
@@ -111,7 +110,7 @@ class AbstractWorldMapTest {
 
     private static AbstractWorldMap getAbstractWorldMap(GrowthVariant growthVariant) {
         MoveVariant moveVariant = new TotalPredestination();
-        AbstractWorldMap map = new EarthMap(10, 10, growthVariant, moveVariant);
+        AbstractWorldMap map = new GlobeMap(10, 10, growthVariant, moveVariant);
 
         // when
         Animal animal1 = new Animal(new Vector2d(2, 3), 10, 5, 10, 10, 1, 4, null);

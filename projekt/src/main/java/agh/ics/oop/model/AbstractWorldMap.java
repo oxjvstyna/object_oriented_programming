@@ -29,7 +29,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
-        this.plantEnergy = 2;
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -248,5 +247,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
 
-
+    public void setPlantEnergy(int plantEnergy) {
+        this.plantEnergy = plantEnergy;
+    }
 }

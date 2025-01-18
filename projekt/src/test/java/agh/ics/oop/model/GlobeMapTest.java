@@ -3,11 +3,11 @@ package agh.ics.oop.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EarthMapTest {
+class GlobeMapTest {
 
     @Test
     void animalShouldWrapAroundHorizontallyWhenExitingLeft() {
-        EarthMap map = new EarthMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
+        GlobeMap map = new GlobeMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
         Animal animal = new Animal(new Vector2d(-1, 2), 100, 5, 50, 20, 1, 3, new TotalPredestination());
         map.handleBorder(animal);
         assertEquals(new Vector2d(9, 2), animal.getPosition());
@@ -15,7 +15,7 @@ class EarthMapTest {
 
     @Test
     void animalShouldWrapAroundHorizontallyWhenExitingRight() {
-        EarthMap map = new EarthMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
+        GlobeMap map = new GlobeMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
         Animal animal = new Animal(new Vector2d(11, 2), 100, 5, 50, 20, 1, 3, new TotalPredestination());
         map.handleBorder(animal);
         assertEquals(new Vector2d(0, 2), animal.getPosition());
@@ -23,7 +23,7 @@ class EarthMapTest {
 
     @Test
     void animalShouldNotMoveBeyondTopBorder() {
-        EarthMap map = new EarthMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
+        GlobeMap map = new GlobeMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
         Animal animal = new Animal(new Vector2d(5, 4), 100, 5, 50, 20, 1, 3, new TotalPredestination());
         map.handleBorder(animal);
         assertEquals(new Vector2d(5, 4), animal.getPosition());
@@ -31,7 +31,7 @@ class EarthMapTest {
 
     @Test
     void animalShouldNotMoveBeyondBottomBorder() {
-        EarthMap map = new EarthMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
+        GlobeMap map = new GlobeMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
         Animal animal = new Animal(new Vector2d(5, 5), 100, 5, 50, 20, 1, 3, new TotalPredestination());
         Vector2d newPosition = map.handleBorder(animal);
         assertEquals(new Vector2d(5, 4), newPosition);
@@ -40,7 +40,7 @@ class EarthMapTest {
 
     @Test
     void animalShouldNotMoveBeyondBottomLeftCorner() {
-        EarthMap map = new EarthMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
+        GlobeMap map = new GlobeMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
         Animal animal = new Animal(new Vector2d(0, 0), 100, 5, 50, 20, 1, 3, new TotalPredestination());
         animal.setPosition(new Vector2d(-1, -1));
         map.handleBorder(animal);
@@ -50,7 +50,7 @@ class EarthMapTest {
 
     @Test
     void animalShouldNotMoveBeyondTopRightCorner() {
-        EarthMap map = new EarthMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
+        GlobeMap map = new GlobeMap(10, 5, new FertileEquator(10, 5), new TotalPredestination());
         Animal animal = new Animal(new Vector2d(10, 4), 100, 5, 50, 20, 1, 3, new TotalPredestination());
         map.handleBorder(animal);
         assertEquals(new Vector2d(0, 4), animal.getPosition());
