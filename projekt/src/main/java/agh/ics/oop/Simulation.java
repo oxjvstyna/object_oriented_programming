@@ -9,7 +9,6 @@ public class Simulation implements Runnable {
         this.simConfig = config;
         }
 
-
     public void run() {
         simConfig.currentMap().initializeMap(simConfig.animalCount());
         int steps = simConfig.simulationSteps();
