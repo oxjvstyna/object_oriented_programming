@@ -2,7 +2,6 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.MoveDirection;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -10,50 +9,65 @@ import java.util.List;
 class OptionsParserTest {
 
     @Test
-    void testParseCorrectArguments() {
-        // Test z poprawnymi argumentami
-        String[] args = {"0", "1", "2", "3", "4", "5", "6", "7"};
-        List<MoveDirection> directions = OptionsParser.parse(args);
+    void shouldParseValidDirections() {
+        // given
+        String[] input = {"0", "1", "2", "3", "4", "5", "6", "7"};
 
-        assertEquals(8, directions.size());
-        assertEquals(MoveDirection.FORWARD, directions.get(0));
-        assertEquals(MoveDirection.FORWARD_RIGHT, directions.get(1));
-        assertEquals(MoveDirection.RIGHT, directions.get(2));
-        assertEquals(MoveDirection.BACKWARD_RIGHT, directions.get(3));
-        assertEquals(MoveDirection.BACKWARD, directions.get(4));
-        assertEquals(MoveDirection.BACKWARD_LEFT, directions.get(5));
-        assertEquals(MoveDirection.LEFT, directions.get(6));
-        assertEquals(MoveDirection.FORWARD_LEFT, directions.get(7));
+        // when
+        List<MoveDirection> result = OptionsParser.parse(input);
+
+        // then
+        assertEquals(List.of(
+                MoveDirection.FORWARD,
+                MoveDirection.FORWARD_RIGHT,
+                MoveDirection.RIGHT,
+                MoveDirection.BACKWARD_RIGHT,
+                MoveDirection.BACKWARD,
+                MoveDirection.BACKWARD_LEFT,
+                MoveDirection.LEFT,
+                MoveDirection.FORWARD_LEFT
+        ), result);
     }
 
     @Test
-    void testParseEmptyArguments() {
-        // Test z pustymi argumentami
-        String[] args = {};
-        List<MoveDirection> directions = OptionsParser.parse(args);
+    void shouldThrowExceptionForInvalidDirection() {
+        // given
+        String[] input = {"0", "1", "x", "4"};
 
-        assertTrue(directions.isEmpty(), "Lista powinna być pusta.");
+        // when & then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(input));
+        assertEquals("x jest nieprawidlowym ruchem.", exception.getMessage());
     }
 
     @Test
-    void testParseInvalidArgument() {
-        // Test z niepoprawnym argumentem
-        String[] args = {"8"};
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            OptionsParser.parse(args);
-        });
+    void shouldHandleEmptyInput() {
+        // given
+        String[] input = {};
 
-        assertEquals("8 jest nieprawidlowym ruchem.", exception.getMessage());
+        // when
+        List<MoveDirection> result = OptionsParser.parse(input);
+
+        // then
+        assertTrue(result.isEmpty(), "Expected an empty list for empty input.");
     }
 
     @Test
-    void testParseMixedValidAndInvalidArguments() {
-        // Test z mieszanką poprawnych i niepoprawnych argumentów
-        String[] args = {"0", "1", "8"};
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            OptionsParser.parse(args);
-        });
+    void shouldThrowExceptionForPartiallyInvalidInput() {
+        // given
+        String[] input = {"0", "9", "1"};
 
-        assertEquals("8 jest nieprawidlowym ruchem.", exception.getMessage());
+        // when & then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(input));
+        assertEquals("9 jest nieprawidlowym ruchem.", exception.getMessage());
+    }
+
+    @Test
+    void shouldIgnoreWhitespaceInInput() {
+        // given
+        String[] input = {" 0 ", "1", " 2"};
+
+        // when
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(input));
+        assertEquals(" 0  jest nieprawidlowym ruchem.", exception.getMessage());
     }
 }
