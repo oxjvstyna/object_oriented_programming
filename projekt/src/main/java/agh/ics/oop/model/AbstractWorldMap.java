@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
+    private final AnimalTracker tracker = new AnimalTracker();
     protected GrowthVariant growthVariant;
     protected MoveVariant moveVariant;
     protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
@@ -101,6 +102,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                 highestPriorityAnimal.addEnergy(plantEnergy);
 //                System.out.println("Energia wzrosla z " + highestPriorityAnimal.getEnergy() + " do " + (highestPriorityAnimal.getEnergy() + plantEnergy) );
                 plants.remove(position);
+                tracker.onPlantEaten();
+
             }
         }
     }
@@ -124,6 +127,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                     Animal child = parent1.reproduce(parent2);
                     animals.add(child);
                     this.place(child);
+                    tracker.onDescendantAdded();
+
                 }
             }
         }
