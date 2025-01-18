@@ -52,7 +52,6 @@ public class Animal implements WorldElement {
         this.maxMutation = maxMutation;
         this.moveVariant = moveVariant;
         this.birthEnergy = birthEnergy;
-
     }
 
     public void setPosition(Vector2d position) {

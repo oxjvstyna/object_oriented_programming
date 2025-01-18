@@ -99,7 +99,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
             Vector2d position = highestPriorityAnimal.getPosition();
             if (plants.contains(position)){
                 highestPriorityAnimal.addEnergy(plantEnergy);
-//                System.out.println("Energia wzrosla z " + highestPriorityAnimal.getEnergy() + " do " + (highestPriorityAnimal.getEnergy() + plantEnergy) );
                 plants.remove(position);
             }
         }
@@ -111,7 +110,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         }
     }
 
-    protected void reproduceAnimals() { // do sprawdzenia czy na pewno jest dobrze (czy czasem nie jest tutaj zle uzywana prioretytowosc)
+    protected void reproduceAnimals() {
         for (List<Animal> field : occupiedFields.values()) {
             if (field.size() > 1) {
 

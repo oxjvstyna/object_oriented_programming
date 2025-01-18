@@ -16,15 +16,20 @@ public class World {
         OwlbearMap map2 = new OwlbearMap(50, 50, growthVariant, predestination);
         ConsoleMapDisplay logger = new ConsoleMapDisplay();
         map.addObserver(logger);
+        map2.addObserver(logger);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         map.addObserver((worldMap, message) ->{
                 String currentTime = LocalDateTime.now().format(formatter);
                 System.out.println(currentTime);
         });
+        map2.addObserver((worldMap, message) ->{
+            String currentTime = LocalDateTime.now().format(formatter);
+            System.out.println(currentTime);
+        });
         int animalCount = 5000;
         int simulationSteps = 100;
 
-        SimulationConfig config = new SimulationConfig(map, growthVariant, animalCount, simulationSteps, predestination);
+        SimulationConfig config = new SimulationConfig(map2, growthVariant, animalCount, simulationSteps, predestination);
 
         Simulation simulation = new Simulation(config);
 

@@ -85,7 +85,7 @@ class EarthMapTest {
         Vector2d initialPosition = new Vector2d(0, 0);  // zwierzę na dolnym lewym rogu
         Animal animal = new Animal(initialPosition, 100, 5, 50, 20, 1, 3, moveVariant);
 
-        // when
+        // whenś
         animal.move(validator);
         animal.move(validator);
         animal.move(validator);
