@@ -18,8 +18,7 @@ import java.io.IOException;
 
 public class SimulationPresenter {
 
-    @FXML
-    private Label descriptionLabel;
+    public Label descriptionLabel;
     @FXML
     private ComboBox<String> growthVariantComboBox;
     @FXML
@@ -34,10 +33,6 @@ public class SimulationPresenter {
     private TextField heightInput;
     @FXML
     private TextField plantEnergyInput;
-    @FXML
-    private GridPane mapGrid;
-
-    private Simulation simulation;
 
     @FXML
     public void initialize() {
@@ -51,6 +46,7 @@ public class SimulationPresenter {
     private void onSimulationStartClicked() {
         Platform.runLater(() -> {
             try {
+                // Walidacja wartości z ComboBox
                 if (growthVariantComboBox.getValue() == null ||
                         moveVariantComboBox.getValue() == null ||
                         mapVariantComboBox.getValue() == null ||
@@ -59,10 +55,12 @@ public class SimulationPresenter {
                     return;
                 }
 
+                // Parsowanie i walidacja danych wejściowych
                 int width = Integer.parseInt(widthInput.getText());
                 int height = Integer.parseInt(heightInput.getText());
                 int plantEnergy = Integer.parseInt(plantEnergyInput.getText());
 
+                // Tworzenie komponentów symulacji
                 GrowthVariant selectedGrowthVariant = growthVariantComboBox.getValue().equals("FertileEquator") ? new FertileEquator(width, height) : null;
                 MoveVariant selectedMoveVariant = moveVariantComboBox.getValue().equals("TotalPredestination") ? new TotalPredestination() : null;
                 AbstractWorldMap map = new GlobeMap(width, height, selectedGrowthVariant, selectedMoveVariant);
@@ -72,6 +70,7 @@ public class SimulationPresenter {
                 SimulationConfig config = new SimulationConfig(map, selectedGrowthVariant, 5000, 100, selectedMoveVariant);
                 SimulationEngine engine = new SimulationEngine(new Simulation(config));
 
+                // Ładowanie nowego okna
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
                 BorderPane simulationRoot = loader.load();
                 Stage simulationStage = new Stage();
@@ -79,6 +78,8 @@ public class SimulationPresenter {
                 simulationStage.setScene(new Scene(simulationRoot));
                 simulationStage.show();
 
+
+                // Inicjalizacja kontrolera symulacji
                 SimulationPresenter simulationPresenter = loader.getController();
                 simulationPresenter.initializeSimulation(engine);
 
@@ -88,7 +89,13 @@ public class SimulationPresenter {
                 System.out.println("Failed to load the simulation UI: " + e.getMessage());
             }
         });
+
     }
+
+@FXML
+    private GridPane mapGrid; // Siatka do renderowania mapy
+
+    private Simulation simulation;
 
     public void initializeSimulation(SimulationEngine engine) {
         this.simulation = engine.getSimulation();
@@ -96,24 +103,27 @@ public class SimulationPresenter {
     }
 
     private void startSimulation() {
+        // Wykonanie jednego kroku symulacji
+        // Renderowanie mapy
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                simulation.runStep();
-                renderMap();
+                simulation.runStep(); // Wykonanie jednego kroku symulacji
+                renderMap();          // Renderowanie mapy
             }
         };
         timer.start();
     }
 
     private void renderMap() {
-        mapGrid.getChildren().clear();
+        mapGrid.getChildren().clear(); // Wyczyść poprzednią zawartość siatki
+
         AbstractWorldMap map = simulation.getSimConfig().currentMap();
 
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                String cellContent = map.getCellContent(x, y);
-                Label cell = new Label(cellContent);
+                String cellContent = map.getCellContent(x, y); // Pobierz zawartość komórki mapy
+                javafx.scene.control.Label cell = new javafx.scene.control.Label(cellContent);
                 cell.setStyle("-fx-font-size: 14; -fx-alignment: center; -fx-border-color: black;");
                 mapGrid.add(cell, x, y);
             }
