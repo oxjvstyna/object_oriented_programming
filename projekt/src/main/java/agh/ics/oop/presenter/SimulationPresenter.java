@@ -18,7 +18,6 @@ import java.io.IOException;
 
 public class SimulationPresenter {
 
-    public Label descriptionLabel;
     @FXML
     private ComboBox<String> growthVariantComboBox;
     @FXML
@@ -35,6 +34,11 @@ public class SimulationPresenter {
     private TextField plantEnergyInput;
 
     @FXML
+    private GridPane mapGrid;
+
+    private Simulation simulation;
+
+    @FXML
     public void initialize() {
         growthVariantComboBox.getItems().addAll("FertileEquator", "OtherGrowthVariant");
         moveVariantComboBox.getItems().addAll("TotalPredestination", "OtherMoveVariant");
@@ -46,7 +50,7 @@ public class SimulationPresenter {
     private void onSimulationStartClicked() {
         Platform.runLater(() -> {
             try {
-                // Walidacja wartości z ComboBox
+                // Validate ComboBox values
                 if (growthVariantComboBox.getValue() == null ||
                         moveVariantComboBox.getValue() == null ||
                         mapVariantComboBox.getValue() == null ||
@@ -55,12 +59,12 @@ public class SimulationPresenter {
                     return;
                 }
 
-                // Parsowanie i walidacja danych wejściowych
+                // Parse input fields
                 int width = Integer.parseInt(widthInput.getText());
                 int height = Integer.parseInt(heightInput.getText());
                 int plantEnergy = Integer.parseInt(plantEnergyInput.getText());
 
-                // Tworzenie komponentów symulacji
+                // Create simulation components
                 GrowthVariant selectedGrowthVariant = growthVariantComboBox.getValue().equals("FertileEquator") ? new FertileEquator(width, height) : null;
                 MoveVariant selectedMoveVariant = moveVariantComboBox.getValue().equals("TotalPredestination") ? new TotalPredestination() : null;
                 AnimalConfig animalConfig = new AnimalConfig(10, 10, 10, 10, 10, 10, selectedMoveVariant);
@@ -71,7 +75,7 @@ public class SimulationPresenter {
                 SimulationConfig config = new SimulationConfig(map, selectedGrowthVariant, 5000, 100, selectedMoveVariant);
                 SimulationEngine engine = new SimulationEngine(new Simulation(config));
 
-                // Ładowanie nowego okna
+                // Load the simulation window
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
                 BorderPane simulationRoot = loader.load();
                 Stage simulationStage = new Stage();
@@ -79,24 +83,18 @@ public class SimulationPresenter {
                 simulationStage.setScene(new Scene(simulationRoot));
                 simulationStage.show();
 
-
-                // Inicjalizacja kontrolera symulacji
+                // Initialize the simulation controller
                 SimulationPresenter simulationPresenter = loader.getController();
                 simulationPresenter.initializeSimulation(engine);
 
             } catch (NumberFormatException e) {
                 System.out.println("Please enter valid numeric values for width, height, and plant energy.");
             } catch (IOException e) {
+                e.printStackTrace();
                 System.out.println("Failed to load the simulation UI: " + e.getMessage());
             }
         });
-
     }
-
-@FXML
-    private GridPane mapGrid; // Siatka do renderowania mapy
-
-    private Simulation simulation;
 
     public void initializeSimulation(SimulationEngine engine) {
         this.simulation = engine.getSimulation();
@@ -104,26 +102,25 @@ public class SimulationPresenter {
     }
 
     private void startSimulation() {
-        // Wykonanie jednego kroku symulacji
-        // Renderowanie mapy
+        // Run the simulation step and render the map
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                simulation.runStep(); // Wykonanie jednego kroku symulacji
-                renderMap();          // Renderowanie mapy
+                simulation.runStep();
+                renderMap();
             }
         };
         timer.start();
     }
 
     private void renderMap() {
-        mapGrid.getChildren().clear(); // Wyczyść poprzednią zawartość siatki
+        mapGrid.getChildren().clear(); // Clear the previous content
 
         AbstractWorldMap map = simulation.getSimConfig().currentMap();
 
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                String cellContent = map.getCellContent(x, y); // Pobierz zawartość komórki mapy
+                String cellContent = map.getCellContent(x, y); // Get the cell content
                 javafx.scene.control.Label cell = new javafx.scene.control.Label(cellContent);
                 cell.setStyle("-fx-font-size: 14; -fx-alignment: center; -fx-border-color: black;");
                 mapGrid.add(cell, x, y);
