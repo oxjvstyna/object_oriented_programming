@@ -29,7 +29,7 @@ public class World {
         int animalCount = 5000;
         int simulationSteps = 100;
 
-        SimulationConfig config = new SimulationConfig(map2, growthVariant, animalCount, simulationSteps, predestination);
+        SimulationConfig config = new SimulationConfig(map2, growthVariant, animalCount, simulationSteps, crazy);
 
         Simulation simulation = new Simulation(config);
 

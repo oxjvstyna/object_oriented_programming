@@ -40,7 +40,7 @@ class FertileEquatorTest {
         int equatorEndY = height / 2 + (int) (height * 0.1);
 
         for (Vector2d field : preferredFields) {
-            assertTrue(field.getY() >= equatorStartY && field.getY() <= equatorEndY,
+            assertTrue(field.y() >= equatorStartY && field.y() <= equatorEndY,
                     "Field should belong to the equator region.");
         }
     }

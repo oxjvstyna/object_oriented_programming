@@ -11,11 +11,11 @@ public class Simulation implements Runnable {
 
 
     public void run() {
-        simConfig.getCurrentMap().initializeMap(simConfig.getAnimalCount());
-        int steps = simConfig.getSimulationSteps();
+        simConfig.currentMap().initializeMap(simConfig.animalCount());
+        int steps = simConfig.simulationSteps();
         for (int i = 0; i < steps; i++) {
-            simConfig.getCurrentMap().handleMap();
+            simConfig.currentMap().handleMap();
         }
-        simConfig.getCurrentMap().getReport();
+        simConfig.currentMap().getReport();
     }
 }

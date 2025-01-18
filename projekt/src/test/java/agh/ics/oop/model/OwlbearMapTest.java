@@ -1,6 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.RandomPositionGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,13 +28,13 @@ public class OwlbearMapTest {
 
         // then
         // Validate territory size
-        assertEquals(sideLength, upperRight.getX() - lowerLeft.getX() + 1);
-        assertEquals(sideLength, upperRight.getY() - lowerLeft.getY() + 1);
+        assertEquals(sideLength, upperRight.x() - lowerLeft.x() + 1);
+        assertEquals(sideLength, upperRight.y() - lowerLeft.y() + 1);
 
         // then
         // Validate territory boundaries
-        assertTrue(lowerLeft.getX() >= 0 && lowerLeft.getY() >= 0);
-        assertTrue(upperRight.getX() < mapWidth && upperRight.getY() < mapHeight);
+        assertTrue(lowerLeft.x() >= 0 && lowerLeft.y() >= 0);
+        assertTrue(upperRight.x() < mapWidth && upperRight.y() < mapHeight);
     }
 
     @Test

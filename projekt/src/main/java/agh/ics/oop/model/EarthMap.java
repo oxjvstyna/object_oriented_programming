@@ -1,8 +1,5 @@
 package agh.ics.oop.model;
 
-import java.util.List;
-import java.util.Map;
-
 public class EarthMap extends AbstractWorldMap {
 
 
@@ -12,25 +9,25 @@ public class EarthMap extends AbstractWorldMap {
 
     public Vector2d handleBorder(Animal animal) {
         Vector2d position = animal.getPosition();
-        int x = position.getX();
-        int y = position.getY();
+        int x = position.x();
+        int y = position.y();
 
-        if (y < lowerLeft.getY()) {
-            y = lowerLeft.getY();
+        if (y < lowerLeft.y()) {
+            y = lowerLeft.y();
             animal.reverseDirection();
             animal.setPosition(new Vector2d(x, y));
         }
-        else if (y > upperRight.getY()) {
-            y = upperRight.getY();
+        else if (y > upperRight.y()) {
+            y = upperRight.y();
             animal.reverseDirection();
             animal.setPosition(new Vector2d(x, y));
         }
 
-        if (x < lowerLeft.getX()) {
-            x = upperRight.getX();
+        if (x < lowerLeft.x()) {
+            x = upperRight.x();
         }
-        else if (x > upperRight.getX()) {
-            x = lowerLeft.getX();
+        else if (x > upperRight.x()) {
+            x = lowerLeft.x();
         }
 
 

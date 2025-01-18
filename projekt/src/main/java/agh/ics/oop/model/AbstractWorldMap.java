@@ -3,7 +3,6 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected GrowthVariant growthVariant;
@@ -78,7 +77,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
 
     protected void initializeAnimals(int animalCount) {
-        RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.getX(), lowerLeft.getY(), animalCount);
+        RandomPositionGenerator positionGenerator = new RandomPositionGenerator(width, height, lowerLeft.x(), lowerLeft.y(), animalCount);
             positionGenerator.forEach(position -> {
                 try {
                     this.place(new Animal(position, 10, 5, 10, 10, 1, 4, moveVariant));
@@ -243,8 +242,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public List<Animal> getOrderedAnimals() {
         List<Animal> sortedAnimals = new ArrayList<>(animals);
         return sortedAnimals.stream()
-                .sorted(Comparator.comparing((Animal animal) -> animal.getPosition().getX())
-                        .thenComparing(animal -> animal.getPosition().getY()))
+                .sorted(Comparator.comparing((Animal animal) -> animal.getPosition().x())
+                        .thenComparing(animal -> animal.getPosition().y()))
                 .toList();
     }
 
