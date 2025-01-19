@@ -175,9 +175,6 @@ public class Animal implements WorldElement {
         this.numberOfChildren = numberOfChildren;
     }
 
-    public Object getId() {
-        return this.id;
-    }
 
     public int getMoveIndex() {
         return this.moveIndex;
@@ -185,5 +182,9 @@ public class Animal implements WorldElement {
 
     public Genome getGenomes() {
         return this.genome;
+    }
+
+    public int getId() {
+        return this.id;
     }
 }

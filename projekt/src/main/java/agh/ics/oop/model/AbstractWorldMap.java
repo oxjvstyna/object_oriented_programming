@@ -286,4 +286,18 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         return 0;  // Jeśli nie ma zwierząt na tej pozycji
     }
 
+    public Animal getAnimalById(int animalId) {
+        for (Animal animal : getAllAnimals()) {
+            if (animal.getId() == animalId) {
+                return animal;
+            }
+        }
+        return null;
+    }
+
+    private List<Animal> getAllAnimals() {
+        return new ArrayList<>(animals);
+    }
+
+
 }
