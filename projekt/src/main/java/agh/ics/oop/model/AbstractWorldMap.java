@@ -285,6 +285,16 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         }
     }
 
+    public int getAnimalCountAt(int x, int y) {
+        Vector2d position = new Vector2d(x, y);
+        return hasAnimalAt(position) ? occupiedFields.get(position).size() : 0;
+    }
+
+    public boolean hasPlantAt(int x, int y) {
+        return plants.contains(new Vector2d(x, y));
+    }
+
+
 
     private boolean hasAnimalAt(Vector2d position) {
         return occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty();
