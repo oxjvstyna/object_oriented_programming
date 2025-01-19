@@ -10,6 +10,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected MoveVariant moveVariant;
     protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
     protected final Set<Animal> animals = new HashSet<>();
+    protected final Set<Animal> animalHistory = new HashSet<>();
     protected final Set<Vector2d> plants = new HashSet<>();
     protected final Map<String, Integer> genotypes = new HashMap<>();
     protected final List<MapChangeListener> observers = new ArrayList<>();
@@ -19,6 +20,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     protected int width;
     protected int height;
     protected int plantEnergy;
+    protected int day = 0;
     int maxAnimalSize = 0;
     protected AnimalConfig config;
 
@@ -49,10 +51,12 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     protected void removeAnimals() {
+        this.day++;
         List<Animal> toRemove = new ArrayList<>();
         for (Animal animal : animals) {
             if (!animal.isAlive()) {
                 toRemove.add(animal);
+                animal.setDeathDay(this.day);
             }
         }
         for (Animal animal : toRemove) {
@@ -125,9 +129,9 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                 if (parent1.getEnergy() >= parent1.birthEnergy && parent2.getEnergy() >= parent2.birthEnergy) {
                     Animal child = parent1.reproduce(parent2);
                     animals.add(child);
+                    animalHistory.add(child);
                     this.place(child);
                     tracker.onDescendantAdded();
-
                 }
             }
         }
@@ -221,6 +225,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     @Override
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
+        animalHistory.add(animal);
         animals.add(animal);
         genotypes.merge(Arrays.toString(animal.getGenomes().getGenesAsStrings()), 1, Integer::sum);
         occupiedFields.putIfAbsent(position, new ArrayList<>());
@@ -287,12 +292,16 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     }
 
     public Animal getAnimalById(int animalId) {
-        for (Animal animal : getAllAnimals()) {
+        for (Animal animal : getAnimalHistory()) {
             if (animal.getId() == animalId) {
                 return animal;
             }
         }
         return null;
+    }
+
+    public Set<Animal> getAnimalHistory() {
+        return animalHistory;
     }
 
     private List<Animal> getAllAnimals() {

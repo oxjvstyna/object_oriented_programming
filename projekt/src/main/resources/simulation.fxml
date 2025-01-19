@@ -18,7 +18,7 @@
 
     <!-- Centralny widok: siatka symulacji -->
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
+        <ScrollPane fitToWidth="true" fitToHeight="true">
             <StackPane>
                 <GridPane fx:id="mapGrid" style="-fx-background-color: #eeeeee;"/>
             </StackPane>
@@ -58,7 +58,7 @@
                 <Label fx:id="followedAnimalDeathDayLabel" text="-" />
             </HBox>
             <HBox spacing="10">
-                <Label text="Liczba potomków:" />
+                <Label text="Liczba dzieci:" />
                 <Label fx:id="followedAnimalChildrenCountLabel" text="-" />
             </HBox>
             <HBox spacing="10">

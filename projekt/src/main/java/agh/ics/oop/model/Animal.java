@@ -22,6 +22,7 @@ public class Animal implements WorldElement {
     int birthEnergy;
     private final MoveVariant moveVariant;
     private int age = 0;
+    private int deathDay = 0;
     private int numberOfChildren = 0;
 
     public Animal(Vector2d initialPosition, AnimalConfig config) {
@@ -186,5 +187,13 @@ public class Animal implements WorldElement {
 
     public int getId() {
         return this.id;
+    }
+
+    public int getDeathDay() {
+        return deathDay;
+    }
+
+    public void setDeathDay(int deathDay) {
+        this.deathDay = deathDay;
     }
 }
