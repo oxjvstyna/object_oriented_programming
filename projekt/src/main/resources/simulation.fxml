@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
 
 <BorderPane fx:controller="agh.ics.oop.presenter.SimulationPresenter"
-            xmlns:fx="http://javafx.com/fxml/1">
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            minHeight="600.0" minWidth="800.0">
+
+    <!-- Centralny widok: siatka symulacji -->
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true">
-            <GridPane fx:id="mapGrid" gridLinesVisible="true" />
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
+            <StackPane>
+                <GridPane fx:id="mapGrid" style="-fx-background-color: #eeeeee;"/>
+            </StackPane>
         </ScrollPane>
     </center>
+
+    <!-- Górna część: Tytuł/Opis -->
+    <top>
+        <HBox spacing="10" style="-fx-padding: 10; -fx-alignment: center;">
+            <Button text="Pauzuj" onAction="#pauseSimulation" />
+            <Button text="Wznów" onAction="#resumeSimulation" />
+            <Button text="Generuj Raport" onAction="#generateReport" />
+        </HBox>
+    </top>
+
+    <!-- Dolna część: Informacje dodatkowe -->
+    <bottom>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label fx:id="descriptionLabel" text="Status symulacji" style="-fx-font-size: 14;" />
+        </VBox>
+    </bottom>
 </BorderPane>
