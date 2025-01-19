@@ -8,16 +8,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-
 import javafx.util.Duration;
 import agh.ics.oop.*;
 import agh.ics.oop.model.*;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class SimulationPresenter {
 
-    public TextArea reportTextArea;
+    @FXML
+    private TextArea reportTextArea;
     @FXML
     private GridPane mapGrid;
 
@@ -65,19 +66,42 @@ public class SimulationPresenter {
         Canvas canvas = new Canvas(mapGrid.getWidth(), mapGrid.getHeight());
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        String dominantGenome = map.getGenotypes().entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("");
+
+        var preferredFields = map.getPreferredPlantFields();
+
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                int maxEnergyValue = map.getMaxEnergyAt(x, y);
                 boolean hasPlant = map.hasPlantAt(x, y);
+                var animalsAtCell = map.getAnimalsAt(x, y);
 
-                if (maxEnergyValue > 0) {
-                    gc.setFill(Color.web(getAnimalColor(maxEnergyValue)));
+                if (preferredFields.contains(new Vector2d(x, y))) {
+                    gc.setFill(Color.DARKGREEN);
                 } else if (hasPlant) {
                     gc.setFill(Color.GREEN);
                 } else {
                     gc.setFill(Color.LIGHTGREEN);
                 }
                 gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+                if (!animalsAtCell.isEmpty()) {
+                    for (Animal animal : animalsAtCell) {
+                        if (dominantGenome.equals(Arrays.toString(animal.getGenome().getGenesAsStrings()))) {
+                            gc.setFill(Color.RED);
+                        } else {
+                            gc.setFill(Color.web(getAnimalColor(animal.getEnergy())));
+                        }
+                        gc.fillOval(
+                                x * cellSize + cellSize * 0.2,
+                                y * cellSize + cellSize * 0.2,
+                                cellSize * 0.6,
+                                cellSize * 0.6
+                        );
+                    }
+                }
             }
         }
 
@@ -85,17 +109,12 @@ public class SimulationPresenter {
         mapGrid.add(canvas, 0, 0);
     }
 
-    // Kolor dla zwierząt na podstawie energii
     private String getAnimalColor(int energy) {
         int maxEnergy = 100;
-        double intensity = Math.min(1.0, energy / (double) maxEnergy); // Normalizacja do zakresu 0-1
-
-        // Gradient od jasnoszarego (wysoka energia) do czarnego (niska energia)
-        int gray = (int) (211 - 211 * (1.0 - intensity)); // Energia 0 -> 0 (czarny), energia max -> 211 (jasnoszary)
+        double intensity = Math.min(1.0, energy / (double) maxEnergy);
+        int gray = (int) (211 - 211 * (1.0 - intensity));
         return String.format("rgb(%d, %d, %d)", gray, gray, gray);
     }
-
-
 
     @FXML
     public void generateReport() {
@@ -104,7 +123,7 @@ public class SimulationPresenter {
         String mostFrequentGenome = map.getGenotypes().entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
-                .orElse("BRAK");
+                .orElse("");
 
         double averageEnergyForLiveAnimals = map.getAnimals().stream()
                 .filter(Animal::isAlive)
@@ -149,7 +168,4 @@ public class SimulationPresenter {
 
         reportTextArea.setText(report);
     }
-
-
-
 }

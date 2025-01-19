@@ -1,6 +1,16 @@
 package agh.ics.oop.model;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+
 
 public record Vector2d(int x, int y) {
+
+    public Vector2d(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     @Override
     public String toString() {

@@ -3,6 +3,8 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
@@ -270,9 +272,13 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         return plantEnergy;
     }
 
-    public Map<String, Integer> getGenotypes() {
-        return genotypes;
+    public Map<String, Integer> getAnimalGenotypes() {
+        return animals.stream()
+                .filter(Animal::isAlive)
+                .map(animal -> animal.getGenome().toString())
+                .collect(Collectors.groupingBy(genotype -> genotype, Collectors.summingInt(genotype -> 1)));
     }
+
 
     public Collection<Animal> getAnimals() {
         return animals;
@@ -290,11 +296,18 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         return maxAnimalSize;
     }
 
-    public Animal getAnimalAt(int x, int y) {
-        Vector2d position = new Vector2d(x, y);
-        if (occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty()) {
-            return occupiedFields.get(position).getFirst();
-        }
-        return null;
+    public List<Animal> getAnimalsAt(int x, int y) {
+        return animals.stream()
+                .filter(animal -> animal.getPosition().equals(new Vector2d(x, y)))
+                .collect(Collectors.toList());
+    }
+
+
+    public Set<Vector2d> getPreferredPlantFields() {
+        return preferredFields;
+    }
+
+    public Map<String, Integer> getGenotypes() {
+        return genotypes;
     }
 }
