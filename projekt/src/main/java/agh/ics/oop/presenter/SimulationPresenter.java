@@ -2,7 +2,6 @@ package agh.ics.oop.presenter;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -63,7 +62,7 @@ public class SimulationPresenter {
 
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                int animalCount = map.getAnimalCountAt(x, y);
+                int animalCount = map.getMaxEnergyAt(x, y);
                 boolean hasPlant = map.hasPlantAt(x, y);
 
                 if (animalCount > 0) {
@@ -71,7 +70,7 @@ public class SimulationPresenter {
                 } else if (hasPlant) {
                     gc.setFill(Color.GREEN);
                 } else {
-                    gc.setFill(Color.WHITE);
+                    gc.setFill(Color.LIGHTGREEN);
                 }
                 gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
             }
@@ -81,14 +80,19 @@ public class SimulationPresenter {
         mapGrid.add(canvas, 0, 0);
     }
 
-    private String getAnimalColor(int animalCount) {
-        // Im więcej zwierząt, tym ciemniejszy lub cieplejszy kolor
-        int maxAnimals = 10; // Przyjmij maksymalną liczbę zwierząt na pole
-        double intensity = Math.min(1.0, animalCount / (double) maxAnimals); // Normalizacja do zakresu 0-1
-        int red = (int) (255 * intensity);
-        int green = 255 - red;
-        return String.format("rgb(%d, %d, 0)", red, green); // Gradient od zielonego (mało zwierząt) do czerwonego (dużo)
+    // Kolor dla zwierząt na podstawie energii
+    private String getAnimalColor(int energy) {
+        int maxEnergy = 100;
+        double intensity = Math.min(1.0, energy / (double) maxEnergy); // Normalizacja do zakresu 0-1
+
+        // Gradient od jasnoszarego (wysoka energia) do czarnego (niska energia)
+        int gray = (int) (211 - 211 * (1.0 - intensity)); // Energia 0 -> 0 (czarny), energia max -> 211 (jasnoszary)
+        return String.format("rgb(%d, %d, %d)", gray, gray, gray);
     }
+
+
+
+
     @FXML
     public void generateReport() {
         simulation.getSimConfig().currentMap().getReport();
