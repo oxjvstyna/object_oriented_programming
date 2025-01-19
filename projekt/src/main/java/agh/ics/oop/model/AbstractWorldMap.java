@@ -3,6 +3,18 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME, // Identyfikacja typu po nazwie
+        include = JsonTypeInfo.As.PROPERTY, // Przechowuj typ jako właściwość JSON
+        property = "type" // Nazwa właściwości w JSON dla typu
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = GlobeMap.class, name = "GlobeMap"),
+        @JsonSubTypes.Type(value = OwlbearMap.class, name = "OwlbearMap")
+})
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     private final AnimalTracker tracker = new AnimalTracker();
@@ -32,6 +44,9 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.preferredFields = growthVariant.generateFields();
         this.plantEnergy = 2;
         this.config = config;
+    }
+
+    public AbstractWorldMap() {
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -145,41 +160,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         growPlants();
     }
 
-    public void getReport() {
-        String mostFrequentGenome = genotypes.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse("BRAK");
-
-        double averageEnergyForLiveAnimals = animals.stream()
-                .filter(Animal::isAlive)
-                .mapToInt(Animal::getEnergy)
-                .average()
-                .orElse(0.0);
-
-        double averageDaysAliveForLiveAnimals = animals.stream()
-                .filter(Animal::isAlive)
-                .mapToInt(Animal::getAge)
-                .average()
-                .orElse(0.0);
-
-        double averageChildrenForLiveAnimals = animals.stream()
-                .filter(Animal::isAlive)
-                .mapToInt(Animal::getNumberOfChildren)
-                .average()
-                .orElse(0.0);
-
-        System.out.println("Liczba zwierzat na mapie: " + animals.size());
-        System.out.println("Liczba roslin na mapie: " + plants.size());
-        System.out.println("Liczba wolnych pol: " + (this.width * this.height - occupiedFields.size()));
-        System.out.println("Najpopularniejszy genotyp: " + mostFrequentGenome);
-        System.out.println("Sredni poziom energii dla zyjacych zwierzakow: " + averageEnergyForLiveAnimals);
-        System.out.println("Sredni poziom dlugosci zycia zwierzakow na mapie: " + averageDaysAliveForLiveAnimals);
-        System.out.println("Srednia liczba dzieci dla zyjacych zwierzakow: " + averageChildrenForLiveAnimals);
-        System.out.println("Maksymalna ilosc zwierzat na mapie: " + this.maxAnimalSize);
-    }
-
-
     protected Vector2d adjustPosition(Animal animal) {
         return animal.getPosition();
     }
@@ -286,4 +266,35 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         return 0;  // Jeśli nie ma zwierząt na tej pozycji
     }
 
+    public int getPlantEnergy() {
+        return plantEnergy;
+    }
+
+    public Map<String, Integer> getGenotypes() {
+        return genotypes;
+    }
+
+    public Collection<Animal> getAnimals() {
+        return animals;
+    }
+
+    public Map<Vector2d, List<Animal>> getOccupiedFields() {
+        return occupiedFields;
+    }
+
+    public Set<Vector2d> getPlants() {
+        return plants;
+    }
+
+    public int getMaxAnimalSize() {
+        return maxAnimalSize;
+    }
+
+    public Animal getAnimalAt(int x, int y) {
+        Vector2d position = new Vector2d(x, y);
+        if (occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty()) {
+            return occupiedFields.get(position).getFirst();
+        }
+        return null;
+    }
 }

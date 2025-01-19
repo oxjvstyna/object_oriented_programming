@@ -1,7 +1,9 @@
 package agh.ics.oop.model;
 
-public class GlobeMap extends AbstractWorldMap {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class GlobeMap extends AbstractWorldMap implements MapVariant {
 
     public GlobeMap(int width, int height, GrowthVariant growthVariant, AnimalConfig animalConfig) {
         super(width, height, growthVariant, animalConfig);
@@ -44,6 +46,14 @@ public class GlobeMap extends AbstractWorldMap {
     @Override
     protected Vector2d adjustPosition(Animal animal) {
         return handleBorder(animal);
+    }
+
+    public GlobeMap() {
+        super();
+    }
+    @Override
+    public String toString() {
+        return "GlobeMap";
     }
 }
 
