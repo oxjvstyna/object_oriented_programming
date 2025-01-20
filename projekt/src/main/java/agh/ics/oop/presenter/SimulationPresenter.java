@@ -67,7 +67,7 @@ public class SimulationPresenter {
             followedAnimalDeathDayLabel.setText(tracker.getDeathDay() == -1 ? "Still alive" : String.valueOf(tracker.getDeathDay()));
             followedAnimalEnergyLabel.setText(String.valueOf(followedAnimal.getEnergy()));
             followedAnimalChildrenCountLabel.setText(String.valueOf(followedAnimal.getNumberOfChildren()));
-            followedAnimalGenotypeLabel.setText(followedAnimal.getGenome().toString());
+            followedAnimalGenotypeLabel.setText(followedAnimal.getGenomes().toString());
             followedAnimalActiveGeneIndexLabel.setText(String.valueOf(followedAnimal.getMoveIndex()));
         }
     }

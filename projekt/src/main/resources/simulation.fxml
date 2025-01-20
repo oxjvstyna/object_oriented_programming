@@ -39,18 +39,18 @@
         <VBox spacing="10" style="-fx-padding: 10;">
             <HBox spacing="10">
                 <TextField fx:id="animalIdField" promptText="Enter animal ID" />
-                <Button text="Track Animal" onAction="#trackAnimalById" />
+                <Button text="Śledź zwierzę " onAction="#trackAnimalById" />
             </HBox>
 
             <Label fx:id="descriptionLabel" text="Status symulacji" style="-fx-font-size: 14;" />
 
             <!-- Nowe etykiety do wyświetlania informacji o śledzonym zwierzęciu -->
             <HBox spacing="10">
-                <Label text="Energie:" />
+                <Label text="Energia:" />
                 <Label fx:id="followedAnimalEnergyLabel" text="-" />
             </HBox>
             <HBox spacing="10">
-                <Label text="Dzień narodzin:" />
+                <Label text="Czas życia:" />
                 <Label fx:id="followedAnimalBirthDayLabel" text="-" />
             </HBox>
             <HBox spacing="10">
@@ -62,7 +62,7 @@
                 <Label fx:id="followedAnimalChildrenCountLabel" text="-" />
             </HBox>
             <HBox spacing="10">
-                <Label text="Liczba potomków (descendants):" />
+                <Label text="Liczba potomków:" />
                 <Label fx:id="followedAnimalDescendantsCountLabel" text="-" />
             </HBox>
             <HBox spacing="10">
