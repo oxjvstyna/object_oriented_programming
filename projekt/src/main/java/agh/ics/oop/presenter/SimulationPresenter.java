@@ -80,7 +80,7 @@ public class SimulationPresenter {
 
                 if (preferredFields.contains(new Vector2d(x, y))) {
                     gc.setFill(Color.DARKGREEN);
-                } else if (hasPlant) {
+                }else if (hasPlant) {
                     gc.setFill(Color.GREEN);
                 } else {
                     gc.setFill(Color.LIGHTGREEN);
@@ -168,4 +168,6 @@ public class SimulationPresenter {
 
         reportTextArea.setText(report);
     }
+
+
 }

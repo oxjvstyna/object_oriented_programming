@@ -291,4 +291,20 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     public Map<String, Integer> getGenotypes() {
         return genotypes;
     }
+
+    public double getAverageEnergy() {
+        return animals.stream()
+                .filter(Animal::isAlive)
+                .mapToInt(Animal::getEnergy)
+                .average()
+                .orElse(0);
+    }
+
+    public double getAverageLifespan() {
+        return animals.stream()
+                .filter(Animal::isAlive)
+                .mapToInt(Animal::getAge)
+                .average()
+                .orElse(0);
+    }
 }

@@ -1,7 +1,6 @@
 package agh.ics.oop.presenter;
 import java.io.*;
 import java.util.Properties;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
