@@ -5,6 +5,8 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -15,9 +17,14 @@ import agh.ics.oop.*;
 import agh.ics.oop.model.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class SimulationPresenter {
+    public TextArea graphTextArea;
+    public TextArea followedAnimalStatusArea;
+    @FXML
+    private LineChart<Number, Number> statsChart;
     @FXML
     private TextField animalIdField;
     @FXML
@@ -34,11 +41,23 @@ public class SimulationPresenter {
     private boolean isRunning = false;
     private Timeline timeline;
     private Simulation simulation;
-    private int currentDay;
-    private final AnimalTracker tracker = new AnimalTracker();
+    private int currentDay = 1;
+    private XYChart.Series<Number, Number> animalSeries;
+    private XYChart.Series<Number, Number> plantSeries;
 
     public void initializeSimulation(SimulationEngine engine) {
         this.simulation = engine.getSimulation();
+
+        // Inicjalizacja serii dla wykresu
+        animalSeries = new XYChart.Series<>();
+        animalSeries.setName("Liczba zwierząt");
+
+        plantSeries = new XYChart.Series<>();
+        plantSeries.setName("Liczba roślin");
+
+        List<XYChart.Series<Number, Number>> seriesList = Arrays.asList(animalSeries, plantSeries);
+        statsChart.getData().addAll(seriesList);
+
         startSimulation();
     }
 
@@ -50,6 +69,8 @@ public class SimulationPresenter {
             currentDay++;
             updateAnimalStatus();
             generateReport();
+            animalSeries.getData().add(new XYChart.Data<>(currentDay, simulation.getSimConfig().currentMap().getAnimals().size()));
+            plantSeries.getData().add(new XYChart.Data<>(currentDay, simulation.getSimConfig().currentMap().getPlants().size()));
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -65,18 +86,36 @@ public class SimulationPresenter {
     }
 
     public void updateAnimalStatus() {
+        var tracker = simulation.getTracker();
         Animal followedAnimal = tracker.getTrackedAnimal();
+
         if (tracker.isTracking() && followedAnimal != null) {
-            followedAnimalPlantsEatenLabel.setText(String.valueOf(tracker.getPlantsEaten()));
-            followedAnimalDescendantsCountLabel.setText(String.valueOf(tracker.getDescendantsCount()));
-            followedAnimalBirthDayLabel.setText(String.valueOf(followedAnimal.getAge()));
-            followedAnimalDeathDayLabel.setText(tracker.getDeathDay() == -1 ? "Still alive" : String.valueOf(tracker.getDeathDay()));
-            followedAnimalEnergyLabel.setText(String.valueOf(followedAnimal.getEnergy()));
-            followedAnimalChildrenCountLabel.setText(String.valueOf(followedAnimal.getNumberOfChildren()));
-            followedAnimalGenotypeLabel.setText(followedAnimal.getGenomes().toString());
-            followedAnimalActiveGeneIndexLabel.setText(String.valueOf(followedAnimal.getMoveIndex()));
+            String status = String.format("""
+                Energia: %d
+                Czas życia (dni): %d
+                Dzień śmierci: %s
+                Liczba dzieci: %d
+                Liczba potomków: %d
+                Genotyp: %s
+                Indeks aktywnego genu: %s
+                Zjedzone rośliny: %d
+                """,
+                    followedAnimal.getEnergy(),
+                    followedAnimal.getAge(),
+                    tracker.getDeathDay() == 0 ? "Still alive" : tracker.getDeathDay(),
+                    followedAnimal.getNumberOfChildren(),
+                    tracker.getDescendantsCount(),
+                    followedAnimal.getGenomes().toString(),
+                    followedAnimal.getGenome().getGenesAsStrings()[followedAnimal.getMoveIndex()],
+                    tracker.getPlantsEaten()
+            );
+
+            followedAnimalStatusArea.setText(status);
+        } else {
+            followedAnimalStatusArea.setText("Zwierze nie jest śledzone.");
         }
     }
+
 
     @FXML
     private void resumeSimulation() {
@@ -88,9 +127,14 @@ public class SimulationPresenter {
 
     private void renderMap() {
         AbstractWorldMap map = simulation.getSimConfig().currentMap();
-        double cellSize = Math.min(mapGrid.getWidth() / map.getWidth(), mapGrid.getHeight() / map.getHeight());
 
-        Canvas canvas = new Canvas(mapGrid.getWidth(), mapGrid.getHeight());
+        // Ustawienia stałych rozmiarów mapy
+        double mapWidth = 500; // Stała szerokość mapy
+        double mapHeight = 500; // Stała wysokość mapy
+        double cellSize = Math.min(mapWidth / map.getWidth(), mapHeight / map.getHeight());
+
+        // Tworzenie Canvas o stałych wymiarach
+        Canvas canvas = new Canvas(mapWidth, mapHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         String dominantGenome = map.getGenotypes().entrySet().stream()
@@ -99,24 +143,30 @@ public class SimulationPresenter {
                 .orElse("");
 
         var preferredFields = map.getPreferredPlantFields();
+        Animal trackedAnimal = simulation.getTracker().getTrackedAnimal();
 
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 boolean hasPlant = map.hasPlantAt(x, y);
                 var animalsAtCell = map.getAnimalsAt(x, y);
 
+                // Rysowanie pól mapy
                 if (preferredFields.contains(new Vector2d(x, y))) {
                     gc.setFill(Color.DARKGREEN);
-                }else if (hasPlant) {
+                } else if (hasPlant) {
                     gc.setFill(Color.GREEN);
                 } else {
                     gc.setFill(Color.LIGHTGREEN);
                 }
                 gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
 
+                // Rysowanie zwierząt
                 if (!animalsAtCell.isEmpty()) {
                     for (Animal animal : animalsAtCell) {
-                        if (dominantGenome.equals(Arrays.toString(animal.getGenome().getGenesAsStrings()))) {
+                        boolean isTracked = animal.equals(trackedAnimal);
+                        boolean hasDominantGenome = dominantGenome.equals(Arrays.toString(animal.getGenome().getGenesAsStrings()));
+
+                        if (isTracked) {
                             gc.setFill(Color.RED);
                         } else {
                             gc.setFill(Color.web(getAnimalColor(animal.getEnergy())));
@@ -127,11 +177,32 @@ public class SimulationPresenter {
                                 cellSize * 0.6,
                                 cellSize * 0.6
                         );
+
+                        if (hasDominantGenome) {
+                            gc.setStroke(Color.BLUE);
+                            gc.setLineWidth(2);
+                            gc.strokeOval(
+                                    x * cellSize + cellSize * 0.2,
+                                    y * cellSize + cellSize * 0.2,
+                                    cellSize * 0.6,
+                                    cellSize * 0.6
+                            );
+                        }
+                        if (animal instanceof Owlbear) {
+                            gc.setFill(Color.PURPLE);
+                            gc.fillOval(
+                                    x * cellSize + cellSize * 0.2,
+                                    y * cellSize + cellSize * 0.2,
+                                    cellSize * 0.6,
+                                    cellSize * 0.6
+                            );
+                        }
                     }
                 }
             }
         }
 
+        // Czyszczenie i dodanie Canvas do mapGrid
         mapGrid.getChildren().clear();
         mapGrid.add(canvas, 0, 0);
     }
@@ -208,7 +279,7 @@ public class SimulationPresenter {
             Animal animal = simulation.getSimConfig().currentMap().getAnimalById(animalId);
 
             if (animal != null) {
-                tracker.startTracking(animal);
+                simulation.getTracker().startTracking(animal);
                 System.out.println("Started tracking animal with ID: " + animalId);
                 updateAnimalStatus();
             } else {

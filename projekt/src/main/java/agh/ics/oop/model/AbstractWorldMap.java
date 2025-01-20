@@ -5,21 +5,8 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME, // Identyfikacja typu po nazwie
-        include = JsonTypeInfo.As.PROPERTY, // Przechowuj typ jako właściwość JSON
-        property = "type" // Nazwa właściwości w JSON dla typu
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = GlobeMap.class, name = "GlobeMap"),
-        @JsonSubTypes.Type(value = OwlbearMap.class, name = "OwlbearMap")
-})
 
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
-    private final AnimalTracker tracker = new AnimalTracker();
     protected GrowthVariant growthVariant;
     protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
     protected final Set<Animal> animals = new HashSet<>();
@@ -116,9 +103,8 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
             Vector2d position = highestPriorityAnimal.getPosition();
             if (plants.contains(position)){
                 highestPriorityAnimal.addEnergy(plantEnergy);
+                highestPriorityAnimal.addPlantsEaten();
                 plants.remove(position);
-                tracker.onPlantEaten();
-
             }
         }
     }
@@ -140,10 +126,10 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
 
                 if (parent1.getEnergy() >= parent1.birthEnergy && parent2.getEnergy() >= parent2.birthEnergy) {
                     Animal child = parent1.reproduce(parent2);
+                    child.updateDescendantsCount();
                     animals.add(child);
                     animalHistory.add(child);
                     this.place(child);
-                    tracker.onDescendantAdded();
                 }
             }
         }
@@ -329,4 +315,5 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
                 .average()
                 .orElse(0);
     }
+
 }

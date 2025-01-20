@@ -55,6 +55,7 @@ class AbstractWorldMapTest {
         // given
         Vector2d plantPosition = new Vector2d(2, 2);
         worldMap.placePlant(plantPosition);
+        worldMap.setPlantEnergy(10);
 
         Animal animal = new Animal(plantPosition, animalConfig);
         worldMap.place(animal);

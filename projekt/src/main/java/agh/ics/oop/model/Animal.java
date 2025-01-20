@@ -13,7 +13,7 @@ public class Animal implements WorldElement {
     private final int reproductionEnergy;
     private final int minMutation;
     private final int maxMutation;
-    private final int moveIndex;
+    private int moveIndex;
     private Vector2d position;
     MapDirection orientation;
     private int energy;
@@ -27,7 +27,19 @@ public class Animal implements WorldElement {
     private int numberOfChildren = 0;
     private int plantsEaten = 0;
     private int descendantsCount = 0;
-    private List<Animal> children = new ArrayList<>();
+    private final List<Animal> children = new ArrayList<>();
+
+    public void addPlantsEaten() {
+        this.plantsEaten = plantsEaten + 1;
+    }
+
+    public int getPlantsEaten() {
+        return plantsEaten;
+    }
+
+    public void addDescendantsCount() {
+        this.descendantsCount = descendantsCount + 1;
+    }
 
     public List<Animal> getChildren() {
         return children;
@@ -53,6 +65,7 @@ public class Animal implements WorldElement {
         this.moveIndex = -1;
     }
 
+    // Dodawanie dziecka
     public Animal(Vector2d position, int energy, Genome genome, Animal parent1, Animal parent2, int reproductionEnergy, int birthEnergy, int minMutation, int maxMutation, int moveIndex, MoveVariant moveVariant) {
         this.id = idCounter++;
         this.moveIndex = moveIndex;
@@ -95,43 +108,46 @@ public class Animal implements WorldElement {
     public void move(MoveValidator validator) {
         this.age += 1;
         int index = this.moveVariant.getNextMoveIndex(genome, moveIndex);
+        this.moveIndex = index;
         int moveDirectionCode = genome.getGenes().get(index);
         List<MoveDirection> directions = OptionsParser.parse(new String[]{Integer.toString(moveDirectionCode)});
-        MoveDirection direction = directions.get(0);
-
-        switch (direction) {
+        MoveDirection direction = directions.getFirst();
+        switch(direction) {
             case FORWARD:
                 break;
             case FORWARD_RIGHT:
-                this.orientation = this.orientation.next();
-                break;
             case RIGHT:
-                this.orientation = this.orientation.next().next();
-                break;
             case BACKWARD_RIGHT:
-                this.orientation = this.orientation.next().next().next();
-                break;
             case BACKWARD:
-                this.orientation = this.orientation.next().next().next().next();
+                this.orientation = this.orientation.next(direction.ordinal());
                 break;
             case BACKWARD_LEFT:
-                this.orientation = this.orientation.previous().previous().previous();
-                break;
             case LEFT:
-                this.orientation = this.orientation.previous().previous();
-                break;
             case FORWARD_LEFT:
-                this.orientation = this.orientation.previous();
+                this.orientation = this.orientation.previous(8 - direction.ordinal());
                 break;
             default:
-                throw new IllegalArgumentException("Invalid move direction: " + direction);
-        }
+            throw new IllegalArgumentException("Invalid move direction: " + direction);
+    }
+
 
         Vector2d nextPositionForward = this.position.add(orientation.toUnitVector());
         if (validator.canMoveTo(nextPositionForward)) {
             this.position = nextPositionForward;
         }
         this.addEnergy(-1);
+    }
+
+    public void updateDescendantsCount() {
+        this.descendantsCount++;
+        if (this.parent1 != null) {
+            this.parent1.updateDescendantsCount();
+        }
+}
+
+    // Getter for descendantsCount
+    public int getDescendantsCount() {
+        return this.descendantsCount;
     }
 
     public void addEnergy(int value) {
@@ -203,5 +219,9 @@ public class Animal implements WorldElement {
 
     public void setDeathDay(int deathDay) {
         this.deathDay = deathDay;
+    }
+
+    public Genome getGenome() {
+        return this.genome;
     }
 }

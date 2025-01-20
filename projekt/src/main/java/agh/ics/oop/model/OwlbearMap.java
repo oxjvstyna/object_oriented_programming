@@ -20,14 +20,17 @@ public class OwlbearMap extends AbstractWorldMap implements MapVariant {
 
         RandomPositionGenerator generator = new RandomPositionGenerator(sideLength, sideLength, territoryLowerLeft.x(), territoryLowerLeft.y(), 1);
         Vector2d owlbearPosition = generator.iterator().next();
-        AnimalConfig owlbearConfig = new AnimalConfig( 999999999, 5, 99999, 99999, 9999, 9999, config.moveVariant());
+        AnimalConfig owlbearConfig = new AnimalConfig( 9999999, 5, 999999, 9999999, config.minMutation(), config.maxMutation(), config.moveVariant());
         this.owlbear = new Owlbear(owlbearPosition, owlbearConfig, this);
         this.place(owlbear);
     }
 
     public void eatAnimals() {
         for (Animal animal : occupiedFields.get(owlbear.getPosition())) {
-            animal.addEnergy(-999999);
+            if (animal instanceof Owlbear) {
+                continue;
+            }
+            animal.addEnergy(-9999999);
         }
     }
 

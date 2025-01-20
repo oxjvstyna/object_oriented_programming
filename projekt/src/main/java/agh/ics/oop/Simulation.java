@@ -9,29 +9,31 @@ import java.util.Arrays;
 public class Simulation implements Runnable {
     protected SimulationConfig simConfig;
     protected CSVWriter csvWriter;
+    private final AnimalTracker tracker;
     int day = 1;
 
     public Simulation(SimulationConfig config) {
         this.simConfig = config;
+        this.tracker = new AnimalTracker();
         try {
             csvWriter = new CSVWriter("simulation_stats.csv");
-
             csvWriter.writeHeader(Arrays.asList("Day", "AliveAnimals", "Plants", "AverageEnergy", "AverageLifespan"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 
     @Override
     public void run() {
         simConfig.currentMap().initializeMap(simConfig.animalCount());
-
     }
 
     public SimulationConfig getSimConfig() {
         return simConfig;
+    }
+
+    public AnimalTracker getTracker() {
+        return tracker;
     }
 
     public void runStep() {
@@ -58,7 +60,6 @@ public class Simulation implements Runnable {
             e.printStackTrace();
         }
     }
-
 
     public int getAliveAnimalsCount() {
         return simConfig.currentMap().getAnimals().size();

@@ -2,31 +2,15 @@ package agh.ics.oop.model;
 
 public class AnimalTracker {
     private Animal trackedAnimal;
-    private int plantsEaten = 0;
-    private int descendantsCount = 0;
     private int deathDay = -1;
 
     public void startTracking(Animal animal) {
         this.trackedAnimal = animal;
-        this.plantsEaten = 0;
-        this.descendantsCount = 0;
         this.deathDay = -1;
     }
 
     public boolean isTracking() {
         return this.trackedAnimal != null;
-    }
-
-    public void onPlantEaten() {
-        if (isTracking()) {
-            plantsEaten++;
-        }
-    }
-
-    public void onDescendantAdded() {
-        if (isTracking()) {
-            descendantsCount++;
-        }
     }
 
     public void updateDeathDay() {
@@ -39,11 +23,11 @@ public class AnimalTracker {
 
 
     public int getPlantsEaten() {
-        return plantsEaten;
+        return trackedAnimal.getPlantsEaten();
     }
 
     public int getDescendantsCount() {
-        return descendantsCount;
+        return trackedAnimal.getDescendantsCount();
     }
 
     public int getDeathDay() {

@@ -7,7 +7,7 @@ public class Owlbear extends Animal {
         super(owlbearPosition, config);
         this.worldMap = map;
     }
-
+    
     @Override
     public void move(MoveValidator validator) {
         Vector2d upperRight = worldMap.getTerritoryUpperRight();
@@ -18,7 +18,7 @@ public class Owlbear extends Animal {
 
         // Wywołaj metodę move z klas bazowych
         super.move(validator);
-        this.addEnergy(1);
+        this.addEnergy(worldMap.getPlantEnergy());
     }
 
 }

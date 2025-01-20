@@ -22,7 +22,7 @@ public enum  MapDirection {
             case SOUTH_WEST -> "Poludniowy Zachod";
         };
     }
-    public MapDirection next() {
+    public MapDirection next(int ordinal) {
         return switch(this) {
             case NORTH -> NORTH_EAST;
             case NORTH_EAST -> EAST;
@@ -34,7 +34,7 @@ public enum  MapDirection {
             case NORTH_WEST -> NORTH;
         };
     }
-    public MapDirection previous() {
+    public MapDirection previous(int i) {
         return switch(this) {
             case NORTH -> NORTH_WEST;
             case NORTH_WEST -> WEST;
