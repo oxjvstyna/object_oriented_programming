@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 
+<?import javafx.scene.control.TextArea?>
 <BorderPane fx:controller="agh.ics.oop.presenter.SimulationPresenter"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -17,7 +18,7 @@
 
     <!-- Centralny widok: siatka symulacji -->
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
+        <ScrollPane fitToWidth="true" fitToHeight="true">
             <StackPane>
                 <GridPane fx:id="mapGrid" style="-fx-background-color: #eeeeee;"/>
             </StackPane>
@@ -29,7 +30,6 @@
         <HBox spacing="10" style="-fx-padding: 10; -fx-alignment: center;">
             <Button text="Pauzuj" onAction="#pauseSimulation" />
             <Button text="Wznów" onAction="#resumeSimulation" />
-            <Button text="Generuj Raport" onAction="#generateReport" />
         </HBox>
     </top>
 
@@ -37,6 +37,8 @@
     <bottom>
         <VBox spacing="10" style="-fx-padding: 10;">
             <Label fx:id="descriptionLabel" text="Status symulacji" style="-fx-font-size: 14;" />
+            <TextArea fx:id="reportTextArea" editable="false" wrapText="true" style="-fx-pref-height: 200;" />
         </VBox>
     </bottom>
+
 </BorderPane>

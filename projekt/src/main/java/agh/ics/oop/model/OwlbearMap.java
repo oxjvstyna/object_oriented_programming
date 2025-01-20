@@ -1,7 +1,7 @@
 package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
-public class OwlbearMap extends AbstractWorldMap {
+public class OwlbearMap extends AbstractWorldMap implements MapVariant {
     Owlbear owlbear;
     Vector2d territoryLowerLeft;
     Vector2d territoryUpperRight;
@@ -47,5 +47,9 @@ public class OwlbearMap extends AbstractWorldMap {
         consumePlants();
         reproduceAnimals();
         growPlants();
+    }
+    @Override
+    public String toString() {
+        return "OwlbearMap";
     }
 }

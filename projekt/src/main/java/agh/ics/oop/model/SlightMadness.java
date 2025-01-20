@@ -3,6 +3,8 @@ package agh.ics.oop.model;
 import java.util.Random;
 
 public class SlightMadness implements MoveVariant {
+    public SlightMadness() {
+    }
     private final Random randomGenerator = new Random();
 
     @Override
@@ -12,5 +14,9 @@ public class SlightMadness implements MoveVariant {
         } else {
             return randomGenerator.nextInt(genome.size());
         }
+    }
+    @Override
+    public String toString() {
+        return "SlightMadness";
     }
 }
