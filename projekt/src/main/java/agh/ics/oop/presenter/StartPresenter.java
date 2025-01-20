@@ -122,7 +122,7 @@ public void onSaveConfigClicked(ActionEvent actionEvent) {
 
         widthInput.setText(String.valueOf(map.getWidth()));
         heightInput.setText(String.valueOf(map.getHeight()));
-        plantEnergyInput.setText(String.valueOf(map.getPlantEnergy()));
+        plantEnergyInput.setText(String.valueOf(config.plantEnergy()));
         startingEnergyInput.setText(String.valueOf(animalConfig.initialEnergy()));
         genomeLengthInput.setText(String.valueOf(animalConfig.genomeLength()));
         reproductionEnergyInput.setText(String.valueOf(animalConfig.reproductionEnergy()));
@@ -140,7 +140,7 @@ public void onSaveConfigClicked(ActionEvent actionEvent) {
         Properties properties = new Properties();
         properties.setProperty("width", String.valueOf(config.currentMap().getWidth()));
         properties.setProperty("height", String.valueOf(config.currentMap().getHeight()));
-        properties.setProperty("plantEnergy", String.valueOf(config.currentMap().getPlantEnergy()));
+        properties.setProperty("plantEnergy", String.valueOf(config.plantEnergy()));
         properties.setProperty("startingEnergy", String.valueOf(config.animalConfig().initialEnergy()));
         properties.setProperty("genomeLength", String.valueOf(config.animalConfig().genomeLength()));
         properties.setProperty("simulationSpeed", String.valueOf(config.simulationSpeed()));
