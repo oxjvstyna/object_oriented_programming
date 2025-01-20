@@ -31,12 +31,7 @@ public class SimulationPresenter {
     private TextArea reportTextArea;
     @FXML
     private GridPane mapGrid;
-    @FXML
-    private Label followedAnimalEnergyLabel, followedAnimalBirthDayLabel, followedAnimalDeathDayLabel,
-            followedAnimalChildrenCountLabel, followedAnimalDescendantsCountLabel, followedAnimalGenotypeLabel,
-            followedAnimalActiveGeneIndexLabel, followedAnimalPlantsEatenLabel;
-    @FXML
-    private TextArea animalStatusTextArea;
+
 
     private boolean isRunning = false;
     private Timeline timeline;
@@ -48,7 +43,6 @@ public class SimulationPresenter {
     public void initializeSimulation(SimulationEngine engine) {
         this.simulation = engine.getSimulation();
 
-        // Inicjalizacja serii dla wykresu
         animalSeries = new XYChart.Series<>();
         animalSeries.setName("Liczba zwierząt");
 
@@ -128,12 +122,10 @@ public class SimulationPresenter {
     private void renderMap() {
         AbstractWorldMap map = simulation.getSimConfig().currentMap();
 
-        // Ustawienia stałych rozmiarów mapy
-        double mapWidth = 500; // Stała szerokość mapy
-        double mapHeight = 500; // Stała wysokość mapy
+        double mapWidth = 500;
+        double mapHeight = 500;
         double cellSize = Math.min(mapWidth / map.getWidth(), mapHeight / map.getHeight());
 
-        // Tworzenie Canvas o stałych wymiarach
         Canvas canvas = new Canvas(mapWidth, mapHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -150,7 +142,7 @@ public class SimulationPresenter {
                 boolean hasPlant = map.hasPlantAt(x, y);
                 var animalsAtCell = map.getAnimalsAt(x, y);
 
-                // Rysowanie pól mapy
+
                 if (preferredFields.contains(new Vector2d(x, y))) {
                     gc.setFill(Color.DARKGREEN);
                 } else if (hasPlant) {
@@ -160,7 +152,7 @@ public class SimulationPresenter {
                 }
                 gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
 
-                // Rysowanie zwierząt
+
                 if (!animalsAtCell.isEmpty()) {
                     for (Animal animal : animalsAtCell) {
                         boolean isTracked = animal.equals(trackedAnimal);
@@ -202,7 +194,7 @@ public class SimulationPresenter {
             }
         }
 
-        // Czyszczenie i dodanie Canvas do mapGrid
+
         mapGrid.getChildren().clear();
         mapGrid.add(canvas, 0, 0);
     }

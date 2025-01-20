@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:controller="agh.ics.oop.presenter.SimulationPresenter"
@@ -17,7 +16,7 @@
             xmlns:fx="http://javafx.com/fxml"
             minHeight="600.0" minWidth="800.0">
 
-    <!-- Top section: Simulation control -->
+
     <top>
         <HBox spacing="15" style="-fx-padding: 15; -fx-alignment: center;">
             <Button text="Pauzuj" onAction="#pauseSimulation" style="-fx-pref-width: 100;" />
@@ -27,27 +26,27 @@
         </HBox>
     </top>
 
-    <!-- Center view: Map and stats -->
+
     <center>
         <HBox spacing="15" style="-fx-padding: 15;">
-            <!-- Map (centered and fixed size) -->
+
             <GridPane fx:id="mapGrid" style="-fx-hgap: 2; -fx-vgap: 2; -fx-padding: 10;" minWidth="500.0" minHeight="500.0" />
             <VBox>
                 <HBox spacing="15" style="-fx-padding: 10;">
-                    <!-- Map statistics -->
+
                     <VBox spacing="10" style="-fx-pref-width: 300;">
                         <Label text="Statystyki mapy" style="-fx-font-size: 16; -fx-font-weight: bold;" />
                         <TextArea fx:id="reportTextArea" editable="false" wrapText="true" style="-fx-pref-height: 165; -fx-pref-width: 300;" />
                     </VBox>
 
-                    <!-- Tracked animal details -->
+
                     <VBox spacing="10" style="-fx-pref-width: 200;">
                         <Label text="Śledzone zwierzę" style="-fx-font-size: 16; -fx-font-weight: bold;" />
                         <TextArea fx:id="followedAnimalStatusArea" editable="false" wrapText="true" style="-fx-pref-height: 165; -fx-pref-width: 150;" />
                     </VBox>
                 </HBox>
 
-                <!-- Chart -->
+
                 <VBox spacing="10">
                     <LineChart fx:id="statsChart" title="Zmiana liczby zwierząt i roślin w czasie" createSymbols="false"
                                minWidth="400.0" minHeight="300.0" maxWidth="600.0" maxHeight="300.0">
@@ -60,7 +59,7 @@
                     </LineChart>
                 </VBox>
             </VBox>
-            <!-- Statistics and chart -->
+
 
         </HBox>
     </center>
