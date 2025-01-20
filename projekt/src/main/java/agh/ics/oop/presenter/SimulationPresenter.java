@@ -96,7 +96,7 @@ public class SimulationPresenter {
                 """,
                     followedAnimal.getEnergy(),
                     followedAnimal.getAge(),
-                    tracker.getDeathDay() == 0 ? "Still alive" : tracker.getDeathDay(),
+                    tracker.getDeathDay() == 0 ? "Nadal żyje" : tracker.getDeathDay(),
                     followedAnimal.getNumberOfChildren(),
                     tracker.getDescendantsCount(),
                     followedAnimal.getGenomes().toString(),
