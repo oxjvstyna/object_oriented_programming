@@ -1,8 +1,5 @@
 package agh.ics.oop.model;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,10 +13,6 @@ public class FertileEquator implements GrowthVariant{
         this.height = height;
     }
 
-    public FertileEquator() {
-        this.width = 0;
-        this.height = 0;
-    }
 
     public Set<Vector2d> generateFields(){
         int equatorStartY = height / 2 - (int)(height * 0.1);

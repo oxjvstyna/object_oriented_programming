@@ -1,19 +1,7 @@
 package agh.ics.oop.model;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.util.Random;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = SlightMadness.class, name = "SlightMadness"),
-        @JsonSubTypes.Type(value = TotalPredestination.class, name = "TotalPredestination")
-})
 public class SlightMadness implements MoveVariant {
     public SlightMadness() {
     }

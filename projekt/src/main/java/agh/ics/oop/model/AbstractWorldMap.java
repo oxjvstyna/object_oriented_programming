@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
     private final AnimalTracker tracker = new AnimalTracker();
     protected GrowthVariant growthVariant;
-    protected MoveVariant moveVariant;
     protected final Map<Vector2d, List<Animal>> occupiedFields = new HashMap<>();
     protected final Set<Animal> animals = new HashSet<>();
     protected final Set<Vector2d> plants = new HashSet<>();
@@ -44,11 +43,7 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         this.width = width;
         this.height = height;
         this.preferredFields = growthVariant.generateFields();
-        this.plantEnergy = 2;
         this.config = config;
-    }
-
-    public AbstractWorldMap() {
     }
 
     public void addObserver(MapChangeListener observer) {
@@ -253,20 +248,6 @@ public abstract class AbstractWorldMap implements WorldMap<Animal, Vector2d> {
         return plants.contains(new Vector2d(x, y));
     }
 
-    private boolean hasAnimalAt(Vector2d position) {
-        return occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty();
-    }
-
-    public int getMaxEnergyAt(int x, int y) {
-        Vector2d position = new Vector2d(x, y);
-        if (occupiedFields.containsKey(position) && !occupiedFields.get(position).isEmpty()) {
-            return occupiedFields.get(position).stream()
-                    .mapToInt(Animal::getEnergy)  // Pobieramy energię każdego zwierzęcia na tej pozycji
-                    .max()  // Zwracamy maksymalną wartość energii
-                    .orElse(0);  // Jeśli nie ma zwierząt, zwrócimy 0
-        }
-        return 0;  // Jeśli nie ma zwierząt na tej pozycji
-    }
 
     public int getPlantEnergy() {
         return plantEnergy;
