@@ -13,10 +13,6 @@ public class AnimalTracker {
         this.deathDay = -1;
     }
 
-    public void stopTracking() {
-        this.trackedAnimal = null;
-    }
-
     public boolean isTracking() {
         return this.trackedAnimal != null;
     }
@@ -33,38 +29,25 @@ public class AnimalTracker {
         }
     }
 
-    public void onAnimalDeath(int day) {
-        if (isTracking() && trackedAnimal != null && !trackedAnimal.isAlive()) {
-            this.deathDay = day;
-        }
+    public void updateDeathDay() {
+        this.deathDay = trackedAnimal.getDeathDay();
     }
 
-    public String getStatus(int currentDay) {
-        if (!isTracking() || trackedAnimal == null) {
-            return "No animal is being tracked.";
-        }
+    public Animal getTrackedAnimal() {
+        return trackedAnimal;
+    }
 
-        return String.format(
-                """
-                Animal ID: %d
-                Genome: %s
-                Active Gene: %d
-                Energy: %d
-                Plants Eaten: %d
-                Children Count: %d
-                Descendants Count: %d
-                Age: %d
-                Death Day: %s
-                """,
-                trackedAnimal.getId(),
-                trackedAnimal.getGenome(),
-                trackedAnimal.getGenome().getGenes().get(trackedAnimal.getMoveIndex()),
-                trackedAnimal.getEnergy(),
-                plantsEaten,
-                trackedAnimal.getNumberOfChildren(),
-                descendantsCount,
-                trackedAnimal.isAlive() ? currentDay - trackedAnimal.getAge() : -1,
-                deathDay == -1 ? "Still alive" : deathDay
-        );
+
+    public int getPlantsEaten() {
+        return plantsEaten;
+    }
+
+    public int getDescendantsCount() {
+        return descendantsCount;
+    }
+
+    public int getDeathDay() {
+        updateDeathDay();
+        return deathDay;
     }
 }

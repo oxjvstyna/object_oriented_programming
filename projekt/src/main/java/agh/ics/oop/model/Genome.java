@@ -66,4 +66,10 @@ public class Genome {
     public int size() {
         return genes.size();
     }
+
+    @Override
+    public String toString() {
+        return genes.toString(); // `genes` to lista genów w twojej klasie Genome
+    }
+
 }

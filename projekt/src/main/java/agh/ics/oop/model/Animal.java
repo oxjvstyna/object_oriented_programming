@@ -2,6 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.OptionsParser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -22,7 +23,19 @@ public class Animal implements WorldElement {
     int birthEnergy;
     private final MoveVariant moveVariant;
     private int age = 0;
+    private int deathDay = 0;
     private int numberOfChildren = 0;
+    private int plantsEaten = 0;
+    private int descendantsCount = 0;
+    private List<Animal> children = new ArrayList<>();
+
+    public List<Animal> getChildren() {
+        return children;
+    }
+
+    public void addChild(Animal child) {
+        children.add(child);
+    }
 
     public Animal(Vector2d initialPosition, AnimalConfig config) {
         this.id = idCounter++;
@@ -129,10 +142,6 @@ public class Animal implements WorldElement {
         return this.energy;
     }
 
-    public Genome getGenome() {
-        return this.genome;
-    }
-
     public boolean isAlive() {
         return energy > 0;
     }
@@ -175,9 +184,6 @@ public class Animal implements WorldElement {
         this.numberOfChildren = numberOfChildren;
     }
 
-    public Object getId() {
-        return this.id;
-    }
 
     public int getMoveIndex() {
         return this.moveIndex;
@@ -185,5 +191,17 @@ public class Animal implements WorldElement {
 
     public Genome getGenomes() {
         return this.genome;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public int getDeathDay() {
+        return deathDay;
+    }
+
+    public void setDeathDay(int deathDay) {
+        this.deathDay = deathDay;
     }
 }

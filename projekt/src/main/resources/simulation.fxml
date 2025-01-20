@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 
 <?import javafx.scene.control.TextArea?>
 <BorderPane fx:controller="agh.ics.oop.presenter.SimulationPresenter"
@@ -36,7 +37,45 @@
     <!-- Dolna część: Informacje dodatkowe -->
     <bottom>
         <VBox spacing="10" style="-fx-padding: 10;">
+            <HBox spacing="10">
+                <TextField fx:id="animalIdField" promptText="Enter animal ID" />
+                <Button text="Śledź zwierzę " onAction="#trackAnimalById" />
+            </HBox>
+
             <Label fx:id="descriptionLabel" text="Status symulacji" style="-fx-font-size: 14;" />
+            <!-- Nowe etykiety do wyświetlania informacji o śledzonym zwierzęciu -->
+            <HBox spacing="10">
+                <Label text="Energia:" />
+                <Label fx:id="followedAnimalEnergyLabel" text="-" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Czas życia:" />
+                <Label fx:id="followedAnimalBirthDayLabel" text="-" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Dzień śmierci:" />
+                <Label fx:id="followedAnimalDeathDayLabel" text="-" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Liczba dzieci:" />
+                <Label fx:id="followedAnimalChildrenCountLabel" text="-" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Liczba potomków:" />
+                <Label fx:id="followedAnimalDescendantsCountLabel" text="-" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Genotyp:" />
+                <Label fx:id="followedAnimalGenotypeLabel" text="-" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Indeks aktywnego genu:" />
+                <Label fx:id="followedAnimalActiveGeneIndexLabel" text="-" />
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Zjedzone rośliny:" />
+                <Label fx:id="followedAnimalPlantsEatenLabel" text="-" />
+            </HBox>
             <TextArea fx:id="reportTextArea" editable="false" wrapText="true" style="-fx-pref-height: 200;" />
         </VBox>
     </bottom>

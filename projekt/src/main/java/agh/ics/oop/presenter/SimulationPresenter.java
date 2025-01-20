@@ -5,7 +5,9 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -16,15 +18,24 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class SimulationPresenter {
-
+    @FXML
+    private TextField animalIdField;
     @FXML
     private TextArea reportTextArea;
     @FXML
     private GridPane mapGrid;
+    @FXML
+    private Label followedAnimalEnergyLabel, followedAnimalBirthDayLabel, followedAnimalDeathDayLabel,
+            followedAnimalChildrenCountLabel, followedAnimalDescendantsCountLabel, followedAnimalGenotypeLabel,
+            followedAnimalActiveGeneIndexLabel, followedAnimalPlantsEatenLabel;
+    @FXML
+    private TextArea animalStatusTextArea;
 
     private boolean isRunning = false;
     private Timeline timeline;
     private Simulation simulation;
+    private int currentDay;
+    private final AnimalTracker tracker = new AnimalTracker();
 
     public void initializeSimulation(SimulationEngine engine) {
         this.simulation = engine.getSimulation();
@@ -36,6 +47,8 @@ public class SimulationPresenter {
         timeline = new Timeline(new KeyFrame(Duration.millis(simulation.getSimConfig().simulationSpeed()), event -> {
             simulation.runStep();
             renderMap();
+            currentDay++;
+            updateAnimalStatus();
             generateReport();
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -48,6 +61,20 @@ public class SimulationPresenter {
         if (timeline != null && isRunning) {
             timeline.pause();
             isRunning = false;
+        }
+    }
+
+    public void updateAnimalStatus() {
+        Animal followedAnimal = tracker.getTrackedAnimal();
+        if (tracker.isTracking() && followedAnimal != null) {
+            followedAnimalPlantsEatenLabel.setText(String.valueOf(tracker.getPlantsEaten()));
+            followedAnimalDescendantsCountLabel.setText(String.valueOf(tracker.getDescendantsCount()));
+            followedAnimalBirthDayLabel.setText(String.valueOf(followedAnimal.getAge()));
+            followedAnimalDeathDayLabel.setText(tracker.getDeathDay() == -1 ? "Still alive" : String.valueOf(tracker.getDeathDay()));
+            followedAnimalEnergyLabel.setText(String.valueOf(followedAnimal.getEnergy()));
+            followedAnimalChildrenCountLabel.setText(String.valueOf(followedAnimal.getNumberOfChildren()));
+            followedAnimalGenotypeLabel.setText(followedAnimal.getGenomes().toString());
+            followedAnimalActiveGeneIndexLabel.setText(String.valueOf(followedAnimal.getMoveIndex()));
         }
     }
 
@@ -115,7 +142,6 @@ public class SimulationPresenter {
         int gray = (int) (211 - 211 * (1.0 - intensity));
         return String.format("rgb(%d, %d, %d)", gray, gray, gray);
     }
-
     @FXML
     public void generateReport() {
         AbstractWorldMap map = simulation.getSimConfig().currentMap();
@@ -169,5 +195,28 @@ public class SimulationPresenter {
         reportTextArea.setText(report);
     }
 
+    @FXML
+    private void trackAnimalById() {
+        String inputId = animalIdField.getText().trim();
+        if (inputId.isEmpty()) {
+            System.out.println("Please enter a valid ID.");
+            return;
+        }
+
+        try {
+            int animalId = Integer.parseInt(inputId);
+            Animal animal = simulation.getSimConfig().currentMap().getAnimalById(animalId);
+
+            if (animal != null) {
+                tracker.startTracking(animal);
+                System.out.println("Started tracking animal with ID: " + animalId);
+                updateAnimalStatus();
+            } else {
+                System.out.println("No animal found with ID: " + animalId);
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid ID format. Please enter a valid ID.");
+        }
+    }
 
 }
