@@ -13,6 +13,7 @@ public class FertileEquator implements GrowthVariant{
         this.height = height;
     }
 
+
     public Set<Vector2d> generateFields(){
         int equatorStartY = height / 2 - (int)(height * 0.1);
         int equatorEndY = height / 2 + (int)(height * 0.1);
@@ -24,4 +25,10 @@ public class FertileEquator implements GrowthVariant{
         }
         return preferredFields;
     }
+
+    @Override
+    public String toString() {
+        return "FertileEquator";
+    }
+
 }

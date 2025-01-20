@@ -42,9 +42,9 @@ public record Vector2d(int x, int y) {
     public boolean equals(Object other) {
         if (this == other)
             return true;
-        if (!(other instanceof Vector2d that))
+        if (!(other instanceof Vector2d(int x1, int y1)))
             return false;
-        return this.x == that.x && this.y == that.y;
+        return this.x == x1 && this.y == y1;
     }
 
 }

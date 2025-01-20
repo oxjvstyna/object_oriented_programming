@@ -14,9 +14,14 @@ import javafx.util.Duration;
 import agh.ics.oop.*;
 import agh.ics.oop.model.*;
 
+import java.util.Arrays;
+import java.util.Map;
+
 public class SimulationPresenter {
     @FXML
     private TextField animalIdField;
+    @FXML
+    private TextArea reportTextArea;
     @FXML
     private GridPane mapGrid;
     @FXML
@@ -44,6 +49,7 @@ public class SimulationPresenter {
             renderMap();
             currentDay++;
             updateAnimalStatus();
+            generateReport();
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -87,19 +93,42 @@ public class SimulationPresenter {
         Canvas canvas = new Canvas(mapGrid.getWidth(), mapGrid.getHeight());
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        String dominantGenome = map.getGenotypes().entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("");
+
+        var preferredFields = map.getPreferredPlantFields();
+
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                int animalCount = map.getMaxEnergyAt(x, y);
                 boolean hasPlant = map.hasPlantAt(x, y);
+                var animalsAtCell = map.getAnimalsAt(x, y);
 
-                if (animalCount > 0) {
-                    gc.setFill(Color.web(getAnimalColor(animalCount)));
-                } else if (hasPlant) {
+                if (preferredFields.contains(new Vector2d(x, y))) {
+                    gc.setFill(Color.DARKGREEN);
+                }else if (hasPlant) {
                     gc.setFill(Color.GREEN);
                 } else {
                     gc.setFill(Color.LIGHTGREEN);
                 }
                 gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+                if (!animalsAtCell.isEmpty()) {
+                    for (Animal animal : animalsAtCell) {
+                        if (dominantGenome.equals(Arrays.toString(animal.getGenome().getGenesAsStrings()))) {
+                            gc.setFill(Color.RED);
+                        } else {
+                            gc.setFill(Color.web(getAnimalColor(animal.getEnergy())));
+                        }
+                        gc.fillOval(
+                                x * cellSize + cellSize * 0.2,
+                                y * cellSize + cellSize * 0.2,
+                                cellSize * 0.6,
+                                cellSize * 0.6
+                        );
+                    }
+                }
             }
         }
 
@@ -108,21 +137,62 @@ public class SimulationPresenter {
     }
 
     private String getAnimalColor(int energy) {
-        int maxEnergy = 100; // Załóżmy, że 100 to maksymalna energia
-        double ratio = Math.min(1.0, energy / (double) maxEnergy);
-
-        // Kolor przechodzi od czerwonego (niska energia) do zielonego (wysoka energia)
-        int red = (int) (255 * (1 - ratio)); // Więcej energii = mniej czerwonego
-        int green = (int) (255 * ratio);    // Więcej energii = więcej zielonego
-        int blue = 0; // Brak niebieskiego
-
-        return String.format("rgb(%d, %d, %d)", red, green, blue);
+        int maxEnergy = 100;
+        double intensity = Math.min(1.0, energy / (double) maxEnergy);
+        int gray = (int) (211 - 211 * (1.0 - intensity));
+        return String.format("rgb(%d, %d, %d)", gray, gray, gray);
     }
-
-
     @FXML
     public void generateReport() {
-        simulation.getSimConfig().currentMap().getReport();
+        AbstractWorldMap map = simulation.getSimConfig().currentMap();
+
+        String mostFrequentGenome = map.getGenotypes().entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("");
+
+        double averageEnergyForLiveAnimals = map.getAnimals().stream()
+                .filter(Animal::isAlive)
+                .mapToInt(Animal::getEnergy)
+                .average()
+                .orElse(0.0);
+
+        double averageDaysAliveForLiveAnimals = map.getAnimals().stream()
+                .filter(Animal::isAlive)
+                .mapToInt(Animal::getAge)
+                .average()
+                .orElse(0.0);
+
+        double averageChildrenForLiveAnimals = map.getAnimals().stream()
+                .filter(Animal::isAlive)
+                .mapToInt(Animal::getNumberOfChildren)
+                .average()
+                .orElse(0.0);
+
+        int freeFields = map.getWidth() * map.getHeight() - map.getOccupiedFields().size();
+
+        String report = String.format(
+                """
+                Liczba zwierząt na mapie: %d
+                Liczba roślin na mapie: %d
+                Liczba wolnych pól: %d
+                Najpopularniejszy genotyp: %s
+                Średni poziom energii dla żyjących zwierząt: %.2f
+                Średnia długość życia żyjących zwierząt: %.2f
+                Średnia liczba dzieci dla żyjących zwierząt: %.2f
+                Maksymalna liczba zwierząt na mapie: %d
+                """,
+                map.getAnimals().size(),
+                map.getPlants().size(),
+                freeFields,
+                mostFrequentGenome,
+                averageEnergyForLiveAnimals,
+                averageDaysAliveForLiveAnimals,
+                averageChildrenForLiveAnimals,
+                map.getMaxAnimalSize()
+        );
+
+        reportTextArea.setText(report);
     }
 
     @FXML
@@ -148,4 +218,5 @@ public class SimulationPresenter {
             System.out.println("Invalid ID format. Please enter a valid ID.");
         }
     }
+
 }

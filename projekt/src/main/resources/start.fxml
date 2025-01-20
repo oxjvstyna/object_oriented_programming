@@ -79,6 +79,11 @@
                 <Label text="Simulation Speed:" GridPane.rowIndex="2" GridPane.columnIndex="4" style="-fx-font-size: 14px;" />
                 <TextField fx:id="simulationSpeedInput" GridPane.rowIndex="2" GridPane.columnIndex="5" style="-fx-pref-width: 100px;" text="100" />
             </GridPane>
+            <HBox spacing="10">
+                <Button text="Save Configuration" onAction="#onSaveConfigClicked" />
+                <Button text="Load Configuration" onAction="#onLoadConfigClicked" />
+            </HBox>
+
 
             <!-- Przycisk startowy -->
             <Button text="Start Simulation" onAction="#onSimulationStartClicked"

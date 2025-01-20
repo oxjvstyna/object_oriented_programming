@@ -23,7 +23,7 @@ public class World {
         map.addObserver((worldMap, message) -> System.out.println(LocalDateTime.now().format(formatter)));
         map2.addObserver((worldMap, message) -> System.out.println(LocalDateTime.now().format(formatter)));
 
-        SimulationConfig config = new SimulationConfig(map, growthVariant, 5000, 100, predestination);
+        SimulationConfig config = new SimulationConfig(map, map, 10, growthVariant, 10000, 100, animalConfig);
         SimulationEngine engine = new SimulationEngine(new Simulation(config));
         engine.runAsyncInThreadPool();
     }
