@@ -2,14 +2,14 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.collections.FXCollections?>
+
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="400.0" minWidth="600.0"
             fx:controller="agh.ics.oop.presenter.StartPresenter">
 
-    <!-- Górny tytuł -->
+
     <top>
         <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;">
             <Label text="Simulation Setup" style="-fx-font-size: 30px; -fx-font-weight: bold;" />
@@ -17,11 +17,11 @@
         </VBox>
     </top>
 
-    <!-- Środkowy panel z opcjami -->
+
     <center>
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
 
-            <!-- Opcje wyboru wariantów w jednym wierszu -->
+
             <HBox spacing="20" alignment="CENTER">
                 <VBox spacing="5" alignment="CENTER">
                     <Label text="Growth Variant:" style="-fx-font-size: 14px;" />
@@ -41,9 +41,9 @@
                 </VBox>
             </HBox>
 
-            <!-- Pola do wprowadzania liczb w układzie siatki -->
+
             <GridPane hgap="20" vgap="10" alignment="CENTER">
-                <!-- Pierwsza kolumna -->
+
                 <Label text="Width:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-size: 14px;" />
                 <TextField fx:id="widthInput" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-width: 100px;" text="20" />
 
@@ -56,7 +56,7 @@
                 <Label text="Start Energy:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-size: 14px;" />
                 <TextField fx:id="startingEnergyInput" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-pref-width: 100px;" text="50" />
 
-                <!-- Druga kolumna -->
+
                 <Label text="Genome Length:" GridPane.rowIndex="0" GridPane.columnIndex="2" style="-fx-font-size: 14px;" />
                 <TextField fx:id="genomeLengthInput" GridPane.rowIndex="0" GridPane.columnIndex="3" style="-fx-pref-width: 100px;" text="8" />
 
@@ -69,7 +69,7 @@
                 <Label text="Birth Energy:" GridPane.rowIndex="3" GridPane.columnIndex="2" style="-fx-font-size: 14px;" />
                 <TextField fx:id="birthEnergyInput" GridPane.rowIndex="3" GridPane.columnIndex="3" style="-fx-pref-width: 100px;" text="30" />
 
-                <!-- Trzecia kolumna -->
+
                 <Label text="Min Mutations:" GridPane.rowIndex="0" GridPane.columnIndex="4" style="-fx-font-size: 14px;" />
                 <TextField fx:id="minMutationsInput" GridPane.rowIndex="0" GridPane.columnIndex="5" style="-fx-pref-width: 100px;" text="1" />
 
@@ -85,13 +85,13 @@
             </HBox>
 
 
-            <!-- Przycisk startowy -->
+
             <Button text="Start Simulation" onAction="#onSimulationStartClicked"
                     style="-fx-font-size: 16px; -fx-pref-width: 180px;" />
         </VBox>
     </center>
 
-    <!-- Dolny opis -->
+
     <bottom>
         <HBox alignment="CENTER" style="-fx-padding: 10;">
             <Label fx:id="descriptionLabel" text="Adjust parameters and click Start Simulation." style="-fx-font-size: 12px;" />

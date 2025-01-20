@@ -13,10 +13,8 @@ public class Owlbear extends Animal {
         Vector2d upperRight = worldMap.getTerritoryUpperRight();
         Vector2d lowerLeft = worldMap.getTerritoryLowerLeft();
 
-        // Ustaw walidator pozycji
         validator = position -> position.precedes(upperRight) && position.follows(lowerLeft);
 
-        // Wywołaj metodę move z klas bazowych
         super.move(validator);
         this.addEnergy(worldMap.getPlantEnergy());
     }

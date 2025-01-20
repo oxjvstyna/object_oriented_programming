@@ -9,6 +9,6 @@ public class ConsoleMapDisplay implements MapChangeListener{
         updateCount++;
         System.out.println("Mapa zaktualizowana: " + message);
         System.out.println("Sumaryczna liczba zmian: " + updateCount);
-        System.out.println(); // dla przejrzystosci
+        System.out.println();
     }
 }

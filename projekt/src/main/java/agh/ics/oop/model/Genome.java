@@ -69,7 +69,7 @@ public class Genome {
 
     @Override
     public String toString() {
-        return genes.toString(); // `genes` to lista genów w twojej klasie Genome
+        return genes.toString();
     }
 
 }

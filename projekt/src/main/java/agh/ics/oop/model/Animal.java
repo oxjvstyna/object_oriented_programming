@@ -145,7 +145,6 @@ public class Animal implements WorldElement {
         }
 }
 
-    // Getter for descendantsCount
     public int getDescendantsCount() {
         return this.descendantsCount;
     }
