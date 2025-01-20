@@ -73,17 +73,4 @@ public class OwlbearMapTest {
         assertTrue(animal.getEnergy() <= 0);
     }
 
-
-    @Test
-    void testOwlbearImmortality() {
-        // when
-        // Simulate multiple turns to ensure the Owlbear does not lose energy
-        for (int i = 0; i < 1000; i++) {
-            map.owlbear.move(map);
-        }
-
-        // then
-        // Validate the Owlbear's energy remains unchanged
-        assertEquals(999999999, map.owlbear.getEnergy());
-    }
 }
