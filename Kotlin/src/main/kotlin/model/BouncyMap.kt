@@ -6,7 +6,7 @@ import util.randomPosition
 
 class BouncyMap(private val width: Int, private val height: Int) : WorldMap {
 
-    private val animals = mutableMapOf<Vector2d, Animal>()
+    val animals = mutableMapOf<Vector2d, Animal>()
 
     override fun canMoveTo(position: Vector2d): Boolean {
         return position.x in 0 until width && position.y in 0 until height
@@ -24,13 +24,11 @@ class BouncyMap(private val width: Int, private val height: Int) : WorldMap {
         if (!isOccupied(animal.position)) {
             animals[animal.position] = animal
         } else {
-            val randomFree = randomFreePosition(Vector2d(width, height)) ?: run {
-                val toSwap = animals.keys.random()
-                animals.remove(toSwap)
-                toSwap
+            val randomFree = randomFreePosition(Vector2d(width, height))
+            if (randomFree != null) {
+                animal.position = randomFree
+                animals[randomFree] = animal
             }
-            animal.position = randomFree
-            animals[randomFree] = animal
         }
     }
 
@@ -38,5 +36,4 @@ class BouncyMap(private val width: Int, private val height: Int) : WorldMap {
     override fun isOccupied(position: Vector2d): Boolean {
         return animals.containsKey(position)
     }
-
 }

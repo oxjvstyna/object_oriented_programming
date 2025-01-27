@@ -6,8 +6,9 @@ import util.MoveDirection
 
 data class Animal (
     var position: Vector2d,
-    var orientation: MapDirection,
+    var orientation: MapDirection = MapDirection.NORTH,
 ) {
+
 
     override fun toString(): String = when (orientation) {
         MapDirection.EAST -> ">"
